@@ -1,3 +1,4 @@
+import { setInterval } from "node:timers";
 import type { GatewayReadyDispatchData, WithIntrinsicProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
 import EventHandler from "../../../lib/classes/EventHandler.js";
@@ -14,7 +15,7 @@ export default class Ready extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#ready
 	 */
 	public override async run({ shardId, data }: WithIntrinsicProps<GatewayReadyDispatchData>) {
-		this.client.submitMetric("guild_count", "set", data.guilds.length, { shard: shardId.toString() });
+		// this.client.submitMetric("guild_count", "set", data.guilds.length, { shard: shardId.toString() });
 
 		for (const guild of data.guilds) this.client.guildOwnersCache.set(guild.id, "");
 
@@ -29,5 +30,19 @@ export default class Ready extends EventHandler {
 			allowed_mentions: { parse: [] },
 			username: `${this.client.config.botName} | Console Logs`,
 		});
+
+		setInterval(() => {
+			this.client.dataDog.gauge("guilds", this.client.guildOwnersCache.size);
+			this.client.dataDog.gauge("approximateUserCount", this.client.approximateUserCount);
+
+			this.client.dataDog.flush(
+				() => {},
+				// eslint-disable-next-line promise/prefer-await-to-callbacks
+				(error) => {
+					this.client.logger.error(error);
+					this.client.logger.sentry.captureException(error);
+				},
+			);
+		}, 10_000);
 	}
 }

@@ -1,4 +1,4 @@
-import process from "node:process";
+import { env } from "node:process";
 import { setTimeout } from "node:timers";
 import type {
 	APIApplicationCommandInteraction,
@@ -76,7 +76,7 @@ export default class ApplicationCommandHandler {
 	 * @returns True or False depending on if the application commands were registered successfully.
 	 */
 	public async registerApplicationCommands() {
-		if (process.env.NODE_ENV === "production") {
+		if (env.NODE_ENV === "production") {
 			const guildOnlyCommands: Map<string, ApplicationCommand[]> = new Map();
 
 			for (const applicationCommand of [...this.client.applicationCommands.values()].filter(
@@ -88,24 +88,24 @@ export default class ApplicationCommandHandler {
 
 			return Promise.all([
 				this.client.api.applicationCommands
-					.bulkOverwriteGuildCommands(process.env.APPLICATION_ID, this.client.config.testGuildId, [])
+					.bulkOverwriteGuildCommands(env.APPLICATION_ID, env.DEVELOPMENT_GUILD_ID, [])
 					// eslint-disable-next-line promise/prefer-await-to-callbacks, promise/prefer-await-to-then
 					.catch(async (error) => {
 						if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingAccess)
 							this.client.logger.error(
 								null,
-								`I encountered DiscordAPIError: Missing Access in ${this.client.config.testGuildId} when trying to clear application commands in the test guild.`,
+								`I encountered DiscordAPIError: Missing Access in ${env.DEVELOPMENT_GUILD_ID} when trying to clear application commands in the test guild.`,
 							);
 
 						await this.client.logger.sentry.captureWithExtras(error, {
-							"Guild ID": this.client.config.testGuildId,
+							"Guild ID": env.DEVELOPMENT_GUILD_ID,
 							"Application Command Count": this.client.applicationCommands.size,
 							"Application Commands": this.client.applicationCommands,
 						});
 						throw error;
 					}),
 				this.client.api.applicationCommands.bulkOverwriteGlobalCommands(
-					process.env.APPLICATION_ID,
+					env.APPLICATION_ID,
 					[...this.client.applicationCommands.values()]
 						.filter((applicationCommand) => !applicationCommand.guilds.length)
 						.map((applicationCommand) => applicationCommand.options),
@@ -113,7 +113,7 @@ export default class ApplicationCommandHandler {
 				[...guildOnlyCommands.entries()].map(async ([guildId, applicationCommands]) =>
 					this.client.api.applicationCommands
 						.bulkOverwriteGuildCommands(
-							process.env.APPLICATION_ID,
+							env.APPLICATION_ID,
 							guildId,
 							applicationCommands.map((applicationCommand) => applicationCommand.options),
 						)
@@ -122,11 +122,11 @@ export default class ApplicationCommandHandler {
 							if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingAccess)
 								this.client.logger.error(
 									null,
-									`I encountered DiscordAPIError: Missing Access in ${this.client.config.testGuildId} when trying to set guild commands.`,
+									`I encountered DiscordAPIError: Missing Access in ${env.DEVELOPMENT_GUILD_ID} when trying to set guild commands.`,
 								);
 
 							await this.client.logger.sentry.captureWithExtras(error, {
-								"Guild ID": this.client.config.testGuildId,
+								"Guild ID": env.DEVELOPMENT_GUILD_ID,
 								"Application Command Count": this.client.applicationCommands.size,
 								"Application Commands": this.client.applicationCommands,
 							});
@@ -139,8 +139,8 @@ export default class ApplicationCommandHandler {
 		return (
 			this.client.api.applicationCommands
 				.bulkOverwriteGuildCommands(
-					process.env.APPLICATION_ID,
-					this.client.config.testGuildId,
+					env.APPLICATION_ID,
+					env.DEVELOPMENT_GUILD_ID,
 					[...this.client.applicationCommands.values()].map((applicationCommand) => applicationCommand.options),
 				)
 				// eslint-disable-next-line promise/prefer-await-to-callbacks, promise/prefer-await-to-then
@@ -148,11 +148,11 @@ export default class ApplicationCommandHandler {
 					if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingAccess)
 						this.client.logger.error(
 							null,
-							`I encountered DiscordAPIError: Missing Access in ${this.client.config.testGuildId} when trying to set application commands in the test guild.`,
+							`I encountered DiscordAPIError: Missing Access in ${env.DEVELOPMENT_GUILD_ID} when trying to set application commands in the test guild.`,
 						);
 
 					await this.client.logger.sentry.captureWithExtras(error, {
-						"Guild ID": this.client.config.testGuildId,
+						"Guild ID": env.DEVELOPMENT_GUILD_ID,
 						"Application Command Count": this.client.applicationCommands.size,
 						"Application Commands": this.client.applicationCommands,
 					});
@@ -222,7 +222,7 @@ export default class ApplicationCommandHandler {
 			);
 
 			try {
-				if (process.env.NODE_ENV === "production")
+				if (env.NODE_ENV === "production")
 					await this.client.api.applicationCommands.deleteGlobalCommand(
 						interaction.application_id,
 						interaction.data.id,
@@ -231,17 +231,17 @@ export default class ApplicationCommandHandler {
 					await this.client.api.applicationCommands.deleteGuildCommand(
 						interaction.application_id,
 						interaction.data.id,
-						interaction.guild_id ?? this.client.config.testGuildId,
+						interaction.guild_id ?? env.DEVELOPMENT_GUILD_ID,
 					);
 			} catch (error) {
 				if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingAccess)
 					this.client.logger.error(
 						null,
-						`I encountered DiscordAPIError: Missing Access in the test guild [${this.client.config.testGuildId}] when trying to delete a non-existent application command.`,
+						`I encountered DiscordAPIError: Missing Access in the test guild [${env.DEVELOPMENT_GUILD_ID}] when trying to delete a non-existent application command.`,
 					);
 
 				await this.client.logger.sentry.captureWithExtras(error, {
-					"Guild ID": this.client.config.testGuildId,
+					"Guild ID": env.DEVELOPMENT_GUILD_ID,
 					"Application Command Count": this.client.applicationCommands.size,
 					"Application Commands": this.client.applicationCommands,
 				});
@@ -417,19 +417,19 @@ export default class ApplicationCommandHandler {
 			if (applicationCommand.cooldown)
 				await applicationCommand.applyCooldown((interaction.member?.user ?? interaction.user!).id);
 
-			this.client.submitMetric("commands_used", "inc", 1, {
-				command: applicationCommand.name,
-				type: applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context",
-				success: "true",
-				shard: shardId.toString(),
-			});
+			// this.client.submitMetric("commands_used", "inc", 1, {
+			// 	command: applicationCommand.name,
+			// 	type: applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context",
+			// 	success: "true",
+			// 	shard: shardId.toString(),
+			// });
 		} catch (error) {
-			this.client.submitMetric("commands_used", "inc", 1, {
-				command: applicationCommand.name,
-				type: applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context",
-				success: "false",
-				shard: shardId.toString(),
-			});
+			// this.client.submitMetric("commands_used", "inc", 1, {
+			// 	command: applicationCommand.name,
+			// 	type: applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context",
+			// 	success: "false",
+			// 	shard: shardId.toString(),
+			// });
 			this.client.logger.error(error);
 
 			const eventId = await this.client.logger.sentry.captureWithInteraction(error, interaction);

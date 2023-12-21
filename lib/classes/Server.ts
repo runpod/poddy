@@ -1,9 +1,9 @@
-import process from "node:process";
+import { env, exit } from "node:process";
 import { PrismaClient } from "@prisma/client";
 import type { FastifyInstance } from "fastify";
 import { fastify } from "fastify";
-import fastifyMetricsPlugin from "fastify-metrics";
-import { register } from "prom-client";
+// import fastifyMetricsPlugin from "fastify-metrics";
+// import { register } from "prom-client";
 import Logger from "./Logger.js";
 
 export default class Server {
@@ -64,7 +64,7 @@ export default class Server {
 		});
 
 		// I forget what this is even used for, but Vlad from https://github.com/vladfrangu/highlight uses it and recommended me to use it a while ago.
-		if (process.env.NODE_ENV === "development") {
+		if (env.NODE_ENV === "development") {
 			this.prisma.$on("query", (event) => {
 				try {
 					const paramsArray = JSON.parse(event.params);
@@ -100,13 +100,13 @@ export default class Server {
 	 * Start the server.
 	 */
 	public async start() {
-		await this.router.register(fastifyMetricsPlugin, {
-			defaultMetrics: {
-				enabled: false,
-				register,
-			},
-			endpoint: null,
-		});
+		// await this.router.register(fastifyMetricsPlugin, {
+		// 	defaultMetrics: {
+		// 		enabled: false,
+		// 		register,
+		// 	},
+		// 	endpoint: null,
+		// });
 
 		this.registerRoutes();
 
@@ -116,7 +116,7 @@ export default class Server {
 				Logger.error(error);
 				Logger.sentry.captureException(error);
 
-				process.exit(1);
+				exit(1);
 			}
 
 			Logger.info(`Fastify server started, listening on ${address}.`);
@@ -129,14 +129,14 @@ export default class Server {
 	private registerRoutes() {
 		this.router.get("/ping", (_, response) => response.send("PONG!"));
 
-		this.router.get("/metrics", async (request, response) => {
-			if (request.headers.authorization?.replace("Bearer ", "") !== process.env.PROMETHEUS_AUTH)
-				return response.status(401).send("Invalid authorization token.");
+		// this.router.get("/metrics", async (request, response) => {
+		// 	if (request.headers.authorization?.replace("Bearer ", "") !== process.env.PROMETHEUS_AUTH)
+		// 		return response.status(401).send("Invalid authorization token.");
 
-			const metrics = await register.metrics();
+		// 	const metrics = await register.metrics();
 
-			return response.send(metrics);
-		});
+		// 	return response.send(metrics);
+		// });
 
 		this.router.get("/", (_, response) => response.redirect("https://polar.blue"));
 	}

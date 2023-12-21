@@ -1,4 +1,4 @@
-import process from "node:process";
+import { env } from "node:process";
 import { format } from "node:util";
 import type { APIInteraction, APIMessage } from "@discordjs/core";
 import * as Sentry from "@sentry/node";
@@ -6,7 +6,7 @@ import { load } from "dotenv-extended";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 load({
-	path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
+	path: env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
 });
 
 /**
@@ -25,7 +25,7 @@ export default function init(): typeof Sentry & {
 } {
 	Sentry.init({
 		tracesSampleRate: 1,
-		dsn: process.env.SENTRY_DSN,
+		dsn: env.SENTRY_DSN,
 	});
 
 	return {
@@ -41,7 +41,7 @@ export default function init(): typeof Sentry & {
 		captureWithInteraction: async (error: any, interaction: APIInteraction): Promise<string> => {
 			return new Promise((resolve) => {
 				Sentry.withScope((scope) => {
-					scope.setExtra("Environment", process.env.NODE_ENV);
+					scope.setExtra("Environment", env.NODE_ENV);
 					scope.setUser({
 						username: (interaction.member?.user ?? interaction.user!).username,
 						id: (interaction.member?.user ?? interaction.user!).id,
@@ -63,7 +63,7 @@ export default function init(): typeof Sentry & {
 		captureWithMessage: async (error: any, message: APIMessage): Promise<string> => {
 			return new Promise((resolve) => {
 				Sentry.withScope((scope) => {
-					scope.setExtra("Environment", process.env.NODE_ENV);
+					scope.setExtra("Environment", env.NODE_ENV);
 					scope.setUser({
 						username: `${message.author.username}#${message.author.discriminator}`,
 						id: message.author.id,
@@ -83,7 +83,7 @@ export default function init(): typeof Sentry & {
 		): Promise<string> => {
 			return new Promise((resolve) => {
 				Sentry.withScope((scope) => {
-					scope.setExtra("Environment", process.env.NODE_ENV);
+					scope.setExtra("Environment", env.NODE_ENV);
 					scope.setExtra("IP Address", request.ip);
 					scope.setExtra("User Agent", request.headers["user-agent"]);
 
@@ -112,7 +112,7 @@ export default function init(): typeof Sentry & {
 		captureWithExtras: async (error: any, extras: Record<string, any>) => {
 			return new Promise((resolve) => {
 				Sentry.withScope((scope) => {
-					scope.setExtra("Environment", process.env.NODE_ENV);
+					scope.setExtra("Environment", env.NODE_ENV);
 					for (const [key, value] of Object.entries(extras)) scope.setExtra(key, format(value));
 					resolve(Sentry.captureException(error));
 				});

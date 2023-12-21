@@ -1,4 +1,4 @@
-import process from "node:process";
+import { env } from "node:process";
 import type {
 	APIApplicationCommandInteraction,
 	APIContextMenuInteraction,
@@ -268,8 +268,7 @@ export default class ApplicationCommand {
 				let guildMe = this.client.guildMeCache.get(interaction.guild_id!);
 
 				try {
-					if (!guildMe)
-						guildMe = await this.client.api.guilds.getMember(interaction.guild_id, process.env.APPLICATION_ID);
+					if (!guildMe) guildMe = await this.client.api.guilds.getMember(interaction.guild_id, env.APPLICATION_ID);
 
 					if (!this.client.guildOwnersCache.has(interaction.guild_id)) {
 						const guild = await this.client.api.guilds.get(interaction.guild_id);
@@ -299,7 +298,7 @@ export default class ApplicationCommand {
 					throw error;
 				}
 
-				if (this.client.guildOwnersCache.get(interaction.guild_id) !== process.env.APPLICATION_ID)
+				if (this.client.guildOwnersCache.get(interaction.guild_id) !== env.APPLICATION_ID)
 					return {
 						title: language.get("MISSING_PERMISSIONS_BASE_TITLE"),
 						description: language.get(

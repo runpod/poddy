@@ -106,8 +106,69 @@ export default {
 		"An error has occurred, please try again later. This has already been reported to my developers.",
 
 	PING_COMMAND_NAME: "ping",
-	PING_COMMAND_DESCRIPTION: "Pong! Get the current ping / latency of the PUGs bot.",
+	PING_COMMAND_DESCRIPTION: "Pong! Get the current ping / latency of the Nimbus.",
 
 	PING: "Ping?",
 	PONG: "Pong! (Host latency of {{hostLatency}}ms)",
+
+	CONFIG_COMMAND_NAME: "config",
+	CONFIG_COMMAND_DESCRIPTION: "Manage Nimbus' config for your server.",
+
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_NAME: "auto_thread_channel",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_DESCRIPTION: "Manage auto thread channels for your server.",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME: "add",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_DESCRIPTION: "Add an auto thread channel.",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME: "channel",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION: "The channel to add.",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_THREAD_NAME_OPTION_NAME: "thread_name",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_THREAD_NAME_OPTION_DESCRIPTION:
+		"The name of the thread to create. Supports variables {{author}} and {{content}}.",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME: "remove",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_DESCRIPTION: "Remove an auto thread channel.",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION: "The channel to remove.",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_NAME: "list",
+	CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_DESCRIPTION: "List all auto thread channels.",
+
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_NAME: "auto_tag_on_forum_channel",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_DESCRIPTION: "Manage auto tag on forum channels for your server.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME: "add",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_DESCRIPTION: "Add an auto tag on a forum channel.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME: "channel",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION:
+		"The forum channel to add an auto tag on.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_TAG_OPTION_NAME: "tag",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_TAG_OPTION_DESCRIPTION:
+		"The tag to add to the forum channel.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME: "remove",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_DESCRIPTION:
+		"Remove an auto tag on forum channel.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION:
+		"The forum channel to remove an auto tag from.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_TAG_OPTION_DESCRIPTION:
+		"The tag to remove from the forum channel.",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_NAME: "list",
+	CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_DESCRIPTION:
+		"List all auto tag on forum channels.",
+
+	AUTO_THREADS_LIST_TITLE: "Auto Thread Channels",
+	AUTO_THREADS_TITLE_NONE_DESCRIPTION:
+		"There are currently no auto thread channels for this server, add some by doing `/config auto_thread_channel add <channel>`!",
+
+	AUTO_THREAD_ADDED_TITLE: "Auto Thread Channel Added",
+	AUTO_THREAD_ADDED_DESCRIPTION: "The channel <#{{channelId}}> has been added as an auto thread channel!",
+
+	AUTO_THREAD_REMOVED_TITLE: "Auto Thread Channel Removed",
+	AUTO_THREAD_REMOVED_DESCRIPTION: "The channel <#{{channelId}}> has been removed as an auto thread channel!",
+
+	AUTO_TAGS_LIST_TITLE: "Auto Tags On Forum Channels",
+	AUTO_TAGS_TITLE_NONE_DESCRIPTION:
+		"There are currently no auto tags on forum channels for this server, add some by doing `/config auto_tag_on_forum_channel add <channel> <tag>`!",
+
+	AUTO_TAG_ADDED_TITLE: "Auto Tag On Forum Channel Added",
+	AUTO_TAG_ADDED_DESCRIPTION:
+		"The tag {{tag}} has been added to the forum channel <#{{channelId}}> as an auto tag on forum channel!",
+
+	AUTO_TAG_REMOVED_TITLE: "Auto Tag On Forum Channel Removed",
+	AUTO_TAG_REMOVED_DESCRIPTION:
+		"The tag {{tag}} has been removed from the forum channel <#{{channelId}}> as an auto tag on forum channel!",
 };

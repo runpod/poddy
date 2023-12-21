@@ -1,4 +1,4 @@
-import process from "node:process";
+import { env } from "node:process";
 import type { GatewayPresenceUpdateData } from "@discordjs/core";
 import { ActivityType, GatewayIntentBits, PermissionFlagsBits } from "@discordjs/core";
 
@@ -6,7 +6,7 @@ export default {
 	/**
 	 * The prefix the bot will use for text commands, the prefix is different depending on the NODE_ENV.
 	 */
-	prefixes: process.env.NODE_ENV === "production" ? ["c!"] : ["c!!"],
+	prefixes: env.NODE_ENV === "production" ? ["c!"] : ["c!!"],
 	/**
 	 * The name the bot should use across the bot.
 	 */
@@ -20,8 +20,6 @@ export default {
 	 * A list of users that are marked as administrators of the bot, these users have access to eval commands.
 	 */
 	admins: ["619284841187246090"],
-	/* The ID for the test guild  */
-	testGuildId: process.env.DEVELOPMENT_GUILD_ID,
 
 	/**
 	 * The presence that should be displayed when the bot starts running.

@@ -31,3 +31,20 @@ model UserLanguage {
 
     @@map("user_languages")
 }
+
+model AutoThreadChannel {
+    channelId  String  @id
+    guildId    String
+    threadName String?
+
+    @@map("auto_thread_channels")
+}
+
+model AutoTagOnForumChannel {
+    channelId String
+    guildId   String
+    tagId     String
+
+    @@id([channelId, tagId])
+    @@map("auto_tag_on_forum_channels")
+}

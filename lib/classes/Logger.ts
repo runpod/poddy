@@ -1,4 +1,4 @@
-import process from "node:process";
+import { env } from "node:process";
 import { inspect } from "node:util";
 import type { RESTPostAPIWebhookWithTokenJSONBody } from "@discordjs/core";
 import { bgGreenBright, bgMagentaBright, bgRedBright, bgYellowBright, bold } from "colorette";
@@ -100,7 +100,7 @@ export class Logger {
 	public async webhookLog(type: string, options: RESTPostAPIWebhookWithTokenJSONBody) {
 		if (!type) throw new Error("No webhook type has been provided!");
 		else if (!this.webhooks.get(type.toLowerCase())) {
-			const webhookURL = process.env[`${type.toUpperCase()}_HOOK`];
+			const webhookURL = env[`${type.toUpperCase()}_HOOK`];
 			if (!webhookURL) throw new Error(`No webhook URL has been provided for ${type}!`);
 
 			this.webhooks.set(type.toLowerCase(), webhookURL);

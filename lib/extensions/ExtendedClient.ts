@@ -1,12 +1,12 @@
 import { execSync } from "node:child_process";
 import { resolve } from "node:path";
-import process from "node:process";
+import { env } from "node:process";
 import type { APIGuildMember, APIRole, ClientOptions, MappedEvents } from "@discordjs/core";
 import { API, Client } from "@discordjs/core";
 import { PrismaClient } from "@prisma/client";
+import * as metrics from "datadog-metrics";
 import i18next from "i18next";
 import intervalPlural from "i18next-intervalplural-postprocessor";
-import { Gauge } from "prom-client";
 import Config from "../../config/bot.config.js";
 import type ApplicationCommand from "../classes/ApplicationCommand.js";
 import ApplicationCommandHandler from "../classes/ApplicationCommandHandler.js";
@@ -17,7 +17,7 @@ import ButtonHandler from "../classes/ButtonHandler.js";
 import type EventHandler from "../classes/EventHandler.js";
 import LanguageHandler from "../classes/LanguageHandler.js";
 import Logger from "../classes/Logger.js";
-import metrics from "../classes/Metrics.js";
+// import metrics from "../classes/Metrics.js";
 import type Modal from "../classes/Modal.js";
 import ModalHandler from "../classes/ModalHandler.js";
 import type SelectMenu from "../classes/SelectMenu.js";
@@ -83,7 +83,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * All of the different gauges we use for Metrics with Prometheus and Grafana.
 	 */
-	private readonly gauges: Map<keyof typeof metrics, Gauge>;
+	// private readonly gauges: Map<keyof typeof metrics, Gauge>;
 
 	/**
 	 * A map of guild ID to user ID, representing a guild and who owns it.
@@ -177,9 +177,9 @@ export default class ExtendedClient extends Client {
 	public readonly modalHandler: ModalHandler;
 
 	/**
-	 * A map of a guild ID to a set of user IDs, representing a guild and who is in a voice channel in the guild.
+	 * Our data dog client.
 	 */
-	public readonly usersInVoice: Map<string, Set<string>>;
+	public readonly dataDog: typeof metrics;
 
 	public constructor({ rest, gateway }: ClientOptions) {
 		super({ rest, gateway });
@@ -188,9 +188,7 @@ export default class ExtendedClient extends Client {
 
 		this.config = Config;
 		this.config.version =
-			execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + process.env.NODE_ENV === "development"
-				? "dev"
-				: "";
+			execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + env.NODE_ENV === "development" ? "dev" : "";
 
 		this.logger = Logger;
 		this.functions = new Functions(this);
@@ -210,18 +208,6 @@ export default class ExtendedClient extends Client {
 			],
 		});
 
-		this.gauges = new Map<keyof typeof metrics, Gauge>();
-
-		for (const [key, gauge] of Object.entries(metrics)) {
-			this.gauges.set(
-				key as keyof typeof metrics,
-				new Gauge({
-					name: key,
-					...gauge,
-				}),
-			);
-		}
-
 		this.guildOwnersCache = new Map();
 		this.guildRolesCache = new Map();
 		this.guildMeCache = new Map();
@@ -229,7 +215,7 @@ export default class ExtendedClient extends Client {
 		this.approximateUserCount = 0;
 
 		// I forget what this is even used for, but Vlad from https://github.com/vladfrangu/highlight uses it and recommended me to use it a while ago.
-		if (process.env.NODE_ENV === "development") {
+		if (env.NODE_ENV === "development") {
 			this.prisma.$on("query", (event) => {
 				try {
 					const paramsArray = JSON.parse(event.params);
@@ -260,6 +246,16 @@ export default class ExtendedClient extends Client {
 			});
 		}
 
+		// @ts-expect-error
+		this.dataDog = metrics.default;
+
+		this.dataDog.init({
+			flushIntervalSeconds: 0,
+			apiKey: env.DATADOG_API_KEY,
+			prefix: `${this.config.botName.toLowerCase().split(" ").join("_")}.`,
+			defaultTags: [`env:${env.NODE_ENV}`],
+		});
+
 		this.i18n = i18next;
 
 		this.__dirname = resolve();
@@ -286,8 +282,6 @@ export default class ExtendedClient extends Client {
 
 		this.events = new Map();
 		void this.loadEvents();
-
-		this.usersInVoice = new Map();
 	}
 
 	/**
@@ -333,20 +327,15 @@ export default class ExtendedClient extends Client {
 	 * @param value The value to submit to the metric.
 	 * @param labels The labels to submit to the metric.
 	 */
-	public submitMetric<K extends keyof typeof metrics>(
-		key: K,
-		method: "inc" | "set",
-		value: number,
-		labels: Partial<Record<(typeof metrics)[K]["labelNames"][number], string>>,
-	) {
-		const gauge = this.gauges.get(key);
-		if (!gauge) return;
+	// public submitMetric<K extends keyof typeof metrics>(
+	// 	key: K,
+	// 	method: "inc" | "set",
+	// 	value: number,
+	// 	labels: Partial<Record<(typeof metrics)[K]["labelNames"][number], string>>,
+	// ) {
+	// 	const gauge = this.gauges.get(key);
+	// 	if (!gauge) return;
 
-		gauge[method](labels, value);
-	}
-
-	/**
-	 * Check if the initial queue message has been sent yet, if not send a new one.
-	 */
-	// private checkInitialQueueMessage() {}
+	// 	gauge[method](labels, value);
+	// }
 }

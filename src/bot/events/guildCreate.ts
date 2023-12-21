@@ -14,7 +14,7 @@ export default class GuildCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-create
 	 */
 	public override async run({ shardId, data }: WithIntrinsicProps<GatewayGuildCreateDispatchData>) {
-		this.client.submitMetric("guild_count", "inc", 1, { shard: shardId.toString() });
+		// this.client.submitMetric("guild_count", "inc", 1, { shard: shardId.toString() });
 
 		const guildRoles = new Map();
 

@@ -1,4 +1,4 @@
-import process from "node:process";
+import { env } from "node:process";
 import type { APIEmbed, APIRole, GatewayMessageCreateDispatchData, Permissions } from "@discordjs/core";
 import { RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
@@ -249,7 +249,7 @@ export default class TextCommand {
 			let guildMe = this.client.guildMeCache.get(message.guild_id!);
 
 			try {
-				if (!guildMe) guildMe = await this.client.api.guilds.getMember(message.guild_id, process.env.APPLICATION_ID);
+				if (!guildMe) guildMe = await this.client.api.guilds.getMember(message.guild_id, env.APPLICATION_ID);
 
 				if (!this.client.guildOwnersCache.has(message.guild_id)) {
 					const guild = await this.client.api.guilds.get(message.guild_id);
@@ -308,7 +308,7 @@ export default class TextCommand {
 				),
 			);
 
-			if (missingPermissions && this.client.guildOwnersCache.get(message.guild_id) !== process.env.APPLICATION_ID)
+			if (missingPermissions && this.client.guildOwnersCache.get(message.guild_id) !== env.APPLICATION_ID)
 				return {
 					title: language.get("MISSING_PERMISSIONS_BASE_TITLE"),
 					description: language.get(

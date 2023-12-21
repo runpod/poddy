@@ -140,10 +140,10 @@ export default class AutoCompleteHandler {
 		});
 		const language = this.client.languageHandler.getLanguage(userLanguage?.languageId ?? interaction.locale);
 
-		this.client.submitMetric("autocomplete_responses", "inc", 1, {
-			name: name.join("-"),
-			shard: shardId.toString(),
-		});
+		// this.client.submitMetric("autocomplete_responses", "inc", 1, {
+		// 	name: name.join("-"),
+		// 	shard: shardId.toString(),
+		// });
 
 		return this.runAutoComplete(autoComplete, interactionWithArguments, language, shardId);
 	}
