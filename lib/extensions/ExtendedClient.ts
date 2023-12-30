@@ -17,7 +17,6 @@ import ButtonHandler from "../classes/ButtonHandler.js";
 import type EventHandler from "../classes/EventHandler.js";
 import LanguageHandler from "../classes/LanguageHandler.js";
 import Logger from "../classes/Logger.js";
-// import metrics from "../classes/Metrics.js";
 import type Modal from "../classes/Modal.js";
 import ModalHandler from "../classes/ModalHandler.js";
 import type SelectMenu from "../classes/SelectMenu.js";
@@ -181,6 +180,11 @@ export default class ExtendedClient extends Client {
 	 */
 	public readonly dataDog: typeof metrics;
 
+	/**
+	 * A map of guild IDs to a set of user IDs, representing a guild and who is in a voice channel.
+	 */
+	public readonly usersInVoice: Map<string, Set<string>> = new Map();
+
 	public constructor({ rest, gateway }: ClientOptions) {
 		super({ rest, gateway });
 
@@ -318,24 +322,4 @@ export default class ExtendedClient extends Client {
 			this.events.set(event.name, event);
 		}
 	}
-
-	/**
-	 * Submit a metric to prometheus.
-	 *
-	 * @param key The key of the metric to submit to.
-	 * @param method The method to use to submit the metric.
-	 * @param value The value to submit to the metric.
-	 * @param labels The labels to submit to the metric.
-	 */
-	// public submitMetric<K extends keyof typeof metrics>(
-	// 	key: K,
-	// 	method: "inc" | "set",
-	// 	value: number,
-	// 	labels: Partial<Record<(typeof metrics)[K]["labelNames"][number], string>>,
-	// ) {
-	// 	const gauge = this.gauges.get(key);
-	// 	if (!gauge) return;
-
-	// 	gauge[method](labels, value);
-	// }
 }

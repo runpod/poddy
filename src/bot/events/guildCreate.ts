@@ -14,14 +14,14 @@ export default class GuildCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-create
 	 */
 	public override async run({ shardId, data }: WithIntrinsicProps<GatewayGuildCreateDispatchData>) {
-		// this.client.submitMetric("guild_count", "inc", 1, { shard: shardId.toString() });
-
 		const guildRoles = new Map();
 
 		for (const guildRole of data.roles) guildRoles.set(guildRole.id, guildRole);
 
 		this.client.guildRolesCache.set(data.id, guildRoles);
 		if (this.client.guildOwnersCache.get(data.id) === undefined) {
+			this.client.dataDog.increment("guild_count", 1, [`shard:${shardId}`]);
+
 			this.client.guildOwnersCache.set(data.id, data.owner_id);
 			this.client.approximateUserCount += data.member_count;
 

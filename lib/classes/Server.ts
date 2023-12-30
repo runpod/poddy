@@ -2,8 +2,6 @@ import { env, exit } from "node:process";
 import { PrismaClient } from "@prisma/client";
 import type { FastifyInstance } from "fastify";
 import { fastify } from "fastify";
-// import fastifyMetricsPlugin from "fastify-metrics";
-// import { register } from "prom-client";
 import Logger from "./Logger.js";
 
 export default class Server {
@@ -100,14 +98,6 @@ export default class Server {
 	 * Start the server.
 	 */
 	public async start() {
-		// await this.router.register(fastifyMetricsPlugin, {
-		// 	defaultMetrics: {
-		// 		enabled: false,
-		// 		register,
-		// 	},
-		// 	endpoint: null,
-		// });
-
 		this.registerRoutes();
 
 		// eslint-disable-next-line promise/prefer-await-to-callbacks
@@ -128,15 +118,6 @@ export default class Server {
 	 */
 	private registerRoutes() {
 		this.router.get("/ping", (_, response) => response.send("PONG!"));
-
-		// this.router.get("/metrics", async (request, response) => {
-		// 	if (request.headers.authorization?.replace("Bearer ", "") !== process.env.PROMETHEUS_AUTH)
-		// 		return response.status(401).send("Invalid authorization token.");
-
-		// 	const metrics = await register.metrics();
-
-		// 	return response.send(metrics);
-		// });
 
 		this.router.get("/", (_, response) => response.redirect("https://polar.blue"));
 	}

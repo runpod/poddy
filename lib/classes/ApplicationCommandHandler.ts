@@ -417,19 +417,19 @@ export default class ApplicationCommandHandler {
 			if (applicationCommand.cooldown)
 				await applicationCommand.applyCooldown((interaction.member?.user ?? interaction.user!).id);
 
-			// this.client.submitMetric("commands_used", "inc", 1, {
-			// 	command: applicationCommand.name,
-			// 	type: applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context",
-			// 	success: "true",
-			// 	shard: shardId.toString(),
-			// });
+			this.client.dataDog.increment("command_used", 1, [
+				`command:${applicationCommand.name}`,
+				`type:${applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context"}`,
+				`success:true`,
+				`shard:${shardId}`,
+			]);
 		} catch (error) {
-			// this.client.submitMetric("commands_used", "inc", 1, {
-			// 	command: applicationCommand.name,
-			// 	type: applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context",
-			// 	success: "false",
-			// 	shard: shardId.toString(),
-			// });
+			this.client.dataDog.increment("command_used", 1, [
+				`command:${applicationCommand.name}`,
+				`type:${applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context"}`,
+				`success:false`,
+				`shard:${shardId}`,
+			]);
 			this.client.logger.error(error);
 
 			const eventId = await this.client.logger.sentry.captureWithInteraction(error, interaction);

@@ -14,7 +14,21 @@ export default class ThreadCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#thread-create
 	 */
 	public override async run({ data: channel }: WithIntrinsicProps<GatewayThreadCreateDispatchData>) {
+		console.log(channel);
 		if (channel.type !== ChannelType.PublicThread) return;
+
+		if (!channel.applied_tags) {
+			const parentChannel = await this.client.api.channels.get(channel.parent_id!);
+
+			if (parentChannel.type !== ChannelType.GuildForum) return;
+		}
+
+		this.client.dataDog.increment("forum_posts", 1, [
+			`channelId:${channel.parent_id}`,
+			`guildId:${channel.guild_id}`,
+			`userId:${channel.owner_id}`,
+			...channel.applied_tags.map((tag) => `tagId:${tag}`),
+		]);
 
 		const autoTagOnForumChannel = await this.client.prisma.autoTagOnForumChannel.findMany({
 			where: {

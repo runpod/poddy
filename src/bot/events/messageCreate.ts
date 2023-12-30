@@ -16,7 +16,39 @@ export default class MessageCreate extends EventHandler {
 	public override async run({ shardId, data: message }: WithIntrinsicProps<GatewayMessageCreateDispatchData>) {
 		if (message.author.bot) return;
 
+		this.client.dataDog.increment("total_messages_sent", 1, [
+			`guildId:${message.guild_id ?? "@me"}`,
+			`userId:${message.author.id}`,
+			`channelId:${message.channel_id}`,
+		]);
+
 		if (message.guild_id) {
+			if (message.member && new Date(message.member.joined_at).getTime() > Date.now() + 604_800_000) {
+				const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
+					where: {
+						userId_guildId: {
+							userId: message.author.id,
+							guildId: message.guild_id,
+						},
+					},
+				});
+
+				if (!newCommunicator) {
+					await this.client.prisma.newCommunicator.create({
+						data: {
+							userId: message.author.id,
+							guildId: message.guild_id,
+							joinedAt: new Date(message.member.joined_at),
+						},
+					});
+
+					this.client.dataDog.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
+
+					if (new Date(message.member.joined_at).getTime() + 86_400 > Date.now())
+						this.client.dataDog.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
+				}
+			}
+
 			const autoThreadChannel = await this.client.prisma.autoThreadChannel.findUnique({
 				where: { channelId: message.channel_id },
 			});

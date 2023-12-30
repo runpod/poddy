@@ -190,19 +190,19 @@ export default class TextCommandHandler {
 
 			if (textCommand.cooldown) await textCommand.applyCooldown(message.author.id);
 
-			// this.client.submitMetric("commands_used", "inc", 1, {
-			// 	command: textCommand.name,
-			// 	type: "text",
-			// 	success: "true",
-			// 	shard: shardId.toString(),
-			// });
+			this.client.dataDog.increment("command_used", 1, [
+				`command:${textCommand.name}`,
+				`type:text`,
+				`success:true`,
+				`shard:${shardId}`,
+			]);
 		} catch (error) {
-			// this.client.submitMetric("commands_used", "inc", 1, {
-			// 	command: textCommand.name,
-			// 	type: "text",
-			// 	success: "false",
-			// 	shard: shardId.toString(),
-			// });
+			this.client.dataDog.increment("command_used", 1, [
+				`command:${textCommand.name}`,
+				`type:text`,
+				`success:false`,
+				`shard:${shardId}`,
+			]);
 			this.client.logger.error(error);
 
 			const eventId = await this.client.logger.sentry.captureWithMessage(error, message);

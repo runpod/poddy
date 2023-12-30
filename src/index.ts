@@ -29,11 +29,6 @@ await new Server(Number.parseInt(env.FASTIFY_PORT, 10)).start();
 const client = new ExtendedClient({ rest, gateway });
 await client.start();
 
-// Ask Vladdy what happened when I updated, maybe this was only meant for internal use?
-// client.gateway.on(WebSocketShardEvents.HeartbeatComplete, ({ data, shardId }) =>
-// 	client.submitMetric("latency", "set", latency, { shard: shardId.toString() }),
-// );
-
 await gateway.connect().then(async () => {
 	await client.applicationCommandHandler.registerApplicationCommands();
 	Logger.info("All shards have started.");

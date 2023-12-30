@@ -1,6 +1,7 @@
-import { setInterval } from "node:timers";
+import { env } from "node:process";
 import type { GatewayReadyDispatchData, WithIntrinsicProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
+import { schedule } from "node-cron";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -15,7 +16,7 @@ export default class Ready extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#ready
 	 */
 	public override async run({ shardId, data }: WithIntrinsicProps<GatewayReadyDispatchData>) {
-		// this.client.submitMetric("guild_count", "set", data.guilds.length, { shard: shardId.toString() });
+		this.client.dataDog.gauge("guild_count", data.guilds.length, [`shard:${shardId}`]);
 
 		for (const guild of data.guilds) this.client.guildOwnersCache.set(guild.id, "");
 
@@ -23,26 +24,51 @@ export default class Ready extends EventHandler {
 			`Logged in as ${data.user.username}#${data.user.discriminator} [${data.user.id}] on Shard ${shardId} with ${data.guilds.length} guilds.`,
 		);
 
-		await this.client.logger.webhookLog("console", {
+		schedule("59 23 * * *", async () => {
+			const newCommunicators = await this.client.prisma.newCommunicator.findMany({});
+
+			await Promise.all(
+				newCommunicators
+					.filter((newCommunicator) => newCommunicator.joinedAt.getTime() + 604_800_000 < Date.now())
+					.map(async (newCommunicator) =>
+						this.client.prisma.newCommunicator.delete({
+							where: {
+								userId_guildId: {
+									guildId: newCommunicator.guildId,
+									userId: newCommunicator.userId,
+								},
+							},
+						}),
+					),
+			);
+		});
+
+		schedule("* * * * *", () => {
+			this.client.dataDog.gauge("guilds", this.client.guildOwnersCache.size);
+			this.client.dataDog.gauge("approximate_user_count", this.client.approximateUserCount);
+
+			for (const [guildId, usersInVoice] of this.client.usersInVoice.entries())
+				this.client.dataDog.increment("minutes_in_voice", usersInVoice.size, [`guild:${guildId}`]);
+
+			if (env.DATADOG_API_KEY)
+				this.client.dataDog.flush(
+					() => {
+						this.client.logger.debug("Flushed DataDog metrics.");
+					},
+					// eslint-disable-next-line promise/prefer-await-to-callbacks
+					(error) => {
+						this.client.logger.error(error);
+						this.client.logger.sentry.captureException(error);
+					},
+				);
+		});
+
+		return this.client.logger.webhookLog("console", {
 			content: `${this.client.functions.generateTimestamp()} Logged in as ${data.user.username}#${
 				data.user.discriminator
 			} [\`${data.user.id}\`] on Shard ${shardId} with ${data.guilds.length} guilds.`,
 			allowed_mentions: { parse: [] },
 			username: `${this.client.config.botName} | Console Logs`,
 		});
-
-		setInterval(() => {
-			this.client.dataDog.gauge("guilds", this.client.guildOwnersCache.size);
-			this.client.dataDog.gauge("approximateUserCount", this.client.approximateUserCount);
-
-			this.client.dataDog.flush(
-				() => {},
-				// eslint-disable-next-line promise/prefer-await-to-callbacks
-				(error) => {
-					this.client.logger.error(error);
-					this.client.logger.sentry.captureException(error);
-				},
-			);
-		}, 10_000);
 	}
 }
