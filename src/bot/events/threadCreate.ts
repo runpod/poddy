@@ -23,23 +23,34 @@ export default class ThreadCreate extends EventHandler {
 			if (parentChannel.type !== ChannelType.GuildForum) return;
 		}
 
-		this.client.dataDog.increment("forum_posts", 1, [
-			`channelId:${channel.parent_id}`,
-			`guildId:${channel.guild_id}`,
-			`userId:${channel.owner_id}`,
-			...channel.applied_tags.map((tag) => `tagId:${tag}`),
-		]);
-
 		const autoTagOnForumChannel = await this.client.prisma.autoTagOnForumChannel.findMany({
 			where: {
 				channelId: channel.parent_id!,
 			},
 		});
 
-		if (!autoTagOnForumChannel.length) return;
+		if (!autoTagOnForumChannel.length) {
+			this.client.dataDog.increment("forum_posts", 1, [
+				`channelId:${channel.parent_id}`,
+				`guildId:${channel.guild_id}`,
+				`userId:${channel.owner_id}`,
+				...(channel.applied_tags ?? []).map((tag) => `tagId:${tag}`),
+			]);
+
+			return;
+		}
+
+		const tagIds = (channel.applied_tags ?? []).concat(autoTagOnForumChannel.map(({ tagId }) => tagId));
+
+		this.client.dataDog.increment("forum_posts", 1, [
+			`channelId:${channel.parent_id}`,
+			`guildId:${channel.guild_id}`,
+			`userId:${channel.owner_id}`,
+			...tagIds.map((tag) => `tagId:${tag}`),
+		]);
 
 		return this.client.api.channels.edit(channel.id, {
-			applied_tags: channel.applied_tags.concat(autoTagOnForumChannel.map(({ tagId }) => tagId)),
+			applied_tags: tagIds.concat(autoTagOnForumChannel.map(({ tagId }) => tagId)),
 		});
 	}
 }
