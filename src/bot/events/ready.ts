@@ -53,7 +53,7 @@ export default class Ready extends EventHandler {
 			if (env.DATADOG_API_KEY)
 				this.client.dataDog.flush(
 					() => {
-						this.client.logger.debug("Flushed DataDog metrics.");
+						if (env.NODE_ENV === "development") this.client.logger.debug("Flushed DataDog metrics.");
 					},
 					// eslint-disable-next-line promise/prefer-await-to-callbacks
 					(error) => {
