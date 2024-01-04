@@ -40,7 +40,7 @@ export default class ThreadCreate extends EventHandler {
 			return;
 		}
 
-		const tagIds = (channel.applied_tags ?? []).concat(autoTagOnForumChannel.map(({ tagId }) => tagId));
+		const tagIds = [...new Set((channel.applied_tags ?? []).concat(autoTagOnForumChannel.map(({ tagId }) => tagId)))];
 
 		this.client.dataDog.increment("forum_posts", 1, [
 			`channelId:${channel.parent_id}`,
@@ -50,7 +50,7 @@ export default class ThreadCreate extends EventHandler {
 		]);
 
 		return this.client.api.channels.edit(channel.id, {
-			applied_tags: tagIds.concat(autoTagOnForumChannel.map(({ tagId }) => tagId)),
+			applied_tags: tagIds,
 		});
 	}
 }
