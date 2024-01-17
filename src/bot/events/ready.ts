@@ -63,6 +63,13 @@ export default class Ready extends EventHandler {
 				);
 		});
 
+		const helpDesks = await this.client.prisma.helpDesk.findMany({
+			where: {},
+			select: { id: true },
+		});
+
+		await Promise.all(helpDesks.map(async (helpDesk) => this.client.functions.updateHelpDesk(helpDesk.id)));
+
 		return this.client.logger.webhookLog("console", {
 			content: `${this.client.functions.generateTimestamp()} Logged in as ${data.user.username}#${
 				data.user.discriminator

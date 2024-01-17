@@ -1,5 +1,6 @@
-import type { GatewayMessageCreateDispatchData, WithIntrinsicProps } from "@discordjs/core";
-import { GatewayDispatchEvents } from "@discordjs/core";
+import type { APIChannel, GatewayMessageCreateDispatchData, WithIntrinsicProps } from "@discordjs/core";
+import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
+import { DiscordAPIError } from "@discordjs/rest";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -16,10 +17,22 @@ export default class MessageCreate extends EventHandler {
 	public override async run({ shardId, data: message }: WithIntrinsicProps<GatewayMessageCreateDispatchData>) {
 		if (message.author.bot) return;
 
+		let channel: APIChannel | null = null;
+
+		try {
+			channel = await this.client.api.channels.get(message.channel_id);
+		} catch (error) {
+			if (error instanceof DiscordAPIError) {
+				if (error.code === RESTJSONErrorCodes.UnknownChannel)
+					this.client.logger.error(`Unable to fetch channel ${message.channel_id}.`);
+			} else throw error;
+		}
+
 		this.client.dataDog.increment("total_messages_sent", 1, [
 			`guildId:${message.guild_id ?? "@me"}`,
 			`userId:${message.author.id}`,
 			`channelId:${message.channel_id}`,
+			`channelName:${channel?.name}`,
 		]);
 
 		if (message.guild_id) {

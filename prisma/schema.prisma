@@ -58,3 +58,47 @@ model NewCommunicator {
     @@id([userId, guildId])
     @@map("new_communicators")
 }
+
+model Embed {
+    id      String @id @default(cuid())
+    name    String
+    data    String
+    guildId String
+
+    helpDeskOptions HelpDeskOption[]
+
+    @@unique([name, guildId])
+    @@map("embeds")
+}
+
+model HelpDesk {
+    id         String  @id @default(cuid())
+    guildId    String
+    channelId  String?
+    name       String
+    embedColor String?
+    messageId  String?
+
+    helpDeskOptions HelpDeskOption[]
+
+    @@unique([guildId, name])
+    @@map("help_desks")
+}
+
+model HelpDeskOption {
+    id            String   @id @default(cuid())
+    name          String
+    responseId    String
+    description   String?
+    helpDeskId    String
+    emojiName     String?
+    emojiId       String?
+    emojiAnimated Boolean?
+    position      Int
+
+    helpDesk HelpDesk @relation(fields: [helpDeskId], references: [id], onDelete: Cascade)
+    response Embed    @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+    @@unique([helpDeskId, name])
+    @@map("help_desk_options")
+}

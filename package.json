@@ -24,8 +24,7 @@
 		"@prisma/client": "^5.3.1",
 		"@sapphire/bitfield": "^1.0.0",
 		"@sapphire/snowflake": "^3.4.2",
-		"@sentry/node": "^7.48.0",
-		"@sentry/tracing": "^7.48.0",
+		"@sentry/node": "7.46.0",
 		"@types/node-cron": "^3.0.11",
 		"bufferutil": "^4.0.7",
 		"colorette": "^2.0.19",
@@ -40,7 +39,6 @@
 		"zlib-sync": "^0.1.8"
 	},
 	"devDependencies": {
-		"@sentry/types": "^7.48.0",
 		"@types/got": "^9.6.12",
 		"@types/node": "18.18.0",
 		"@typescript-eslint/eslint-plugin": "^5.58.0",

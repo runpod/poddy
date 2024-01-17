@@ -1,5 +1,9 @@
+/* eslint-disable n/no-sync */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync } from "node:fs";
+import type { APIMessage, APISelectMenuOption, RESTPostAPIChannelMessageJSONBody } from "@discordjs/core";
+import { ComponentType, RESTJSONErrorCodes } from "@discordjs/core";
+import { DiscordAPIError } from "@discordjs/rest";
 import Config from "../../config/bot.config.js";
 import type Language from "../classes/Language.js";
 import Logger from "../classes/Logger.js";
@@ -268,5 +272,211 @@ export default class Functions {
 	 */
 	public hash(string: string): string {
 		return createHash("sha256").update(string).digest("hex");
+	}
+
+	/**
+	 * Update a help desk message.
+	 *
+	 * @param helpDeskId The ID of the help desk to update.
+	 */
+	public async updateHelpDesk(helpDeskId: string) {
+		const helpDesk = await this.client.prisma.helpDesk.findUnique({
+			where: { id: helpDeskId },
+			include: { helpDeskOptions: { orderBy: { position: "asc" } } },
+		});
+
+		if (!helpDesk?.channelId) return;
+
+		let message: APIMessage | undefined;
+
+		const content = {
+			embeds: [
+				{
+					title: helpDesk.name,
+					description: helpDesk.helpDeskOptions
+						.map(
+							(helpDeskOption) =>
+								`${
+									helpDeskOption.emojiName
+										? helpDeskOption.emojiId
+											? `<${helpDeskOption.emojiAnimated ? "a" : ""}:${helpDeskOption.emojiName}:${
+													helpDeskOption.emojiId
+											  }>: `
+											: `${helpDeskOption.emojiName}: `
+										: ""
+								}${helpDeskOption.name}`,
+						)
+						.join("\n"),
+					color: helpDesk.embedColor ? Number.parseInt(helpDesk.embedColor, 16) : this.client.config.colors.primary,
+				},
+			],
+			components: [
+				{
+					type: ComponentType.ActionRow,
+					components: [
+						{
+							custom_id: `helpDesk.${helpDesk.id}`,
+							type: ComponentType.StringSelect,
+							placeholder: "Select an option...",
+							options: helpDesk.helpDeskOptions.map((helpDeskOption) => {
+								const option = {
+									label: helpDeskOption.name,
+									value: helpDeskOption.id,
+								} as APISelectMenuOption;
+
+								if (helpDeskOption.description) option.description = helpDeskOption.description;
+								if (helpDeskOption.emojiName)
+									option.emoji = { name: helpDeskOption.emojiName, animated: Boolean(option.emoji?.animated) };
+								if (helpDeskOption.emojiId) option.emoji!.id = helpDeskOption.emojiId;
+
+								return option;
+							}),
+						},
+					],
+				},
+			],
+		} as RESTPostAPIChannelMessageJSONBody;
+
+		if (helpDesk.messageId) {
+			try {
+				message = await this.client.api.channels.getMessage(helpDesk.channelId, helpDesk.messageId);
+			} catch (error) {
+				if (error instanceof DiscordAPIError)
+					if (error.code === RESTJSONErrorCodes.UnknownMessage) {
+						this.client.logger.error(
+							`Unable to find help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+						);
+
+						await this.client.prisma.helpDesk.update({
+							where: { id: helpDesk.id },
+							data: { messageId: null },
+						});
+
+						return;
+					} else if (error.code === RESTJSONErrorCodes.MissingAccess) {
+						this.client.logger.error(
+							`Unable to access help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+						);
+
+						return;
+					}
+
+				throw error;
+			}
+
+			if (!helpDesk.helpDeskOptions.length) {
+				try {
+					await this.client.api.channels.deleteMessage(helpDesk.channelId, helpDesk.messageId);
+				} catch (error) {
+					if (error instanceof DiscordAPIError)
+						if (error.code === RESTJSONErrorCodes.UnknownMessage) {
+							this.client.logger.error(
+								`Unable to find help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+							);
+
+							await this.client.prisma.helpDesk.update({
+								where: { id: helpDesk.id },
+								data: { messageId: null },
+							});
+
+							return;
+						} else if (error.code === RESTJSONErrorCodes.MissingAccess) {
+							this.client.logger.error(
+								`Unable to access help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+							);
+
+							return;
+						} else if (error.code === RESTJSONErrorCodes.MissingPermissions) {
+							this.client.logger.error(
+								`Unable to delete help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId} due to missing permissions.`,
+							);
+
+							return;
+						}
+
+					throw error;
+				}
+
+				this.client.logger.info(
+					`Deleted help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId} because it had no options.`,
+				);
+
+				return;
+			}
+
+			try {
+				await this.client.api.channels.editMessage(helpDesk.channelId, helpDesk.messageId, content);
+			} catch (error) {
+				if (error instanceof DiscordAPIError)
+					if (error.code === RESTJSONErrorCodes.UnknownMessage) {
+						this.client.logger.error(
+							`Unable to find help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+						);
+
+						await this.client.prisma.helpDesk.update({
+							where: { id: helpDesk.id },
+							data: { messageId: null },
+						});
+
+						return;
+					} else if (error.code === RESTJSONErrorCodes.MissingAccess) {
+						this.client.logger.error(
+							`Unable to access help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+						);
+
+						return;
+					} else if (error.code === RESTJSONErrorCodes.MissingPermissions) {
+						this.client.logger.error(
+							`Unable to delete help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId} due to missing permissions.`,
+						);
+
+						return;
+					}
+
+				throw error;
+			}
+
+			this.client.logger.info(
+				`Updated help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+			);
+
+			return;
+		}
+
+		if (!helpDesk.helpDeskOptions.length) {
+			this.client.logger.info(
+				`Did not create help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId} because it had no options.`,
+			);
+
+			return;
+		}
+
+		try {
+			message = await this.client.api.channels.createMessage(helpDesk.channelId, content);
+		} catch (error) {
+			if (error instanceof DiscordAPIError)
+				if (error.code === RESTJSONErrorCodes.MissingAccess) {
+					this.client.logger.error(
+						`Unable to access help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`,
+					);
+
+					return;
+				} else if (error.code === RESTJSONErrorCodes.MissingPermissions) {
+					this.client.logger.error(
+						`Unable to create help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId} due to missing permissions.`,
+					);
+
+					return;
+				}
+
+			throw error;
+		}
+
+		await this.client.prisma.helpDesk.update({
+			where: { id: helpDesk.id },
+			data: { messageId: message!.id },
+		});
+
+		this.client.logger.info(`Created help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`);
 	}
 }

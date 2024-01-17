@@ -95,13 +95,13 @@ export default class Ping extends ApplicationCommand {
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
+									name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
 									description: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_DESCRIPTION",
 								}),
 								options: [
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME",
+											name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME",
 											description:
 												"CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION",
 										}),
@@ -124,13 +124,13 @@ export default class Ping extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
+									name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
 									description: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_DESCRIPTION",
 								}),
 								options: [
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME",
+											name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME",
 											description:
 												"CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION",
 										}),
@@ -153,7 +153,7 @@ export default class Ping extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_NAME",
+									name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_NAME",
 									description: "CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.Subcommand,
@@ -298,7 +298,7 @@ export default class Ping extends ApplicationCommand {
 			if (
 				interaction.arguments.subCommand!.name ===
 				this.client.languageHandler.defaultLanguage!.get(
-					"CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
+					"CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
 				)
 			) {
 				const channelId =
@@ -347,7 +347,7 @@ export default class Ping extends ApplicationCommand {
 			} else if (
 				interaction.arguments.subCommand!.name ===
 				this.client.languageHandler.defaultLanguage!.get(
-					"CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
+					"CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
 				)
 			) {
 				const channelId =

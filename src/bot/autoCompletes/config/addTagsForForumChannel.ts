@@ -38,7 +38,7 @@ export default class AddTagsForForumChannel extends AutoComplete {
 		const channelId =
 			interaction.arguments.channels?.[
 				this.client.languageHandler.defaultLanguage!.get(
-					"CONFIG_AUTO_TAG_ON_FORUM_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME",
+					"CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_CHANNEL_OPTION_NAME",
 				)
 				// @ts-expect-error - This won't error.
 			]?.value;
