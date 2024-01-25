@@ -14,6 +14,9 @@ dependencies:
   '@discordjs/ws':
     specifier: ^1.0.2
     version: 1.0.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+  '@hono/node-server':
+    specifier: ^1.5.0
+    version: 1.5.0
   '@prisma/client':
     specifier: ^5.3.1
     version: 5.8.0(prisma@5.8.0)
@@ -47,6 +50,9 @@ dependencies:
   fastify:
     specifier: ^4.15.0
     version: 4.25.2
+  hono:
+    specifier: ^3.12.6
+    version: 3.12.6
   i18next:
     specifier: ^22.4.14
     version: 22.5.1
@@ -460,6 +466,11 @@ packages:
     resolution: {integrity: sha512-aZAXGYo6m22Fk1zZzEUKBvut/CIIQe/BapEORnxiD5Qr0kPHqqI69NtEMCme74h+at72sPhbkb4ZrLd1W3KRLA==}
     dependencies:
       fast-json-stringify: 5.10.0
+    dev: false
+
+  /@hono/node-server@1.5.0:
+    resolution: {integrity: sha512-xMZW2tuHLdUtx5B28E5bsLazJe9NVU2z4QW/Xefgvg41U84r4L1mTxNutTMNwt6BrRujy7hs1aKyUpIuSqcXtQ==}
+    engines: {node: '>=18.14.1'}
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
@@ -3180,6 +3191,11 @@ packages:
     dependencies:
       function-bind: 1.1.2
     dev: true
+
+  /hono@3.12.6:
+    resolution: {integrity: sha512-nnLMJbBA8k+tW8XD1Xt0BfNmJswppYF2pSOVo5U3DdU72SPYUjFkPg7/Q9KfkNcsrXzxFdJQ00JYjPGancmOOA==}
+    engines: {node: '>=16.0.0'}
+    dev: false
 
   /hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}

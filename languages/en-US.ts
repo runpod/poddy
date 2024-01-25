@@ -432,4 +432,68 @@ export default {
 	HELP_DESK_OPTION_RENAMED_TITLE: "Help Desk Option Renamed",
 	HELP_DESK_OPTION_RENAMED_DESCRIPTION:
 		"Option **{{oldOptionName}}** `[{{optionId}}]` has been renamed to **{{newOptionName}}** in help desk **{{helpDeskName}}** `[{{helpDeskId}}]`!",
+
+	SUBSCRIPTIONS_COMMAND_NAME: "subscriptions",
+	SUBSCRIPTIONS_COMMAND_DESCRIPTION: "Manage Poddy's subscription system.",
+
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_NAME: "group",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_DESCRIPTION: "Manage Poddy's subscription groups.",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_DESCRIPTION: "Add a subscription group.",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_ID_OPTION_NAME: "id",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_ID_OPTION_DESCRIPTION:
+		"The ID of the subscription group (This is the messageGroupId from our Lambda).",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_NAME_OPTION_DESCRIPTION:
+		"The name of the subscription group you want to add.",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_CATEGORY_OPTION_NAME: "category",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_CATEGORY_OPTION_DESCRIPTION:
+		"The category of the subscription group you want to add.",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_DESCRIPTION:
+		"The description of the subscription group you want to add.",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_REMOVE_SUB_COMMAND_DESCRIPTION: "Remove a subscription group.",
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_REMOVE_SUB_COMMAND_ID_OPTION_DESCRIPTION:
+		"The name of the subscription group you want to remove.",
+
+	SUBSCRIPTIONS_COMMAND_GROUP_SUB_COMMAND_LIST_SUB_COMMAND_DESCRIPTION: "List all subscription groups.",
+
+	SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_NAME: "subscribe",
+	SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_DESCRIPTION: "Subscribe to a subscription group.",
+	SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_GROUP_OPTION_DESCRIPTION: "The subscription group to subscribe to.",
+	SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION:
+		"The channel to send the subscription message in.",
+	SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_USER_OPTION_NAME: "user",
+	SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_USER_OPTION_DESCRIPTION:
+		"The user to subscribe. If not provided this will default to you.",
+
+	SUBSCRIPTIONS_COMMAND_UNSUBSCRIBE_SUB_COMMAND_NAME: "unsubscribe",
+	SUBSCRIPTIONS_COMMAND_UNSUBSCRIBE_SUB_COMMAND_DESCRIPTION: "Unsubscribe from a subscription group.",
+	SUBSCRIPTIONS_COMMAND_UNSUBSCRIBE_SUB_COMMAND_USER_OPTION_DESCRIPTION: "The user to unsubscribe.",
+	SUBSCRIPTIONS_COMMAND_UNSUBSCRIBE_SUB_COMMAND_GROUP_OPTION_DESCRIPTION: "The subscription group to unsubscribe from.",
+
+	SUBSCRIPTION_GROUP_ADDED_TITLE: "Subscription Group Added",
+	SUBSCRIPTION_GROUP_ADDED_DESCRIPTION:
+		"The subscription group **{{subscriptionGroupName}}** `[{{subscriptionGroupId}}]` has been added!",
+
+	SUBSCRIPTION_GROUP_NOT_FOUND_TITLE: "Subscription Group Not Found",
+	SUBSCRIPTION_GROUP_NOT_FOUND_DESCRIPTION:
+		"A subscription group with an ID `{{subscriptionGroupId}}` was not found, please choose one of the provided options!",
+
+	SUBSCRIPTION_GROUP_REMOVED_TITLE: "Subscription Group Removed",
+	SUBSCRIPTION_GROUP_REMOVED_DESCRIPTION:
+		"The subscription group **{{subscriptionGroupName}}** `[{{subscriptionGroupId}}]` has been removed!",
+
+	SUBSCRIPTION_GROUP_LIST_TITLE: "Subscription Groups",
+	SUBSCRIPTION_GROUP_LIST_NO_SUBSCRIPTION_GROUPS_DESCRIPTION:
+		"There are currently no subscription groups for this server, add some by doing `/subscriptions group add`!",
+
+	SUBSCRIBED_TITLE: "Subscribed",
+	SUBSCRIBED_DESCRIPTION:
+		"{{userMention}} has been subscribed to {{subscriptionGroup}}, they will get their notifications in {{channelMention}}!",
+
+	SUBSCRIPTION_NOT_FOUND_TITLE: "Subscription Not Found",
+	SUBSCRIPTION_NOT_FOUND_DESCRIPTION:
+		"I could not find a subscription for {{userMention}} with the properties you provided.",
+
+	UNSUBSCRIBED_TITLE: "Unsubscribed",
+	UNSUBSCRIBED_DESCRIPTION:
+		"{{userMention}} has been unsubscribed from {{subscriptionGroup}} and will no longer get their notifications in {{channelMention}}!",
 };

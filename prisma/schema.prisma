@@ -102,3 +102,26 @@ model HelpDeskOption {
     @@unique([helpDeskId, name])
     @@map("help_desk_options")
 }
+
+model SubscriptionGroup {
+    id          String  @id
+    name        String  @unique
+    category    String?
+    description String?
+
+    subscribedUsers SubscribedUser[]
+
+    @@map("subscription_groups")
+}
+
+model SubscribedUser {
+    id        String @id @default(cuid())
+    userId    String
+    groupId   String
+    channelId String
+
+    group SubscriptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, groupId])
+    @@map("subscribed_users")
+}
