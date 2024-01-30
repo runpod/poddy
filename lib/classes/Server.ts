@@ -103,7 +103,7 @@ export default class Server {
 	private registerRoutes() {
 		this.router.get("/ping", (context) => context.text("PONG!"));
 
-		this.router.get("/", (context) => context.redirect("https://polar.blue"));
+		this.router.get("/", (context) => context.redirect("https://discord.gg/runpod"));
 
 		this.router.post("/lambda_push", async (context) => {
 			if (context.req.header("authorization") !== env.LAMBDA_PUSH_SECRET) {
