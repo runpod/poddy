@@ -35,6 +35,14 @@ export default class MessageCreate extends EventHandler {
 			`channelName:${channel?.name}`,
 		]);
 
+		if (message.member && Date.now() - new Date(message.member.joined_at).getTime() < 604_800_000)
+			this.client.dataDog.increment("total_messages_sent.new_user", 1, [
+				`guildId:${message.guild_id ?? "@me"}`,
+				`userId:${message.author.id}`,
+				`channelId:${message.channel_id}`,
+				`channelName:${channel?.name}`,
+			]);
+
 		if (message.guild_id) {
 			if (message.member && new Date(message.member.joined_at).getTime() > Date.now() + 604_800_000) {
 				const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
