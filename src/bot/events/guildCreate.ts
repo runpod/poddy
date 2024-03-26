@@ -20,10 +20,6 @@ export default class GuildCreate extends EventHandler {
 
 		this.client.guildRolesCache.set(guild.id, guildRoles);
 		this.client.approximateUserCount += guild.member_count;
-		// eslint-disable-next-line no-warning-comments
-		// TODO: We want to track the member count for only the Runpod Discord, this will update the
-		// user count incorrectly every single time a guild goes available and unavailable, rather we
-		// should use guild_members and specify the guildId we want to keep track of.
 
 		this.client.dataDog.gauge("guild_members", guild.member_count, [`guildId:${guild.id}`]);
 

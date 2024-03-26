@@ -125,3 +125,39 @@ model SubscribedUser {
     @@unique([userId, groupId])
     @@map("subscribed_users")
 }
+
+model Event {
+    id          String  @id @default(cuid())
+    guildId     String
+    channelId   String
+    name        String
+    description String?
+    active      Boolean @default(true)
+
+    submissions Submission[]
+
+    @@unique([name, guildId])
+}
+
+model Submission {
+    userId    String
+    eventId   String
+    messageId String @unique
+
+    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    upvotes SubmissionUpvote[]
+
+    @@id([userId, eventId])
+}
+
+model SubmissionUpvote {
+    userId       String
+    submissionId String
+    eventId      String
+
+    submission Submission @relation(fields: [submissionId], references: [messageId], onDelete: Cascade)
+
+    @@id([userId, submissionId])
+    @@unique([userId, eventId])
+}
