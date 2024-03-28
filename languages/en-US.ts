@@ -655,4 +655,6 @@ export default {
 
 	ACCOUNT_TOO_YOUNG_TITLE: "Account Too Young",
 	ACCOUNT_TOO_YOUNG_DESCRIPTION: "Your account is too young to redeem a code, please try again later.",
+
+	SUBMISSION_MESSAGE: "{{user}}'s submission.",
 };

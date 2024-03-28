@@ -480,4 +480,5 @@ export interface LanguageValues {
 	};
 	ACCOUNT_TOO_YOUNG_TITLE: {};
 	ACCOUNT_TOO_YOUNG_DESCRIPTION: {};
+	SUBMISSION_MESSAGE: { user: any };
 }

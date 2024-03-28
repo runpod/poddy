@@ -114,11 +114,12 @@ export default class Submit extends ApplicationCommand {
 				allowed_mentions: { parse: [], replied_user: true },
 			});
 
-		const response = await fetch(
+		const attachment =
 			interaction.arguments.attachments![
 				this.client.languageHandler.defaultLanguage!.get("SUBMIT_COMMAND_IMAGE_OPTION_NAME")
-			]!.url,
-		);
+			]!;
+
+		const response = await fetch(attachment.url);
 
 		if (!response.ok)
 			return this.client.api.interactions.reply(interaction.id, interaction.token, {
@@ -133,23 +134,37 @@ export default class Submit extends ApplicationCommand {
 			});
 
 		const buffer = Buffer.from(await response.arrayBuffer());
-		const extension = response.url.split("?").shift()?.split(".").pop();
+		const extension = attachment.filename.split(".").pop()!;
 
 		const user = interaction.member?.user ?? interaction.user!;
 
 		const message = await this.client.api.channels.createMessage(event.channelId, {
-			embeds: [
+			embeds: attachment.content_type?.includes("video")
+				? []
+				: [
+						{
+							author: {
+								name: user.global_name ?? user.username,
+								icon_url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${
+									user.avatar?.startsWith("a_") ? "gif" : "png"
+								}?size=2048`,
+							},
+							image: {
+								url: `attachment://submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
+							},
+							color: this.client.config.colors.primary,
+						},
+				  ],
+			content: attachment.content_type?.includes("video")
+				? language.get("SUBMISSION_MESSAGE", {
+						user: `<@${user.id}>`,
+				  })
+				: undefined,
+			attachments: [
 				{
-					author: {
-						name: user.global_name ?? user.username,
-						icon_url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${
-							user.avatar?.startsWith("a_") ? "gif" : "png"
-						}?size=2048`,
-					},
-					image: {
-						url: `attachment://submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
-					},
-					color: this.client.config.colors.primary,
+					id: attachment.id,
+					filename: `submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
+					description: "test",
 				},
 			],
 			components: [
@@ -172,6 +187,7 @@ export default class Submit extends ApplicationCommand {
 				{
 					data: buffer,
 					name: `submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
+					key: `files[${attachment.id}]`,
 				},
 			],
 		});
