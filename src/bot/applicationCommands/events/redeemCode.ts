@@ -5,6 +5,7 @@ import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
 import type Language from "../../../../lib/classes/Language.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 export default class RedeemCode extends ApplicationCommand {
 	/**
@@ -100,7 +101,7 @@ export default class RedeemCode extends ApplicationCommand {
 
 		const alreadyGenerated = await this.client.prisma.generatedCode.findFirst({
 			where: {
-				eventId: id,
+				eventId: event.id,
 				OR: [
 					{
 						userId: (interaction.member?.user ?? interaction.user!).id,
@@ -112,8 +113,8 @@ export default class RedeemCode extends ApplicationCommand {
 			},
 		});
 
-		if (alreadyGenerated)
-			return this.client.api.interactions.reply(interaction.id, interaction.token, {
+		if (alreadyGenerated) {
+			await this.client.api.interactions.reply(interaction.id, interaction.token, {
 				embeds: [
 					{
 						title: language.get("REDEEMED_CODE_TITLE"),
@@ -128,6 +129,9 @@ export default class RedeemCode extends ApplicationCommand {
 				flags: MessageFlags.Ephemeral,
 				allowed_mentions: { parse: [], replied_user: true },
 			});
+
+			return;
+		}
 
 		const userCreationEpoch = Number(
 			(BigInt((interaction.member?.user ?? interaction.user!).id) >> 22n) + 1_420_070_400_000n,
@@ -224,7 +228,7 @@ export default class RedeemCode extends ApplicationCommand {
 						code: generatedCodeData.createCode.id,
 						runpodEmail: email,
 						userId: (interaction.member?.user ?? interaction.user!).id,
-						eventId: id,
+						eventId: event.id,
 					},
 				}),
 				this.client.api.interactions.reply(interaction.id, interaction.token, {
