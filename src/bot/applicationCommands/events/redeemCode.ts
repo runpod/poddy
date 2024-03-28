@@ -219,7 +219,7 @@ export default class RedeemCode extends ApplicationCommand {
 							this.client.api.channels.createMessage(event.codeLogChannelId, {
 								content: language.get("CODE_LOG_MESSAGE", {
 									code: generatedCodeData.createCode.id,
-									codeAmount: `${event.codeAmount}`,
+									codeAmount: `$${event.codeAmount}`,
 									email,
 									eventId: event.id,
 									eventName: event.name,
