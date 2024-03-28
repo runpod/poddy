@@ -1,5 +1,11 @@
 import type { APIApplicationCommandInteraction } from "@discordjs/core";
-import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType, MessageFlags } from "@discordjs/core";
+import {
+	ApplicationCommandOptionType,
+	ApplicationCommandType,
+	ChannelType,
+	MessageFlags,
+	PermissionFlagsBits,
+} from "@discordjs/core";
 import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
 import type Language from "../../../../lib/classes/Language.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
@@ -272,6 +278,7 @@ export default class Events extends ApplicationCommand {
 				],
 				type: ApplicationCommandType.ChatInput,
 				dm_permission: false,
+				default_member_permissions: PermissionFlagsBits.ManageGuild.toString(),
 			},
 		});
 	}
