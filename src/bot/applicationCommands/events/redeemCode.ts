@@ -64,7 +64,19 @@ export default class RedeemCode extends ApplicationCommand {
 				this.client.languageHandler.defaultLanguage!.get("REDEEM_CODE_COMMAND_EVENT_OPTION_NAME")
 			]!.value;
 
-		const event = await this.client.prisma.event.findUnique({ where: { id, codeAmount: { not: null } } });
+		const event = await this.client.prisma.event.findFirst({
+			where: {
+				codeAmount: { not: null },
+				OR: [
+					{
+						id,
+					},
+					{
+						name: { equals: id, mode: "insensitive" },
+					},
+				],
+			},
+		});
 
 		if (!event)
 			return this.client.api.interactions.reply(interaction.id, interaction.token, {
