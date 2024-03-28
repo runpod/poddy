@@ -12,6 +12,7 @@ declare global {
 			GUILD_HOOK: string;
 			LAMBDA_PUSH_SECRET: string;
 			NODE_ENV: "development" | "production";
+			RUNPOD_API_KEY: string;
 			SENTRY_DSN: string;
 		}
 	}

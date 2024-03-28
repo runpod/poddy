@@ -519,6 +519,7 @@ export default {
 	EVENTS_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION_OPTION_NAME: "description",
 	EVENTS_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION_OPTION_DESCRIPTION: "The description of the event you want to create.",
 
+	// TODO: When an event is deleted, send all credit codes that haven't been redeemed and delete them from the DB.
 	EVENTS_COMMAND_DELETE_SUB_COMMAND_NAME: "delete",
 	EVENTS_COMMAND_DELETE_SUB_COMMAND_DESCRIPTION: "Delete an event.",
 	EVENTS_COMMAND_DELETE_SUB_COMMAND_EVENT_OPTION_NAME: "event",
@@ -561,6 +562,32 @@ export default {
 	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_STATUS_SUB_COMMAND_STATUS_OPTION_CHOICES_ACTIVE: "Active",
 	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_STATUS_SUB_COMMAND_STATUS_OPTION_CHOICES_INACTIVE: "Inactive",
 
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_NAME: "codes_log_channel",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_DESCRIPTION:
+		"Edit the codes log channel of an event.",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_EVENT_OPTION_NAME: "event",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_EVENT_OPTION_DESCRIPTION:
+		"The event you want to edit.",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_CHANNEL_OPTION_NAME: "channel",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION:
+		"The new codes log channel of the event. Leave blank to remove the codes log channel.",
+
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_NAME: "code_amount",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_DESCRIPTION:
+		"Edit the amount each code for this event should be worth.",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_EVENT_OPTION_NAME: "event",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_EVENT_OPTION_DESCRIPTION: "The event you want to edit.",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_NAME: "amount",
+	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_DESCRIPTION:
+		"The new amount each code for this event should be worth. Leave blank to remove the code amount.",
+
+	REDEEM_CODE_COMMAND_NAME: "redeem_code",
+	REDEEM_CODE_COMMAND_DESCRIPTION: "Redeem a code from an event.",
+	REDEEM_CODE_COMMAND_EVENT_OPTION_NAME: "event",
+	REDEEM_CODE_COMMAND_EVENT_OPTION_DESCRIPTION: "The event you want to redeem the code from.",
+	REDEEM_CODE_COMMAND_RUNPOD_EMAIL_OPTION_NAME: "runpod_email",
+	REDEEM_CODE_COMMAND_RUNPOD_EMAIL_OPTION_DESCRIPTION: "The RunPod email to redeem the code with.",
+
 	EVENT_CREATED_TITLE: "Event Created",
 	EVENT_CREATED_DESCRIPTION: "Event **{{eventName}}** `[{{eventId}}]` has been created!",
 
@@ -590,6 +617,18 @@ export default {
 	EDITED_EVENT_STATUS_DESCRIPTION:
 		"The status of the event **{{eventName}}** `[{{eventId}}]` has been edited to {{newStatus}}!",
 
+	EDITED_EVENT_CODES_LOG_CHANNEL_TITLE: "Event Codes Log Channel Edited",
+	EDITED_EVENT_CODES_LOG_CHANNEL_DESCRIPTION:
+		"The codes log channel of the event **{{eventName}}** `[{{eventId}}]` has been edited to {{newChannel}}!",
+	EDITED_EVENT_CODES_LOG_CHANNEL_RESET_DESCRIPTION:
+		"The codes log channel of the event **{{eventName}}** `[{{eventId}}]` has been reset!",
+
+	EDITED_EVENT_CODE_AMOUNT_TITLE: "Event Code Amount Edited",
+	EDITED_EVENT_CODE_AMOUNT_DESCRIPTION:
+		"The code amount of the event **{{eventName}}** `[{{eventId}}]` has been edited to {{newAmount}}!",
+	EDITED_EVENT_CODE_AMOUNT_RESET_DESCRIPTION:
+		"The code amount of the event **{{eventName}}** `[{{eventId}}]` has been reset!",
+
 	ALREADY_SUBMITTED_TITLE: "Already Submitted",
 	ALREADY_SUBMITTED_DESCRIPTION: "You've already submitted a file to this event.",
 
@@ -605,4 +644,13 @@ export default {
 	UP_VOTED_DESCRIPTION: "You've up voted the submission by {{submissionAuthor}}!",
 	UP_VOTED_FOOTER:
 		"You may only vote on a singular submission so if you have already voted, your vote has been changed.",
+
+	NOT_A_VALID_EMAIL_TITLE: "Not A Valid Email",
+	NOT_A_VALID_EMAIL_DESCRIPTION: "Please provide a valid RunPod email.",
+
+	REDEEMED_CODE_TITLE: "Redeemed Code",
+	REDEEMED_CODE_DESCRIPTION:
+		"`{{code}}` is your code for the event **{{eventName}}** `[{{eventId}}]`, please remember that you can only redeem one code per Discord account and RunPod email.",
+
+	CODE_LOG_MESSAGE: `{{userMention}} redeemed the code ||\`{{code}}\`|| worth {{codeAmount}} under the email ||\`{{email}}\`|| for the event **{{eventName}}** \`[{{eventId}}]\`!`,
 };

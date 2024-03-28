@@ -4,25 +4,14 @@ import type Language from "../../../../lib/classes/Language.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "../../../../typings/index.js";
 
-export default class AllEventName extends AutoComplete {
+export default class ActiveWithCodeEventName extends AutoComplete {
 	/**
-	 * Create our all event name auto complete.
+	 * Create our active event with code name auto complete.
 	 *
 	 * @param client - Our extended client.
 	 */
 	public constructor(client: ExtendedClient) {
-		super(
-			[
-				"events-delete-event",
-				"events-edit-name-event",
-				"events-edit-description-event",
-				"events-edit-channel-event",
-				"events-edit-status-event",
-				"events-edit-codes_log_channel-event",
-				"events-edit-code_amount-event",
-			],
-			client,
-		);
+		super(["redeem_code-event"], client);
 	}
 
 	/**
@@ -46,6 +35,8 @@ export default class AllEventName extends AutoComplete {
 			where: {
 				name: { startsWith: (value as string | undefined) ?? "", mode: "insensitive" },
 				guildId: interaction.guild_id!,
+				active: true,
+				codeAmount: { not: null },
 			},
 			take: 25,
 		});

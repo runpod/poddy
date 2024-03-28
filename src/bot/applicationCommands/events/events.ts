@@ -209,6 +209,63 @@ export default class Events extends ApplicationCommand {
 								],
 								type: ApplicationCommandOptionType.Subcommand,
 							},
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_NAME",
+									description: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_DESCRIPTION",
+								}),
+								options: [
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_EVENT_OPTION_NAME",
+											description:
+												"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_EVENT_OPTION_DESCRIPTION",
+										}),
+										required: true,
+										autocomplete: true,
+										type: ApplicationCommandOptionType.String,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_CHANNEL_OPTION_NAME",
+											description:
+												"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.Channel,
+										channel_types: [ChannelType.GuildText, ChannelType.PublicThread, ChannelType.PrivateThread],
+									},
+								],
+								type: ApplicationCommandOptionType.Subcommand,
+							},
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_NAME",
+									description: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_DESCRIPTION",
+								}),
+								options: [
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_EVENT_OPTION_NAME",
+											description:
+												"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_EVENT_OPTION_DESCRIPTION",
+										}),
+										required: true,
+										autocomplete: true,
+										type: ApplicationCommandOptionType.String,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_NAME",
+											description:
+												"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_DESCRIPTION",
+										}),
+										required: true,
+										type: ApplicationCommandOptionType.Integer,
+										min_value: 1,
+									},
+								],
+								type: ApplicationCommandOptionType.Subcommand,
+							},
 						],
 						type: ApplicationCommandOptionType.SubcommandGroup,
 					},
@@ -378,6 +435,76 @@ export default class Events extends ApplicationCommand {
 									eventName: event.name,
 									newStatus: status,
 								}),
+								color: this.client.config.colors.success,
+							},
+						],
+						allowed_mentions: { parse: [], replied_user: true },
+					}),
+				]);
+			} else if (
+				interaction.arguments.subCommand!.name ===
+				this.client.languageHandler.defaultLanguage!.get(
+					"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODES_LOG_CHANNEL_SUB_COMMAND_NAME",
+				)
+			) {
+				const channel =
+					interaction.arguments.channels![
+						this.client.languageHandler.defaultLanguage!.get(
+							"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CHANNEL_SUB_COMMAND_CHANNEL_OPTION_NAME",
+						)
+					];
+
+				return Promise.all([
+					this.client.prisma.event.update({ where: { id: event.id }, data: { codeLogChannelId: channel?.id ?? null } }),
+					this.client.api.interactions.reply(interaction.id, interaction.token, {
+						embeds: [
+							{
+								title: language.get("EDITED_EVENT_CODES_LOG_CHANNEL_TITLE"),
+								description: channel
+									? language.get("EDITED_EVENT_CODES_LOG_CHANNEL_DESCRIPTION", {
+											eventId: event.id,
+											eventName: event.name,
+											newChannel: `<#${channel.id}>`,
+									  })
+									: language.get("EDITED_EVENT_CODES_LOG_CHANNEL_RESET_DESCRIPTION", {
+											eventId: event.id,
+											eventName: event.name,
+									  }),
+								color: this.client.config.colors.success,
+							},
+						],
+						allowed_mentions: { parse: [], replied_user: true },
+					}),
+				]);
+			} else if (
+				interaction.arguments.subCommand!.name ===
+				this.client.languageHandler.defaultLanguage!.get(
+					"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_NAME",
+				)
+			) {
+				const amount =
+					interaction.arguments.integers![
+						this.client.languageHandler.defaultLanguage!.get(
+							"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_NAME",
+						)
+					]?.value;
+
+				return Promise.all([
+					this.client.prisma.event.update({ where: { id: event.id }, data: { codeAmount: amount ?? null } }),
+					this.client.api.interactions.reply(interaction.id, interaction.token, {
+						embeds: [
+							{
+								title: language.get("EDITED_EVENT_CODE_AMOUNT_TITLE"),
+								description: amount
+									? language.get("EDITED_EVENT_CODE_AMOUNT_DESCRIPTION", {
+											eventId: event.id,
+											eventName: event.name,
+											newAmount: `$${amount}`,
+									  })
+									: language.get("EDITED_EVENT_CODE_AMOUNT_RESET_DESCRIPTION", {
+											eventId: event.id,
+											eventName: event.name,
+									  }),
 								color: this.client.config.colors.success,
 							},
 						],

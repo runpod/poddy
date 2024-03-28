@@ -127,16 +127,32 @@ model SubscribedUser {
 }
 
 model Event {
-    id          String  @id @default(cuid())
-    guildId     String
-    channelId   String
-    name        String
-    description String?
-    active      Boolean @default(true)
+    id               String  @id @default(cuid())
+    guildId          String
+    channelId        String
+    name             String
+    active           Boolean @default(true)
+    description      String?
+    codeAmount       Int?
+    codeLogChannelId String?
 
-    submissions Submission[]
+    submissions    Submission[]
+    generatedCodes GeneratedCode[]
 
     @@unique([name, guildId])
+}
+
+model GeneratedCode {
+    code        String @id
+    eventId     String
+    userId      String
+    runpodEmail String
+
+    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@unique([runpodEmail, eventId])
+    @@unique([userId, eventId])
+    @@map("generated_codes")
 }
 
 model Submission {
