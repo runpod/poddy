@@ -468,5 +468,16 @@ export interface LanguageValues {
 	NOT_A_VALID_EMAIL_DESCRIPTION: {};
 	REDEEMED_CODE_TITLE: {};
 	REDEEMED_CODE_DESCRIPTION: { code: any; eventName: any; eventId: any };
-	CODE_LOG_MESSAGE: { userMention: any; code: any; codeAmount: any; email: any; eventName: any; eventId: any };
+	CODE_LOG_MESSAGE: {
+		userMention: any;
+		code: any;
+		codeAmount: any;
+		email: any;
+		eventName: any;
+		eventId: any;
+		creationDate: any;
+		joinDate: any;
+	};
+	ACCOUNT_TOO_YOUNG_TITLE: {};
+	ACCOUNT_TOO_YOUNG_DESCRIPTION: {};
 }

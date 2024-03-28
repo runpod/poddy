@@ -649,8 +649,10 @@ export default {
 	NOT_A_VALID_EMAIL_DESCRIPTION: "Please provide a valid RunPod email.",
 
 	REDEEMED_CODE_TITLE: "Redeemed Code",
-	REDEEMED_CODE_DESCRIPTION:
-		"`{{code}}` is your code for the event **{{eventName}}** `[{{eventId}}]`, please remember that you can only redeem one code per Discord account and RunPod email.",
+	REDEEMED_CODE_DESCRIPTION: "`{{code}}` is your code for the event **{{eventName}}** `[{{eventId}}]`.",
 
-	CODE_LOG_MESSAGE: `{{userMention}} redeemed the code ||\`{{code}}\`|| worth {{codeAmount}} under the email ||\`{{email}}\`|| for the event **{{eventName}}** \`[{{eventId}}]\`!`,
+	CODE_LOG_MESSAGE: `{{userMention}} redeemed the code ||\`{{code}}\`|| worth {{codeAmount}} under the email ||\`{{email}}\`|| for the event **{{eventName}}** \`[{{eventId}}]\`, their account was created at {{creationDate}} and they joined {{joinDate}}!`,
+
+	ACCOUNT_TOO_YOUNG_TITLE: "Account Too Young",
+	ACCOUNT_TOO_YOUNG_DESCRIPTION: "Your account is too young to redeem a code, please try again later.",
 };

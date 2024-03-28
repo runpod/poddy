@@ -117,6 +117,23 @@ export default class RedeemCode extends ApplicationCommand {
 				allowed_mentions: { parse: [], replied_user: true },
 			});
 
+		const userCreationEpoch = Number(
+			(BigInt((interaction.member?.user ?? interaction.user!).id) >> 22n) + 1_420_070_400_000n,
+		);
+
+		if (Date.now() - userCreationEpoch < 604_800_000)
+			return this.client.api.interactions.reply(interaction.id, interaction.token, {
+				embeds: [
+					{
+						title: language.get("ACCOUNT_TOO_YOUNG_TITLE"),
+						description: language.get("ACCOUNT_TOO_YOUNG_DESCRIPTION"),
+						color: this.client.config.colors.error,
+					},
+				],
+				allowed_mentions: { parse: [], replied_user: true },
+				flags: MessageFlags.Ephemeral,
+			});
+
 		const userExistsResponse = await fetch(`https://api.runpod.io/graphql?api_key=${env.RUNPOD_API_KEY}`, {
 			method: "POST",
 			body: JSON.stringify({
@@ -224,6 +241,8 @@ export default class RedeemCode extends ApplicationCommand {
 									eventId: event.id,
 									eventName: event.name,
 									userMention: `<@${(interaction.member?.user ?? interaction.user!).id}>`,
+									creationDate: `<t:${Math.floor(userCreationEpoch / 1_000)}:R>`,
+									joinDate: `<t:${Math.floor(new Date(interaction.member!.joined_at).getTime() / 1_000)}:R>`,
 								}),
 								allowed_mentions: { parse: [], replied_user: true },
 							}),
