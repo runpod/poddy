@@ -20,6 +20,7 @@ export default class AllEventName extends AutoComplete {
 				"events-edit-status-event",
 				"events-edit-codes_log_channel-event",
 				"events-edit-code_amount-event",
+				"events-top_submissions-event",
 			],
 			client,
 		);

@@ -275,6 +275,33 @@ export default class Events extends ApplicationCommand {
 						],
 						type: ApplicationCommandOptionType.SubcommandGroup,
 					},
+					{
+						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+							name: "EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_NAME",
+							description: "EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_DESCRIPTION",
+						}),
+						options: [
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_EVENT_OPTION_NAME",
+									description: "EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_EVENT_OPTION_DESCRIPTION",
+								}),
+								required: true,
+								autocomplete: true,
+								type: ApplicationCommandOptionType.String,
+							},
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_AMOUNT_OPTION_NAME",
+									description: "EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_AMOUNT_OPTION_DESCRIPTION",
+								}),
+								type: ApplicationCommandOptionType.Integer,
+								min_value: 1,
+								max_value: 100,
+							},
+						],
+						type: ApplicationCommandOptionType.Subcommand,
+					},
 				],
 				type: ApplicationCommandType.ChatInput,
 				dm_permission: false,
@@ -631,6 +658,96 @@ export default class Events extends ApplicationCommand {
 						color: this.client.config.colors.primary,
 					},
 				],
+			});
+		} else if (
+			interaction.arguments.subCommand!.name ===
+			this.client.languageHandler.defaultLanguage!.get("EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_NAME")
+		) {
+			const amount =
+				interaction.arguments.integers?.[
+					this.client.languageHandler.defaultLanguage!.get(
+						"EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_AMOUNT_OPTION_NAME",
+					)
+				]?.value ?? 10;
+
+			const id =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_EVENT_OPTION_NAME",
+					)
+				]!.value;
+
+			const event = await this.client.prisma.event.findUnique({
+				where: {
+					id,
+				},
+			});
+
+			if (!event)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("EVENT_NOT_FOUND_TITLE"),
+							description: language.get("EVENT_NOT_FOUND_DESCRIPTION", {
+								eventId: id,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					flags: MessageFlags.Ephemeral,
+					allowed_mentions: { parse: [], replied_user: true },
+				});
+
+			const submissions = await this.client.prisma.submission.findMany({
+				where: { eventId: event.id },
+			});
+
+			const upvotes = await this.client.prisma.submissionUpvote.findMany({
+				where: { eventId: event.id },
+				include: {
+					submission: true,
+				},
+			});
+
+			const upvoteTotals = new Map<string, number>();
+
+			for (const upvote of upvotes) {
+				const total = upvoteTotals.get(upvote.submissionId) ?? 0;
+				upvoteTotals.set(upvote.submissionId, total + 1);
+			}
+
+			const sortedSubmissions = [...upvoteTotals.entries()]
+				.sort((a, b) => b[1] - a[1])
+				.map(([submissionId, votes]) => ({
+					...submissions.find((submission) => submission.messageId === submissionId)!,
+					votes,
+				}))
+				.slice(0, amount);
+
+			return this.client.api.interactions.reply(interaction.id, interaction.token, {
+				embeds: [
+					{
+						title: language.get("TOP_SUBMISSIONS_TITLE", {
+							amount,
+						}),
+						description: `${language.get("TOP_SUBMISSIONS_DESCRIPTION", {
+							amount,
+							eventId: event.id,
+							eventName: event.name,
+						})}\n\n${sortedSubmissions
+							.map(
+								(submission, index) =>
+									`**${index + 1}.** <@${submission.userId}>: ${
+										submission.votes
+									} [Jump To Submission](https://discord.com/channels/${interaction.guild_id}/${event.channelId}/${
+										submission.messageId
+									})`,
+							)
+							.join("\n")}`,
+						color: this.client.config.colors.primary,
+					},
+				],
+				allowed_mentions: { parse: [], replied_user: true },
 			});
 		}
 	}

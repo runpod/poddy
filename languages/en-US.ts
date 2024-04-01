@@ -581,6 +581,15 @@ export default {
 	EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_DESCRIPTION:
 		"The new amount each code for this event should be worth. Leave blank to remove the code amount.",
 
+	EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_NAME: "top_submissions",
+	EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_DESCRIPTION: "View the top submissions for an event.",
+	EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_EVENT_OPTION_NAME: "event",
+	EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_EVENT_OPTION_DESCRIPTION:
+		"The event you want to view the top submissions for.",
+	EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_AMOUNT_OPTION_NAME: "amount",
+	EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_AMOUNT_OPTION_DESCRIPTION:
+		"The amount of top submissions you want to view.",
+
 	REDEEM_CODE_COMMAND_NAME: "redeem_code",
 	REDEEM_CODE_COMMAND_DESCRIPTION: "Redeem a code from an event.",
 	REDEEM_CODE_COMMAND_EVENT_OPTION_NAME: "event",
@@ -657,4 +666,7 @@ export default {
 	ACCOUNT_TOO_YOUNG_DESCRIPTION: "Your account is too young to redeem a code, please try again later.",
 
 	SUBMISSION_MESSAGE: "{{user}}'s submission.",
+
+	TOP_SUBMISSIONS_TITLE: "Top {{amount}} Submissions",
+	TOP_SUBMISSIONS_DESCRIPTION: "The top {{amount}} submissions for the event **{{eventName}}** `[{{eventId}}]` are:",
 };
