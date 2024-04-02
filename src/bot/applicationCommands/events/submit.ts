@@ -74,6 +74,7 @@ export default class Submit extends ApplicationCommand {
 		const event = await this.client.prisma.event.findUnique({
 			where: {
 				id: eventId,
+				active: true,
 			},
 		});
 

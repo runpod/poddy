@@ -67,6 +67,7 @@ export default class RedeemCode extends ApplicationCommand {
 		const event = await this.client.prisma.event.findFirst({
 			where: {
 				codeAmount: { not: null },
+				active: true,
 				OR: [
 					{
 						id,
