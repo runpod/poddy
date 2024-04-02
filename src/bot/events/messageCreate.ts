@@ -41,7 +41,7 @@ export default class MessageCreate extends EventHandler {
 		// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
 		// Discord server, and if we need an easier onboarding flow for it.
 		if (message.guild_id) {
-			if (message.member && new Date(message.member.joined_at).getTime() > Date.now() + 604_800_000) {
+			if (message.member && new Date(message.member.joined_at).getTime() > Date.now() - 604_800_000) {
 				this.client.dataDog.increment("total_messages_sent.new_user", 1, [
 					`guildId:${message.guild_id}`,
 					`userId:${message.author.id}`,
