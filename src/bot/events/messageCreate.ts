@@ -41,7 +41,7 @@ export default class MessageCreate extends EventHandler {
 		// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
 		// Discord server, and if we need an easier onboarding flow for it.
 		if (message.guild_id) {
-			if (message.member && new Date(message.member.joined_at).getTime() > Date.now() - 604_800_000) {
+			if (new Date(message.member!.joined_at).getTime() > Date.now() - 604_800_000)
 				this.client.dataDog.increment("total_messages_sent.new_user", 1, [
 					`guildId:${message.guild_id}`,
 					`userId:${message.author.id}`,
@@ -49,29 +49,28 @@ export default class MessageCreate extends EventHandler {
 					`channelName:${channel?.name}`,
 				]);
 
-				const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
-					where: {
-						userId_guildId: {
-							userId: message.author.id,
-							guildId: message.guild_id,
-						},
+			const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
+				where: {
+					userId_guildId: {
+						userId: message.author.id,
+						guildId: message.guild_id,
+					},
+				},
+			});
+
+			if (!newCommunicator) {
+				await this.client.prisma.newCommunicator.create({
+					data: {
+						userId: message.author.id,
+						guildId: message.guild_id,
+						joinedAt: new Date(message.member!.joined_at),
 					},
 				});
 
-				if (!newCommunicator) {
-					await this.client.prisma.newCommunicator.create({
-						data: {
-							userId: message.author.id,
-							guildId: message.guild_id,
-							joinedAt: new Date(message.member.joined_at),
-						},
-					});
+				this.client.dataDog.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
 
-					this.client.dataDog.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
-
-					if (new Date(message.member.joined_at).getTime() + 86_400 > Date.now())
-						this.client.dataDog.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
-				}
+				if (new Date(message.member!.joined_at).getTime() + 86_400 > Date.now())
+					this.client.dataDog.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
 			}
 
 			const autoThreadChannel = await this.client.prisma.autoThreadChannel.findUnique({
