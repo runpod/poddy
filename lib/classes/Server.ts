@@ -2,8 +2,10 @@ import { env } from "node:process";
 import { API } from "@discordjs/core";
 import { REST } from "@discordjs/rest";
 import { serve } from "@hono/node-server";
+import type { ZapierNotificationType } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 import { Hono } from "hono";
+import { schedule } from "node-cron";
 import Logger from "./Logger.js";
 
 export default class Server {
@@ -90,6 +92,55 @@ export default class Server {
 				return result;
 			});
 		}
+		// Cron jobs run in UTC, so this will be at 7AM UTC, which is 12AM PST.
+		else
+			schedule(`0 7 * * *`, async () => {
+				const zapierNotifications = await this.prisma.zapierNotification.findMany({
+					where: { timestamp: { gte: new Date(Date.now() - 1_000 * 60 * 60 * 24) } },
+				});
+				const groups: Record<string, Record<string, string[]>> = {};
+
+				for (const zapierNotification of zapierNotifications) {
+					if (!groups[zapierNotification.type]) groups[zapierNotification.type] = {};
+					if (!groups[zapierNotification.type]![zapierNotification.message])
+						groups[zapierNotification.type]![zapierNotification.message] = [];
+
+					groups[zapierNotification.type]![zapierNotification.message]!.push(zapierNotification.email);
+				}
+
+				for (const [type, record] of Object.entries(groups)) {
+					for (const [message, emails] of Object.entries(record)) {
+						const response = await fetch(
+							(type as ZapierNotificationType) === "CUSTOMER_SUCCESS"
+								? env.SLACK_CUSTOMER_SUCCESS_HOOK
+								: env.SLACK_SALES_HOOK,
+							{
+								method: "POST",
+								body: JSON.stringify({
+									text: `*${message}*\n\n${emails.map((email, index) => `${index + 1}. ${email}`).join("\n")}`,
+								}),
+								headers: {
+									"Content-Type": "application/json",
+								},
+							},
+						);
+
+						if (response.status === 200)
+							Logger.info(`Successfully sent ${type} notification ${message} with ${emails.length} emails!`);
+						else {
+							const data = await response.json();
+
+							Logger.info(
+								`Failed to send ${type} notification ${message} with ${emails.length} emails!\n${JSON.stringify(
+									data,
+									null,
+									4,
+								)}`,
+							);
+						}
+					}
+				}
+			});
 	}
 
 	public async start() {
@@ -162,6 +213,34 @@ export default class Server {
 				success: true,
 				message: `Sent to ${Object.keys(channelsToSendTo).length} channels with ${totalUserCount} users notified!`,
 			});
+		});
+
+		this.router.post("/zapier", async (context) => {
+			if (context.req.header("authorization") !== env.LAMBDA_PUSH_SECRET) {
+				context.status(401);
+
+				return context.text("Unauthorized");
+			}
+
+			let body: {
+				email: string;
+				message: string;
+				type: ZapierNotificationType;
+			};
+
+			try {
+				body = await context.req.json();
+			} catch {
+				context.status(400);
+
+				return context.json({ error: "Invalid JSON" });
+			}
+
+			await this.prisma.zapierNotification.create({ data: body });
+
+			context.status(200);
+
+			return context.json({ success: true });
 		});
 	}
 }
