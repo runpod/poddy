@@ -13,6 +13,11 @@ enum CommandType {
     APPLICATION_COMMAND
 }
 
+enum ZapierNotificationType {
+    CUSTOMER_SUCCESS
+    SALES
+}
+
 model Cooldown {
     userId      String
     commandName String
@@ -176,4 +181,14 @@ model SubmissionUpvote {
 
     @@id([userId, submissionId])
     @@unique([userId, eventId])
+}
+
+model ZapierNotification {
+    id        String                 @id @default(cuid())
+    email     String
+    message   String
+    type      ZapierNotificationType
+    timestamp DateTime               @default(now())
+
+    @@map("zapier_notifications")
 }

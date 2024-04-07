@@ -14,6 +14,8 @@ declare global {
 			NODE_ENV: "development" | "production";
 			RUNPOD_API_KEY: string;
 			SENTRY_DSN: string;
+			SLACK_CUSTOMER_SUCCESS_HOOK: string;
+			SLACK_SALES_HOOK: string;
 		}
 	}
 }

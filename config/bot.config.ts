@@ -64,4 +64,6 @@ export default {
 	 * A list of permissions that the bot needs to function at all.
 	 */
 	requiredPermissions: PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessages,
+
+	supportCategoryId: "1066014949182275594",
 };
