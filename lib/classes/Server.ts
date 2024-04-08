@@ -98,14 +98,14 @@ export default class Server {
 				const zapierNotifications = await this.prisma.zapierNotification.findMany({
 					where: { timestamp: { gte: new Date(Date.now() - 1_000 * 60 * 60 * 24) } },
 				});
-				const groups: Record<string, Record<string, string[]>> = {};
+				const groups: Record<string, Record<string, Set<string>>> = {};
 
 				for (const zapierNotification of zapierNotifications) {
 					if (!groups[zapierNotification.type]) groups[zapierNotification.type] = {};
 					if (!groups[zapierNotification.type]![zapierNotification.message])
-						groups[zapierNotification.type]![zapierNotification.message] = [];
+						groups[zapierNotification.type]![zapierNotification.message] = new Set();
 
-					groups[zapierNotification.type]![zapierNotification.message]!.push(zapierNotification.email);
+					groups[zapierNotification.type]![zapierNotification.message]!.add(zapierNotification.email);
 				}
 
 				for (const [type, record] of Object.entries(groups)) {
@@ -117,7 +117,9 @@ export default class Server {
 							{
 								method: "POST",
 								body: JSON.stringify({
-									text: `*${message}*\n\n${emails.map((email, index) => `${index + 1}. ${email}`).join("\n")}`,
+									text: `*${message}*\n\n${[...emails.values()]
+										.map((email, index) => `${index + 1}. ${email}`)
+										.join("\n")}`,
 								}),
 								headers: {
 									"Content-Type": "application/json",
@@ -126,12 +128,12 @@ export default class Server {
 						);
 
 						if (response.status === 200)
-							Logger.info(`Successfully sent ${type} notification ${message} with ${emails.length} emails!`);
+							Logger.info(`Successfully sent ${type} notification ${message} with ${emails.size} emails!`);
 						else {
 							const data = await response.json();
 
 							Logger.info(
-								`Failed to send ${type} notification ${message} with ${emails.length} emails!\n${JSON.stringify(
+								`Failed to send ${type} notification ${message} with ${emails.size} emails!\n${JSON.stringify(
 									data,
 									null,
 									4,
