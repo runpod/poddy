@@ -92,9 +92,9 @@ export default class Server {
 				return result;
 			});
 		}
-		// Cron jobs run in UTC, so this will be at 7AM UTC, which is 12AM PST.
+		// Cron jobs run in UTC, so this will be at 1 AM UTC, which is 6 PM PST.
 		else
-			schedule(`0 7 * * *`, async () => {
+			schedule(`0 1 * * *`, async () => {
 				const zapierNotifications = await this.prisma.zapierNotification.findMany({
 					where: { timestamp: { gte: new Date(Date.now() - 1_000 * 60 * 60 * 24) } },
 				});
