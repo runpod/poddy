@@ -74,7 +74,7 @@ export default class Ready extends EventHandler {
 			content: `${this.client.functions.generateTimestamp()} Logged in as ${data.user.username}#${
 				data.user.discriminator
 			} [\`${data.user.id}\`] on Shard ${shardId} with ${data.guilds.length} guilds.`,
-			allowed_mentions: { parse: [] },
+			allowed_mentions: { parse: [], replied_user: true },
 			username: `${this.client.config.botName} | Console Logs`,
 		});
 	}

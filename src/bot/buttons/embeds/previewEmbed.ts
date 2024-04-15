@@ -55,7 +55,7 @@ export default class PreviewEmbed extends Button {
 			await this.client.api.interactions.reply(interaction.id, interaction.token, {
 				...JSON.parse(embed.data.toString()),
 				flags: MessageFlags.Ephemeral,
-				allowed_mentions: { parse: [] },
+				allowed_mentions: { parse: [], replied_user: true },
 			});
 		} catch (error) {
 			if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.RequestBodyContainsInvalidJSON)

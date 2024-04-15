@@ -346,7 +346,7 @@ export default class Embed extends ApplicationCommand {
 			try {
 				message = await this.client.api.channels.createMessage(channelId, {
 					...JSON.parse(embed.data.toString()),
-					allowed_mentions: { parse: [] },
+					allowed_mentions: { parse: [], replied_user: true },
 				});
 			} catch (error) {
 				if (error instanceof DiscordAPIError) {

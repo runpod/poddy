@@ -519,7 +519,6 @@ export default {
 	EVENTS_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION_OPTION_NAME: "description",
 	EVENTS_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION_OPTION_DESCRIPTION: "The description of the event you want to create.",
 
-	// TODO: When an event is deleted, send all credit codes that haven't been redeemed and delete them from the DB.
 	EVENTS_COMMAND_DELETE_SUB_COMMAND_NAME: "delete",
 	EVENTS_COMMAND_DELETE_SUB_COMMAND_DESCRIPTION: "Delete an event.",
 	EVENTS_COMMAND_DELETE_SUB_COMMAND_EVENT_OPTION_NAME: "event",
@@ -669,4 +668,74 @@ export default {
 
 	TOP_SUBMISSIONS_TITLE: "Top {{amount}} Submissions",
 	TOP_SUBMISSIONS_DESCRIPTION: "The top {{amount}} submissions for the event **{{eventName}}** `[{{eventId}}]` are:",
+
+	INVITES_COMMAND_NAME: "invites",
+	INVITES_COMMAND_DESCRIPTION: "Manage Poddy's invite system.",
+
+	INVITES_COMMAND_CREATE_SUB_COMMAND_NAME: "create",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION: "Create an invite.",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name of the invite you want to create.",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_CHANNEL_OPTION_NAME: "channel",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_CHANNEL_OPTION_DESCRIPTION: "The channel of the invite you want to create.",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION_OPTION_NAME: "description",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION_OPTION_DESCRIPTION:
+		"The description of the invite you want to create.",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_EXPIRATION_OPTION_NAME: "expiration",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_EXPIRATION_OPTION_DESCRIPTION:
+		"The expiration of the invite you want to create in seconds, 0 for unlimited. (Defaults to 0)",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_MAX_USES_OPTION_NAME: "max_uses",
+	INVITES_COMMAND_CREATE_SUB_COMMAND_MAX_USES_OPTION_DESCRIPTION:
+		"The max uses of the invite you want to create, 0 for unlimited. (Defaults to 0)",
+
+	INVITES_COMMAND_TRACK_SUB_COMMAND_NAME: "track",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_DESCRIPTION: "Track an invite.",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_INVITE_OPTION_NAME: "invite",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_INVITE_OPTION_DESCRIPTION: "The invite you want to track.",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name of the invite you want to track.",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_DESCRIPTION_OPTION_NAME: "description",
+	INVITES_COMMAND_TRACK_SUB_COMMAND_DESCRIPTION_OPTION_DESCRIPTION: "The description of the invite you want to track.",
+
+	INVITES_COMMAND_DELETE_SUB_COMMAND_NAME: "delete",
+	INVITES_COMMAND_DELETE_SUB_COMMAND_DESCRIPTION: "Delete an invite.",
+	INVITES_COMMAND_DELETE_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	INVITES_COMMAND_DELETE_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name of the invite you want to delete.",
+
+	INVITES_COMMAND_LIST_SUB_COMMAND_NAME: "list",
+	INVITES_COMMAND_LIST_SUB_COMMAND_DESCRIPTION: "List all invites.",
+
+	INVITES_COMMAND_INFO_SUB_COMMAND_NAME: "info",
+	INVITES_COMMAND_INFO_SUB_COMMAND_DESCRIPTION: "Get information about an invite.",
+	INVITES_COMMAND_INFO_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	INVITES_COMMAND_INFO_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name of the invite if we are already tracking it.",
+	INVITES_COMMAND_INFO_SUB_COMMAND_INVITE_OPTION_NAME: "invite",
+	INVITES_COMMAND_INFO_SUB_COMMAND_INVITE_OPTION_DESCRIPTION: "The invite you want to get information about.",
+
+	INVITE_CREATED_TITLE: "Invite Created",
+	INVITE_CREATED_DESCRIPTION: "An invite to {{channelMention}} has been created, the invite code is `{{inviteCode}}`!",
+
+	INVALID_INVITE_TITLE: "Invalid Invite",
+	INVALID_INVITE_DESCRIPTION: "The invite that you have provided is not valid!",
+
+	INVITE_NOT_FOR_THIS_SERVER: "Invite Not For This Server",
+	INVITE_NOT_FOR_THIS_SERVER_DESCRIPTION: "The invite that you have provided is not for this server!",
+
+	INVITE_TRACKED_TITLE: "Tracking Invite",
+	INVITE_TRACKED_DESCRIPTION: "I am now tracking the invite **{{inviteName}}** `[{{inviteCode}}]`!",
+
+	INVITE_NOT_FOUND_TITLE: "Invite Not Found",
+	INVITE_NOT_FOUND_DESCRIPTION: "An invite with a name of `{{inviteName}}` was not found!",
+
+	INVITE_DELETED_TITLE: "Invite Deleted",
+	INVITE_DELETED_DESCRIPTION: "The invite **{{inviteName}}** `[{{inviteCode}}]` has been deleted!",
+
+	INVITES_LIST_TITLE: "Invites",
+	INVITES_LIST_NO_INVITES_DESCRIPTION:
+		"There are currently no invites for this server, add some by doing `/invites create`!",
+
+	INVITES_INFO_TITLE: "Invite Information",
+
+	INVITE_EXPIRED_TITLE: "Invite Expired",
+	INVITE_EXPIRED_DESCRIPTION: "The invite you have provided has expired!",
 };
