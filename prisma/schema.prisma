@@ -192,3 +192,13 @@ model ZapierNotification {
 
     @@map("zapier_notifications")
 }
+
+model Invite {
+    code        String  @id
+    name        String
+    description String?
+    createdBy   String
+    guildId     String
+
+    @@map("invites")
+}

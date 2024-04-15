@@ -41,7 +41,7 @@ export default class GuildCreate extends EventHandler {
 					guild.member_count
 				}\`\n**Timestamp:** ${this.client.functions.generateTimestamp()}\n**Shard ID:** \`${shardId}\``,
 				username: `${this.client.config.botName} | Console Logs`,
-				allowed_mentions: { parse: [] },
+				allowed_mentions: { parse: [], replied_user: true },
 			});
 		} else if (this.client.guildOwnersCache.get(guild.id) !== guild.owner_id)
 			return this.client.guildOwnersCache.set(guild.id, guild.owner_id);

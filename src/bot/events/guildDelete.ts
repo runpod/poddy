@@ -30,7 +30,7 @@ export default class GuildDelete extends EventHandler {
 				guild.id
 			}\`\n**Timestamp:** ${this.client.functions.generateTimestamp()}\n**Shard ID:** \`${shardId}\``,
 			username: `${this.client.config.botName} | Console Logs`,
-			allowed_mentions: { parse: [] },
+			allowed_mentions: { parse: [], replied_user: true },
 		});
 	}
 }
