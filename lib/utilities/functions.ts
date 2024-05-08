@@ -293,21 +293,20 @@ export default class Functions {
 			embeds: [
 				{
 					title: helpDesk.name,
-					description: helpDesk.helpDeskOptions
+					description: `${helpDesk.description ? `${helpDesk.description}\n\n` : ""}${helpDesk.helpDeskOptions
 						.map(
 							(helpDeskOption) =>
-								`${
-									helpDeskOption.emojiName
-										? helpDeskOption.emojiId
-											? `<${helpDeskOption.emojiAnimated ? "a" : ""}:${helpDeskOption.emojiName}:${
-													helpDeskOption.emojiId
-											  }>: `
-											: `${helpDeskOption.emojiName}: `
-										: ""
-								}${helpDeskOption.name}`,
+								`${helpDeskOption.emojiName ? `${helpDeskOption.emojiName} ` : ""}${helpDeskOption.name}`,
 						)
-						.join("\n"),
+						.join("\n")}`,
 					color: helpDesk.embedColor ? Number.parseInt(helpDesk.embedColor, 16) : this.client.config.colors.primary,
+					image: {
+						url: "https://cdn.karalite.com/user_2Z1iHO0Px2py0XMFB2sy1mb631L/pixel%20divider.png",
+					},
+					footer: {
+						text: "RunPod • Discord Help Desk",
+						icon_url: "https://cdn.karalite.com/user_2Z1iHO0Px2py0XMFB2sy1mb631L/runpod%20logo.png",
+					},
 				},
 			],
 			components: [

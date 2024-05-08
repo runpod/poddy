@@ -4,34 +4,14 @@ import type Language from "../../../../lib/classes/Language.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "../../../../typings/index.js";
 
-export default class HelpDeskName extends AutoComplete {
+export default class HelpDeskNameHasDescription extends AutoComplete {
 	/**
-	 * Create our help desk name auto complete.
+	 * Create our help desk name that has a description auto complete.
 	 *
 	 * @param client - Our extended client.
 	 */
 	public constructor(client: ExtendedClient) {
-		super(
-			[
-				"help_desk-embed_color-set-name",
-				"help_desk-embed_color-reset-name",
-				"help_desk-channel-set-name",
-				"help_desk-channel-reset-name",
-				"help_desk-delete-name",
-				"help_desk-rename-name",
-				"help_desk_options-add-help_desk",
-				"help_desk_options-response-help_desk",
-				"help_desk_options-description-set-help_desk",
-				"help_desk_options-description-reset-help_desk",
-				"help_desk_options-emoji-set-help_desk",
-				"help_desk_options-emoji-reset-help_desk",
-				"help_desk_options-position-help_desk",
-				"help_desk_options-remove-help_desk",
-				"help_desk_options-rename-help_desk",
-				"help_desk-description-set-name",
-			],
-			client,
-		);
+		super(["help_desk-description-reset-name"], client);
 	}
 
 	/**
@@ -55,6 +35,7 @@ export default class HelpDeskName extends AutoComplete {
 			where: {
 				name: { startsWith: (value as string | undefined) ?? "", mode: "insensitive" },
 				guildId: interaction.guild_id!,
+				description: { not: null },
 			},
 			take: 25,
 		});

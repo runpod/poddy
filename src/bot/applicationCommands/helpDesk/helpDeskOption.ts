@@ -17,6 +17,11 @@ export default class HelpDesk extends ApplicationCommand {
 	private readonly customEmojiRegex = /<(?<animated>a)?:(?<emojiName>\w+):(?<emojiId>\d+)>/m;
 
 	/**
+	 * The regex to test if a string is a valid unicode emoji.
+	 */
+	private readonly unicodeEmojiRegex = /\p{Extended_Pictographic}/u;
+
+	/**
 	 * Create our help desk command.
 	 *
 	 * @param client - Our extended client.
@@ -515,7 +520,11 @@ export default class HelpDesk extends ApplicationCommand {
 				helpDeskOption?.position ??
 				helpDeskOptionsCount + 1;
 
-			const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {};
+			const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {
+				animated: undefined,
+				emojiName: this.unicodeEmojiRegex.exec(emoji ?? "")?.[0],
+				emojiId: undefined,
+			};
 
 			if (helpDeskOption) {
 				if (helpDeskOption.position !== position)
@@ -903,7 +912,11 @@ export default class HelpDesk extends ApplicationCommand {
 						)
 					]!.value;
 
-				const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {};
+				const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {
+					animated: undefined,
+					emojiName: this.unicodeEmojiRegex.exec(emoji ?? "")?.[0],
+					emojiId: undefined,
+				};
 
 				await Promise.all([
 					this.client.prisma.helpDeskOption.update({

@@ -77,12 +77,13 @@ model Embed {
 }
 
 model HelpDesk {
-    id         String  @id @default(cuid())
-    guildId    String
-    channelId  String?
-    name       String
-    embedColor String?
-    messageId  String?
+    id          String  @id @default(cuid())
+    guildId     String
+    channelId   String?
+    name        String
+    description String?
+    embedColor  String?
+    messageId   String?
 
     helpDeskOptions HelpDeskOption[]
 
