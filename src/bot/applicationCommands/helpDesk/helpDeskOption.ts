@@ -36,13 +36,13 @@ export default class HelpDesk extends ApplicationCommand {
 				options: [
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION",
 						}),
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -51,7 +51,7 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "EMBED_COMMAND_CREATE_SUB_COMMAND_NAME_OPTION_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_NAME_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_NAME_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -96,13 +96,13 @@ export default class HelpDesk extends ApplicationCommand {
 					},
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_DESCRIPTION",
 						}),
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -120,7 +120,7 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_RESPONSE_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_RESPONSE_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -132,19 +132,19 @@ export default class HelpDesk extends ApplicationCommand {
 					},
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_DESCRIPTION",
 						}),
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_EMBED_COLOR_SUB_COMMAND_GROUP_SET_SUB_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_DESCRIPTION",
 								}),
 								options: [
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_COMMAND_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 										}),
@@ -154,7 +154,7 @@ export default class HelpDesk extends ApplicationCommand {
 									},
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 										}),
@@ -164,7 +164,7 @@ export default class HelpDesk extends ApplicationCommand {
 									},
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_DESCRIPTION_OPTION_DESCRIPTION",
 										}),
@@ -177,13 +177,13 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_EMBED_COLOR_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_DESCRIPTION",
 								}),
 								options: [
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_COMMAND_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 										}),
@@ -193,7 +193,7 @@ export default class HelpDesk extends ApplicationCommand {
 									},
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_OPTION_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 										}),
@@ -209,7 +209,7 @@ export default class HelpDesk extends ApplicationCommand {
 					},
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_EMOJI_OPTION_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_DESCRIPTION",
 						}),
 						options: [
@@ -221,7 +221,7 @@ export default class HelpDesk extends ApplicationCommand {
 								options: [
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_COMMAND_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 										}),
@@ -231,7 +231,7 @@ export default class HelpDesk extends ApplicationCommand {
 									},
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 										}),
@@ -241,7 +241,7 @@ export default class HelpDesk extends ApplicationCommand {
 									},
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_EMOJI_OPTION_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_EMOJI_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_EMOJI_OPTION_DESCRIPTION",
 										}),
@@ -253,13 +253,13 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_EMBED_COLOR_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_DESCRIPTION",
 								}),
 								options: [
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_COMMAND_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 										}),
@@ -269,7 +269,7 @@ export default class HelpDesk extends ApplicationCommand {
 									},
 									{
 										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-											name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+											name: "HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_OPTION_OPTION_NAME",
 											description:
 												"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_RESET_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 										}),
@@ -285,13 +285,13 @@ export default class HelpDesk extends ApplicationCommand {
 					},
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_DESCRIPTION",
 						}),
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -300,7 +300,7 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_OPTION_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -309,7 +309,7 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_POSITION_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_POSITION_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.Integer,
@@ -322,13 +322,13 @@ export default class HelpDesk extends ApplicationCommand {
 					},
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_DESCRIPTION",
 						}),
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -337,7 +337,7 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_OPTION_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -349,13 +349,13 @@ export default class HelpDesk extends ApplicationCommand {
 					},
 					{
 						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-							name: "EMBED_COMMAND_RENAME_SUB_COMMAND_NAME",
+							name: "HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_NAME",
 							description: "HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_DESCRIPTION",
 						}),
 						options: [
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_COMMAND_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_HELP_DESK_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -364,7 +364,7 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 							{
 								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
-									name: "HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+									name: "HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_OPTION_OPTION_NAME",
 									description: "HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
 								}),
 								type: ApplicationCommandOptionType.String,
@@ -382,6 +382,120 @@ export default class HelpDesk extends ApplicationCommand {
 							},
 						],
 						type: ApplicationCommandOptionType.Subcommand,
+					},
+					{
+						...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+							name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_NAME",
+							description: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_DESCRIPTION",
+						}),
+						options: [
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
+									description: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_DESCRIPTION",
+								}),
+								options: [
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.String,
+										required: true,
+										autocomplete: true,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_OPTION_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.String,
+										required: true,
+										autocomplete: true,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_ROLE_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_ROLE_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.Role,
+										required: true,
+									},
+								],
+								type: ApplicationCommandOptionType.Subcommand,
+							},
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
+									description: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_DESCRIPTION",
+								}),
+								options: [
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.String,
+										required: true,
+										autocomplete: true,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_OPTION_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.String,
+										required: true,
+										autocomplete: true,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_ROLE_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_ROLE_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.Role,
+										required: true,
+									},
+								],
+								type: ApplicationCommandOptionType.Subcommand,
+							},
+							{
+								...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+									name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_NAME",
+									description: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_DESCRIPTION",
+								}),
+								options: [
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_HELP_DESK_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.String,
+										required: true,
+										autocomplete: true,
+									},
+									{
+										...client.languageHandler.generateLocalizationsForApplicationCommandOptionType({
+											name: "HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_OPTION_OPTION_NAME",
+											description:
+												"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_LIST_SUB_COMMAND_OPTION_OPTION_DESCRIPTION",
+										}),
+										type: ApplicationCommandOptionType.String,
+										required: true,
+										autocomplete: true,
+									},
+								],
+								type: ApplicationCommandOptionType.Subcommand,
+							},
+						],
+						type: ApplicationCommandOptionType.SubcommandGroup,
 					},
 				],
 				default_member_permissions: PermissionFlagsBits.ManageGuild.toString(),
@@ -407,318 +521,29 @@ export default class HelpDesk extends ApplicationCommand {
 		shardId: number;
 	}) {
 		if (
-			interaction.arguments.subCommand?.name ===
-			this.client.languageHandler.defaultLanguage!.get(
-				"CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
-			)
-		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
-
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
-				where: {
-					id: helpDeskId,
-					guildId: interaction.guild_id!,
-				},
-			});
-
-			if (!helpDesk)
-				return this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
-							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
-							}),
-							color: this.client.config.colors.error,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				});
-
-			const name =
-				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get("EMBED_COMMAND_CREATE_SUB_COMMAND_NAME_OPTION_NAME")
-				]!.value;
-
-			let helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
-				where: {
-					name: {
-						equals: name,
-						mode: "insensitive",
-					},
-					helpDeskId,
-				},
-			});
-
-			const helpDeskOptionsCount = await this.client.prisma.helpDeskOption.count({
-				where: { helpDeskId },
-			});
-
-			if (!helpDeskOption && helpDeskOptionsCount >= 25)
-				return this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("MAXIMUM_HELP_DESK_OPTIONS_REACHED_TITLE"),
-							description: language.get("MAXIMUM_HELP_DESK_OPTIONS_REACHED_DESCRIPTION"),
-							color: this.client.config.colors.error,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				});
-
-			const embedId =
-				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME",
-					)
-				]!.value;
-
-			const embed = await this.client.prisma.embed.findUnique({
-				where: {
-					id: embedId,
-					guildId: interaction.guild_id!,
-				},
-			});
-
-			if (!embed)
-				return this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_RESPONSE_NOT_FOUND_TITLE"),
-							description: language.get("HELP_DESK_RESPONSE_NOT_FOUND_DESCRIPTION", {
-								helpDeskResponseId: embedId,
-							}),
-							color: this.client.config.colors.error,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				});
-
-			const description =
-				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
-					)
-				]?.value;
-			const emoji =
-				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_EMOJI_OPTION_NAME",
-					)
-				]?.value;
-			const position =
-				interaction.arguments.integers![
-					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
-					)
-				]?.value ??
-				helpDeskOption?.position ??
-				helpDeskOptionsCount + 1;
-
-			const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {
-				animated: undefined,
-				emojiName: this.unicodeEmojiRegex.exec(emoji ?? "")?.[0],
-				emojiId: undefined,
-			};
-
-			if (helpDeskOption) {
-				if (helpDeskOption.position !== position)
-					await this.client.prisma.helpDeskOption.updateMany({
-						where: {
-							helpDeskId,
-							position: {
-								gte: position,
-							},
-						},
-						data: {
-							position: {
-								increment: 1,
-							},
-						},
-					});
-
-				helpDeskOption = await this.client.prisma.helpDeskOption.update({
-					where: {
-						id: helpDeskOption.id,
-						helpDeskId,
-					},
-					data: {
-						name,
-						position,
-						description: description ?? null,
-						emojiAnimated: Boolean(animated),
-						emojiName: emojiId ? emoji ?? null : emojiName ?? null,
-						emojiId: emojiId ?? null,
-						responseId: embedId,
-					},
-				});
-			} else {
-				helpDeskOption = await this.client.prisma.helpDeskOption.create({
-					data: {
-						name,
-						position,
-						helpDeskId,
-						description: description ?? null,
-						emojiAnimated: Boolean(animated),
-						emojiName: emojiId ? emoji ?? null : emojiName ?? null,
-						emojiId: emojiId ?? null,
-						responseId: embedId,
-					},
-				});
-			}
-
-			return Promise.all([
-				this.client.functions.updateHelpDesk(helpDeskId),
-				this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_OPTION_ADDED_TITLE"),
-							description: language.get("HELP_DESK_OPTION_ADDED_DESCRIPTION", {
-								helpDeskId,
-								helpDeskName: helpDesk.name,
-								optionId: helpDeskOption.id,
-								optionName: helpDeskOption.name,
-							}),
-							color: this.client.config.colors.success,
-						},
-					],
-				}),
-			]);
-		} else if (
-			interaction.arguments.subCommand?.name ===
-			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME")
-		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
-
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
-				where: {
-					id: helpDeskId,
-					guildId: interaction.guild_id!,
-				},
-			});
-
-			if (!helpDesk)
-				return this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
-							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
-							}),
-							color: this.client.config.colors.error,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				});
-
-			const helpDeskOptionId =
-				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
-					)
-				]!.value;
-
-			const helpDeskOption = await this.client.prisma.helpDeskOption.findUnique({
-				where: {
-					id: helpDeskOptionId,
-					helpDeskId,
-				},
-			});
-
-			if (!helpDeskOption)
-				return this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
-							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
-								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
-							}),
-							color: this.client.config.colors.error,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				});
-
-			const embedId =
-				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME",
-					)
-				]!.value;
-
-			const embed = await this.client.prisma.embed.findUnique({
-				where: {
-					id: embedId,
-					guildId: interaction.guild_id!,
-				},
-			});
-
-			if (!embed)
-				return this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_RESPONSE_NOT_FOUND_TITLE"),
-							description: language.get("HELP_DESK_RESPONSE_NOT_FOUND_DESCRIPTION", {
-								helpDeskResponseId: embedId,
-							}),
-							color: this.client.config.colors.error,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				});
-
-			return Promise.all([
-				this.client.prisma.helpDeskOption.update({
-					where: {
-						helpDeskId,
-						id: helpDeskOptionId,
-					},
-					data: {
-						responseId: embedId,
-					},
-				}),
-				this.client.api.interactions.reply(interaction.id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("HELP_DESK_OPTION_RESPONSE_SET_TITLE"),
-							description: language.get("HELP_DESK_OPTION_RESPONSE_SET_DESCRIPTION", {
-								helpDeskId,
-								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
-								optionName: helpDeskOption.name,
-								response: embedId,
-							}),
-							color: this.client.config.colors.success,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-				}),
-			]);
-		} else if (
 			interaction.arguments.subCommandGroup?.name ===
-			this.client.languageHandler.defaultLanguage!.get(
-				"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
-			)
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_NAME")
 		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
 
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
 				where: {
-					id: helpDeskId,
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
 					guildId: interaction.guild_id!,
 				},
 			});
@@ -729,7 +554,7 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDeskNameOrId,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -738,17 +563,27 @@ export default class HelpDesk extends ApplicationCommand {
 					flags: MessageFlags.Ephemeral,
 				});
 
-			const helpDeskOptionId =
+			const helpDeskOptionIdOrName =
 				interaction.arguments.strings![
 					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 					)
 				]!.value;
 
-			const helpDeskOption = await this.client.prisma.helpDeskOption.findUnique({
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
 				where: {
-					id: helpDeskOptionId,
-					helpDeskId,
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
 				},
 			});
 
@@ -758,9 +593,9 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOptionIdOrName,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -772,21 +607,20 @@ export default class HelpDesk extends ApplicationCommand {
 			if (
 				interaction.arguments.subCommand?.name ===
 				this.client.languageHandler.defaultLanguage!.get(
-					"HELP_DESK_COMMAND_EMBED_COLOR_SUB_COMMAND_GROUP_SET_SUB_COMMAND_NAME",
+					"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_NAME",
 				)
 			) {
 				const description =
 					interaction.arguments.strings![
 						this.client.languageHandler.defaultLanguage!.get(
-							"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
+							"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
 						)
 					]!.value;
 
 				await Promise.all([
 					this.client.prisma.helpDeskOption.update({
 						where: {
-							helpDeskId,
-							id: helpDeskOptionId,
+							id: helpDeskOption.id,
 						},
 						data: {
 							description,
@@ -797,11 +631,11 @@ export default class HelpDesk extends ApplicationCommand {
 							{
 								title: language.get("HELP_DESK_OPTION_DESCRIPTION_SET_TITLE"),
 								description: language.get("HELP_DESK_OPTION_DESCRIPTION_SET_DESCRIPTION", {
-									helpDeskId,
-									helpDeskName: helpDesk.name,
-									optionId: helpDeskOptionId,
-									optionName: helpDeskOption.name,
 									description,
+									helpDeskId: helpDesk.id,
+									helpDeskName: helpDesk.name,
+									optionId: helpDeskOption.id,
+									optionName: helpDeskOption.name,
 								}),
 								color: this.client.config.colors.success,
 							},
@@ -813,8 +647,7 @@ export default class HelpDesk extends ApplicationCommand {
 				await Promise.all([
 					this.client.prisma.helpDeskOption.update({
 						where: {
-							helpDeskId,
-							id: helpDeskOptionId,
+							id: helpDeskOption.id,
 						},
 						data: {
 							description: null,
@@ -825,9 +658,9 @@ export default class HelpDesk extends ApplicationCommand {
 							{
 								title: language.get("HELP_DESK_OPTION_DESCRIPTION_RESET_TITLE"),
 								description: language.get("HELP_DESK_OPTION_DESCRIPTION_RESET_DESCRIPTION", {
-									helpDeskId,
+									helpDeskId: helpDesk.id,
 									helpDeskName: helpDesk.name,
-									optionId: helpDeskOptionId,
+									optionId: helpDeskOption.id,
 									optionName: helpDeskOption.name,
 								}),
 								color: this.client.config.colors.success,
@@ -837,18 +670,31 @@ export default class HelpDesk extends ApplicationCommand {
 					}),
 				]);
 
-			return this.client.functions.updateHelpDesk(helpDeskId);
+			return this.client.functions.updateHelpDesk(helpDesk.id);
 		} else if (
 			interaction.arguments.subCommandGroup?.name ===
-			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_EMOJI_OPTION_NAME")
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_NAME")
 		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
 
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
 				where: {
-					id: helpDeskId,
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
 					guildId: interaction.guild_id!,
 				},
 			});
@@ -859,7 +705,7 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDeskNameOrId,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -868,17 +714,27 @@ export default class HelpDesk extends ApplicationCommand {
 					flags: MessageFlags.Ephemeral,
 				});
 
-			const helpDeskOptionId =
+			const helpDeskOptionIdOrName =
 				interaction.arguments.strings![
 					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 					)
 				]!.value;
 
-			const helpDeskOption = await this.client.prisma.helpDeskOption.findUnique({
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
 				where: {
-					id: helpDeskOptionId,
-					helpDeskId,
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
 				},
 			});
 
@@ -888,9 +744,9 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOptionIdOrName,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -902,15 +758,15 @@ export default class HelpDesk extends ApplicationCommand {
 			if (
 				interaction.arguments.subCommand?.name ===
 				this.client.languageHandler.defaultLanguage!.get(
-					"HELP_DESK_COMMAND_EMBED_COLOR_SUB_COMMAND_GROUP_SET_SUB_COMMAND_NAME",
+					"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_NAME",
 				)
 			) {
 				const emoji =
 					interaction.arguments.strings![
 						this.client.languageHandler.defaultLanguage!.get(
-							"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_EMOJI_OPTION_NAME",
+							"HELP_DESK_OPTIONS_COMMAND_EMOJI_SUB_COMMAND_GROUP_SET_SUB_COMMAND_EMOJI_OPTION_NAME",
 						)
-					]!.value;
+					]?.value;
 
 				const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {
 					animated: undefined,
@@ -921,12 +777,11 @@ export default class HelpDesk extends ApplicationCommand {
 				await Promise.all([
 					this.client.prisma.helpDeskOption.update({
 						where: {
-							helpDeskId,
-							id: helpDeskOptionId,
+							id: helpDeskOption.id,
 						},
 						data: {
 							emojiAnimated: Boolean(animated),
-							emojiName: (emojiId ? emojiName : emoji) ?? null,
+							emojiName: emojiId ? emoji ?? null : emojiName ?? null,
 							emojiId: emojiId ?? null,
 						},
 					}),
@@ -935,11 +790,11 @@ export default class HelpDesk extends ApplicationCommand {
 							{
 								title: language.get("HELP_DESK_OPTION_EMOJI_SET_TITLE"),
 								description: language.get("HELP_DESK_OPTION_EMOJI_SET_DESCRIPTION", {
-									helpDeskId,
-									helpDeskName: helpDesk.name,
-									optionId: helpDeskOptionId,
-									optionName: helpDeskOption.name,
 									emoji,
+									helpDeskId: helpDesk.id,
+									helpDeskName: helpDesk.name,
+									optionId: helpDeskOption.id,
+									optionName: helpDeskOption.name,
 								}),
 								color: this.client.config.colors.success,
 							},
@@ -951,8 +806,7 @@ export default class HelpDesk extends ApplicationCommand {
 				await Promise.all([
 					this.client.prisma.helpDeskOption.update({
 						where: {
-							helpDeskId,
-							id: helpDeskOptionId,
+							id: helpDeskOption.id,
 						},
 						data: {
 							emojiAnimated: false,
@@ -965,9 +819,9 @@ export default class HelpDesk extends ApplicationCommand {
 							{
 								title: language.get("HELP_DESK_OPTION_EMOJI_RESET_TITLE"),
 								description: language.get("HELP_DESK_OPTION_EMOJI_RESET_DESCRIPTION", {
-									helpDeskId,
+									helpDeskId: helpDesk.id,
 									helpDeskName: helpDesk.name,
-									optionId: helpDeskOptionId,
+									optionId: helpDeskOption.id,
 									optionName: helpDeskOption.name,
 								}),
 								color: this.client.config.colors.success,
@@ -977,18 +831,31 @@ export default class HelpDesk extends ApplicationCommand {
 					}),
 				]);
 
-			return this.client.functions.updateHelpDesk(helpDeskId);
+			return this.client.functions.updateHelpDesk(helpDesk.id);
 		} else if (
-			interaction.arguments.subCommand?.name ===
-			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME")
+			interaction.arguments.subCommandGroup?.name ===
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_NAME")
 		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
 
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
 				where: {
-					id: helpDeskId,
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
 					guildId: interaction.guild_id!,
 				},
 			});
@@ -999,7 +866,7 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDeskNameOrId,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -1008,17 +875,27 @@ export default class HelpDesk extends ApplicationCommand {
 					flags: MessageFlags.Ephemeral,
 				});
 
-			const helpDeskOptionId =
+			const helpDeskOptionIdOrName =
 				interaction.arguments.strings![
 					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 					)
 				]!.value;
 
-			const helpDeskOption = await this.client.prisma.helpDeskOption.findUnique({
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
 				where: {
-					id: helpDeskOptionId,
-					helpDeskId,
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
 				},
 			});
 
@@ -1028,9 +905,484 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOptionIdOrName,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			if (
+				interaction.arguments.subCommand?.name ===
+				this.client.languageHandler.defaultLanguage!.get(
+					"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_NAME",
+				)
+			) {
+				const role =
+					interaction.arguments.roles![
+						this.client.languageHandler.defaultLanguage!.get(
+							"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_ROLE_OPTION_NAME",
+						)
+					]!;
+
+				return Promise.all([
+					this.client.prisma.helpDeskOption.update({
+						where: {
+							id: helpDeskOption.id,
+						},
+						data: {
+							roleIds: {
+								set: [...new Set([...helpDeskOption.roleIds, role.id])],
+							},
+						},
+					}),
+					this.client.api.interactions.reply(interaction.id, interaction.token, {
+						embeds: [
+							{
+								title: language.get("HELP_DESK_OPTION_ROLE_ADDED_TITLE"),
+								description: language.get("HELP_DESK_OPTION_ROLE_ADDED_DESCRIPTION", {
+									helpDeskId: helpDesk.id,
+									helpDeskName: helpDesk.name,
+									optionId: helpDeskOption.id,
+									optionName: helpDeskOption.name,
+									role: `<@&${role.id}>`,
+								}),
+								color: this.client.config.colors.success,
+							},
+						],
+						allowed_mentions: { parse: [], replied_user: true },
+					}),
+				]);
+			} else if (
+				interaction.arguments.subCommand?.name ===
+				this.client.languageHandler.defaultLanguage!.get(
+					"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
+				)
+			) {
+				const role =
+					interaction.arguments.roles![
+						this.client.languageHandler.defaultLanguage!.get(
+							"HELP_DESK_OPTIONS_COMMAND_ROLES_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_ROLE_OPTION_NAME",
+						)
+					]!;
+
+				return Promise.all([
+					this.client.prisma.helpDeskOption.update({
+						where: {
+							id: helpDeskOption.id,
+						},
+						data: {
+							roleIds: {
+								set: helpDeskOption.roleIds.filter((roleId) => roleId !== role.id),
+							},
+						},
+					}),
+					this.client.api.interactions.reply(interaction.id, interaction.token, {
+						embeds: [
+							{
+								title: language.get("HELP_DESK_OPTION_ROLE_REMOVED_TITLE"),
+								description: language.get("HELP_DESK_OPTION_ROLE_REMOVED_DESCRIPTION", {
+									helpDeskId: helpDesk.id,
+									helpDeskName: helpDesk.name,
+									optionId: helpDeskOption.id,
+									optionName: helpDeskOption.name,
+									role: `<@&${role.id}>`,
+								}),
+								color: this.client.config.colors.success,
+							},
+						],
+						allowed_mentions: { parse: [], replied_user: true },
+					}),
+				]);
+			}
+
+			return this.client.api.interactions.reply(interaction.id, interaction.token, {
+				embeds: [
+					{
+						title: language.get("HELP_DESK_OPTION_ROLE_LIST_TITLE"),
+						description: helpDeskOption.roleIds.length
+							? helpDeskOption.roleIds.map((roleId) => `<@&${roleId}>`).join(", ")
+							: language.get("HELP_DESK_OPTION_ROLE_LIST_NO_ROLES_DESCRIPTION", {
+									helpDeskId: helpDesk.id,
+									helpDeskName: helpDesk.name,
+									optionId: helpDeskOption.id,
+									optionName: helpDeskOption.name,
+							  }),
+						color: this.client.config.colors.primary,
+					},
+				],
+				allowed_mentions: { parse: [], replied_user: true },
+			});
+		} else if (
+			interaction.arguments.subCommand?.name ===
+			this.client.languageHandler.defaultLanguage?.get("HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_NAME")
+		) {
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
+
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
+				where: {
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
+					guildId: interaction.guild_id!,
+				},
+			});
+
+			if (!helpDesk)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
+								helpDeskId: helpDeskNameOrId,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			const responseId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME",
+					)
+				]!.value;
+
+			const response = await this.client.prisma.embed.findUnique({
+				where: {
+					id: responseId,
+					guildId: interaction.guild_id!,
+				},
+			});
+
+			if (!response)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_RESPONSE_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_RESPONSE_NOT_FOUND_DESCRIPTION", {
+								helpDeskResponseId: responseId,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			const helpDeskOptionsCount = await this.client.prisma.helpDeskOption.count({
+				where: {
+					helpDeskId: helpDesk.id,
+				},
+			});
+
+			if (helpDeskOptionsCount >= 25)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("MAXIMUM_HELP_DESK_OPTIONS_REACHED_TITLE"),
+							description: language.get("MAXIMUM_HELP_DESK_OPTIONS_REACHED_DESCRIPTION"),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			const optionName =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_NAME_OPTION_NAME")
+				]!.value;
+			const description =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_DESCRIPTION_OPTION_NAME",
+					)
+				]?.value ?? null;
+			const emoji =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_EMOJI_OPTION_NAME",
+					)
+				]?.value;
+			const position =
+				interaction.arguments.integers![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
+					)
+				]?.value ?? helpDeskOptionsCount + 1;
+
+			const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {
+				animated: undefined,
+				emojiName: this.unicodeEmojiRegex.exec(emoji ?? "")?.[0],
+				emojiId: undefined,
+			};
+
+			const helpDeskOption = await this.client.prisma.helpDeskOption.create({
+				data: {
+					name: optionName,
+					description,
+					emojiAnimated: Boolean(animated),
+					emojiName: emojiId ? emoji ?? null : emojiName ?? null,
+					emojiId: emojiId ?? null,
+					position,
+					helpDeskId: helpDesk.id,
+					responseId: response.id,
+				},
+			});
+
+			return Promise.all([
+				this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_OPTION_ADDED_TITLE"),
+							description: language.get("HELP_DESK_OPTION_ADDED_DESCRIPTION", {
+								helpDeskId: helpDesk.id,
+								helpDeskName: helpDesk.name,
+								optionId: helpDeskOption.id,
+								optionName: helpDeskOption.name,
+							}),
+							color: this.client.config.colors.success,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+				}),
+				this.client.functions.updateHelpDesk(helpDesk.id),
+			]);
+		} else if (
+			interaction.arguments.subCommand?.name ===
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_NAME")
+		) {
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
+
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
+				where: {
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
+					guildId: interaction.guild_id!,
+				},
+			});
+
+			if (!helpDesk)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
+								helpDeskId: helpDeskNameOrId,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			const helpDeskOptionIdOrName =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
+					)
+				]!.value;
+
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
+				where: {
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
+				},
+			});
+
+			if (!helpDeskOption)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
+								helpDeskId: helpDesk.id,
+								helpDeskName: helpDesk.name,
+								optionId: helpDeskOptionIdOrName,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			const responseId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_RESPONSE_OPTION_NAME",
+					)
+				]!.value;
+
+			const response = await this.client.prisma.embed.findUnique({
+				where: {
+					id: responseId,
+					guildId: interaction.guild_id!,
+				},
+			});
+
+			if (!response)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_RESPONSE_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_RESPONSE_NOT_FOUND_DESCRIPTION", {
+								helpDeskResponseId: responseId,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			return Promise.all([
+				this.client.prisma.helpDeskOption.update({
+					where: {
+						id: helpDeskOption.id,
+					},
+					data: {
+						responseId: response.id,
+					},
+				}),
+				this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_OPTION_RESPONSE_SET_TITLE"),
+							description: language.get("HELP_DESK_OPTION_RESPONSE_SET_DESCRIPTION", {
+								helpDeskId: helpDesk.id,
+								helpDeskName: helpDesk.name,
+								optionId: helpDeskOption.id,
+								optionName: helpDeskOption.name,
+								response: response.name,
+							}),
+							color: this.client.config.colors.success,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+				}),
+			]);
+		} else if (
+			interaction.arguments.subCommand?.name ===
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_NAME")
+		) {
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
+
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
+				where: {
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
+					guildId: interaction.guild_id!,
+				},
+			});
+
+			if (!helpDesk)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
+								helpDeskId: helpDeskNameOrId,
+							}),
+							color: this.client.config.colors.error,
+						},
+					],
+					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
+				});
+
+			const helpDeskOptionIdOrName =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
+					)
+				]!.value;
+
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
+				where: {
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
+				},
+			});
+
+			if (!helpDeskOption)
+				return this.client.api.interactions.reply(interaction.id, interaction.token, {
+					embeds: [
+						{
+							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
+							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
+								helpDeskId: helpDesk.id,
+								helpDeskName: helpDesk.name,
+								optionId: helpDeskOptionIdOrName,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -1042,19 +1394,19 @@ export default class HelpDesk extends ApplicationCommand {
 			const position =
 				interaction.arguments.integers![
 					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
+						"HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_POSITION_OPTION_NAME",
 					)
 				]!.value;
 
-			if (helpDeskOption.position === position)
+			if (position === helpDeskOption.position)
 				return this.client.api.interactions.reply(interaction.id, interaction.token, {
 					embeds: [
 						{
 							title: language.get("HELP_DESK_OPTION_POSITION_NOT_CHANGED_TITLE"),
 							description: language.get("HELP_DESK_OPTION_POSITION_NOT_CHANGED_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOption.id,
 								optionName: helpDeskOption.name,
 								position,
 							}),
@@ -1062,27 +1414,28 @@ export default class HelpDesk extends ApplicationCommand {
 						},
 					],
 					allowed_mentions: { parse: [], replied_user: true },
+					flags: MessageFlags.Ephemeral,
 				});
 
-			await this.client.prisma.helpDeskOption.updateMany({
-				where: {
-					helpDeskId,
-					position: {
-						gte: position,
+			if (position > helpDeskOption.position)
+				await this.client.prisma.helpDeskOption.updateMany({
+					where: {
+						helpDeskId: helpDesk.id,
+						position: {
+							[position > helpDeskOption.position ? "gte" : "lt"]: position,
+						},
 					},
-				},
-				data: {
-					position: {
-						increment: 1,
+					data: {
+						position: {
+							[position > helpDeskOption.position ? "increment" : "decrement"]: 1,
+						},
 					},
-				},
-			});
+				});
 
 			await Promise.all([
 				this.client.prisma.helpDeskOption.update({
 					where: {
-						helpDeskId,
-						id: helpDeskOptionId,
+						id: helpDeskOption.id,
 					},
 					data: {
 						position,
@@ -1093,9 +1446,9 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_POSITION_SET_TITLE"),
 							description: language.get("HELP_DESK_OPTION_POSITION_SET_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOption.id,
 								optionName: helpDeskOption.name,
 								position,
 							}),
@@ -1106,20 +1459,31 @@ export default class HelpDesk extends ApplicationCommand {
 				}),
 			]);
 
-			return this.client.functions.updateHelpDesk(helpDeskId);
+			return this.client.functions.updateHelpDesk(helpDesk.id);
 		} else if (
 			interaction.arguments.subCommand?.name ===
-			this.client.languageHandler.defaultLanguage!.get(
-				"CONFIG_AUTO_THREAD_CHANNEL_SUB_COMMAND_GROUP_REMOVE_SUB_COMMAND_NAME",
-			)
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_REMOVE_SUB_COMMAND_NAME")
 		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
 
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
 				where: {
-					id: helpDeskId,
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
 					guildId: interaction.guild_id!,
 				},
 			});
@@ -1130,7 +1494,7 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDeskNameOrId,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -1139,17 +1503,27 @@ export default class HelpDesk extends ApplicationCommand {
 					flags: MessageFlags.Ephemeral,
 				});
 
-			const helpDeskOptionId =
+			const helpDeskOptionIdOrName =
 				interaction.arguments.strings![
 					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 					)
 				]!.value;
 
-			const helpDeskOption = await this.client.prisma.helpDeskOption.findUnique({
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
 				where: {
-					id: helpDeskOptionId,
-					helpDeskId,
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
 				},
 			});
 
@@ -1159,9 +1533,9 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOptionIdOrName,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -1173,20 +1547,14 @@ export default class HelpDesk extends ApplicationCommand {
 			await Promise.all([
 				this.client.prisma.helpDeskOption.delete({
 					where: {
-						helpDeskId,
-						id: helpDeskOptionId,
+						id: helpDeskOption.id,
 					},
 				}),
 				this.client.api.interactions.reply(interaction.id, interaction.token, {
 					embeds: [
 						{
 							title: language.get("HELP_DESK_OPTION_REMOVED_TITLE"),
-							description: language.get("HELP_DESK_OPTION_REMOVED_DESCRIPTION", {
-								helpDeskId,
-								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
-								optionName: helpDeskOption.name,
-							}),
+							description: language.get("HELP_DESK_OPTION_REMOVED_DESCRIPTION"),
 							color: this.client.config.colors.success,
 						},
 					],
@@ -1194,18 +1562,31 @@ export default class HelpDesk extends ApplicationCommand {
 				}),
 			]);
 
-			return this.client.functions.updateHelpDesk(helpDeskId);
+			return this.client.functions.updateHelpDesk(helpDesk.id);
 		} else if (
 			interaction.arguments.subCommand?.name ===
-			this.client.languageHandler.defaultLanguage!.get("EMBED_COMMAND_RENAME_SUB_COMMAND_NAME")
+			this.client.languageHandler.defaultLanguage!.get("HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_NAME")
 		) {
-			const helpDeskId =
-				interaction.arguments.strings![this.client.languageHandler.defaultLanguage!.get("HELP_DESK_COMMAND_NAME")]!
-					.value;
+			const helpDeskNameOrId =
+				interaction.arguments.strings![
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_HELP_DESK_OPTION_NAME",
+					)
+				]!.value;
 
-			const helpDesk = await this.client.prisma.helpDesk.findUnique({
+			const helpDesk = await this.client.prisma.helpDesk.findFirst({
 				where: {
-					id: helpDeskId,
+					OR: [
+						{
+							name: {
+								equals: helpDeskNameOrId,
+								mode: "insensitive",
+							},
+						},
+						{
+							id: helpDeskNameOrId,
+						},
+					],
 					guildId: interaction.guild_id!,
 				},
 			});
@@ -1216,7 +1597,7 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDeskNameOrId,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -1225,17 +1606,27 @@ export default class HelpDesk extends ApplicationCommand {
 					flags: MessageFlags.Ephemeral,
 				});
 
-			const helpDeskOptionId =
+			const helpDeskOptionIdOrName =
 				interaction.arguments.strings![
 					this.client.languageHandler.defaultLanguage!.get(
-						"HELP_DESK_OPTIONS_COMMAND_RESPONSE_SUB_COMMAND_OPTION_OPTION_NAME",
+						"HELP_DESK_OPTIONS_COMMAND_DESCRIPTION_SUB_COMMAND_GROUP_SET_SUB_COMMAND_OPTION_OPTION_NAME",
 					)
 				]!.value;
 
-			const helpDeskOption = await this.client.prisma.helpDeskOption.findUnique({
+			const helpDeskOption = await this.client.prisma.helpDeskOption.findFirst({
 				where: {
-					id: helpDeskOptionId,
-					helpDeskId,
+					OR: [
+						{
+							id: helpDeskOptionIdOrName,
+						},
+						{
+							name: {
+								equals: helpDeskOptionIdOrName,
+								mode: "insensitive",
+							},
+						},
+					],
+					helpDeskId: helpDesk.id,
 				},
 			});
 
@@ -1245,9 +1636,9 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_NOT_FOUND_TITLE"),
 							description: language.get("HELP_DESK_OPTION_NOT_FOUND_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								optionId: helpDeskOptionId,
+								optionId: helpDeskOptionIdOrName,
 							}),
 							color: this.client.config.colors.error,
 						},
@@ -1258,14 +1649,15 @@ export default class HelpDesk extends ApplicationCommand {
 
 			const newName =
 				interaction.arguments.strings![
-					this.client.languageHandler.defaultLanguage!.get("EMBED_COMMAND_RENAME_SUB_COMMAND_NEW_NAME_OPTION_NAME")
+					this.client.languageHandler.defaultLanguage!.get(
+						"HELP_DESK_OPTIONS_COMMAND_RENAME_SUB_COMMAND_NEW_NAME_OPTION_NAME",
+					)
 				]!.value;
 
 			await Promise.all([
 				this.client.prisma.helpDeskOption.update({
 					where: {
-						helpDeskId,
-						id: helpDeskOptionId,
+						id: helpDeskOption.id,
 					},
 					data: {
 						name: newName,
@@ -1276,11 +1668,11 @@ export default class HelpDesk extends ApplicationCommand {
 						{
 							title: language.get("HELP_DESK_OPTION_RENAMED_TITLE"),
 							description: language.get("HELP_DESK_OPTION_RENAMED_DESCRIPTION", {
-								helpDeskId,
+								helpDeskId: helpDesk.id,
 								helpDeskName: helpDesk.name,
-								newOptionName: newName,
+								optionId: helpDeskOption.id,
 								oldOptionName: helpDeskOption.name,
-								optionId: helpDeskOptionId,
+								newOptionName: newName,
 							}),
 							color: this.client.config.colors.success,
 						},
@@ -1289,7 +1681,7 @@ export default class HelpDesk extends ApplicationCommand {
 				}),
 			]);
 
-			return this.client.functions.updateHelpDesk(helpDeskId);
+			return this.client.functions.updateHelpDesk(helpDesk.id);
 		}
 	}
 }

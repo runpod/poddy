@@ -29,6 +29,9 @@ export default class HelpDeskName extends AutoComplete {
 				"help_desk_options-remove-help_desk",
 				"help_desk_options-rename-help_desk",
 				"help_desk-description-set-name",
+				"help_desk_options-roles-add-help_desk",
+				"help_desk_options-roles-remove-help_desk",
+				"help_desk_options-roles-list-help_desk",
 			],
 			client,
 		);

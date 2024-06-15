@@ -48,6 +48,11 @@ export default class HelpDesk extends SelectMenu {
 			return;
 		}
 
+		if (helpDeskOption.roleIds.length)
+			await this.client.api.guilds.editMember(interaction.guild_id!, interaction.member!.user.id, {
+				roles: [...new Set(interaction.member!.roles.concat(helpDeskOption.roleIds))],
+			});
+
 		return this.client.api.interactions.reply(interaction.id, interaction.token, {
 			...JSON.parse(helpDeskOption.response.data),
 			allowed_mentions: { parse: [], replied_user: true },
