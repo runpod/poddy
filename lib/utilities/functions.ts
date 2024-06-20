@@ -304,8 +304,8 @@ export default class Functions {
 						url: "https://cdn.karalite.com/user_2Z1iHO0Px2py0XMFB2sy1mb631L/pixel%20divider.png",
 					},
 					footer: {
-						text: "RunPod • Discord Help Desk",
-						icon_url: "https://cdn.karalite.com/user_2Z1iHO0Px2py0XMFB2sy1mb631L/runpod%20logo.png",
+						text: helpDesk.footer,
+						icon_url: helpDesk.footerIconUrl,
 					},
 				},
 			],
