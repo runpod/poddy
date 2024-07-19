@@ -18,6 +18,11 @@ enum ZapierNotificationType {
     SALES
 }
 
+enum TextInputStyle {
+    SHORT
+    PARAGRAPH
+}
+
 model Cooldown {
     userId      String
     commandName String
@@ -102,14 +107,33 @@ model HelpDeskOption {
     emojiName     String?
     emojiId       String?
     emojiAnimated Boolean?
+    modalTitle    String?
+    channelId     String?
     roleIds       String[]
     position      Int
 
     helpDesk HelpDesk @relation(fields: [helpDeskId], references: [id], onDelete: Cascade)
     response Embed    @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
+    helpDeskOptionModalComponents HelpDeskOptionModalComponent[]
+
     @@unique([helpDeskId, name])
     @@map("help_desk_options")
+}
+
+model HelpDeskOptionModalComponent {
+    id               String         @id @default(cuid())
+    label            String
+    style            TextInputStyle
+    required         Boolean
+    minLength        Int?
+    maxLength        Int?
+    placeholder      String?
+    value            String?
+    helpDeskOptionId String
+    position         Int
+
+    helpDeskOption HelpDeskOption @relation(fields: [helpDeskOptionId], references: [id], onDelete: Cascade)
 }
 
 model SubscriptionGroup {

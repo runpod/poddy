@@ -36,6 +36,12 @@ export default class HelpDeskName extends AutoComplete {
 				"help_desk-footer-reset-name",
 				"help_desk-footer_icon-set-name",
 				"help_desk-footer_icon-reset-name",
+				"help_desk_options_modal-title-set-help_desk",
+				"help_desk_options_modal-title-reset-help_desk",
+				"help_desk_options_modal-components-add-help_desk",
+				"help_desk_options_modal-components-delete-help_desk",
+				"help_desk_options_modal-channel-set-help_desk",
+				"help_desk_options_modal-channel-reset-help_desk",
 			],
 			client,
 		);

@@ -1,5 +1,5 @@
-import type { APIMessageComponentSelectMenuInteraction } from "@discordjs/core";
-import { MessageFlags } from "@discordjs/core";
+import type { APIMessageComponentSelectMenuInteraction, APITextInputComponent } from "@discordjs/core";
+import { ComponentType, MessageFlags, TextInputStyle } from "@discordjs/core";
 import type Language from "../../../../lib/classes/Language.js";
 import SelectMenu from "../../../../lib/classes/SelectMenu.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
@@ -39,6 +39,9 @@ export default class HelpDesk extends SelectMenu {
 			},
 			include: {
 				response: true,
+				helpDeskOptionModalComponents: {
+					orderBy: { position: "asc" },
+				},
 			},
 		});
 
@@ -46,6 +49,50 @@ export default class HelpDesk extends SelectMenu {
 			this.client.logger.warn(`Help desk option with ID ${helpDeskOptionId} was not found.`);
 
 			return;
+		}
+
+		if (helpDeskOption.modalTitle && helpDeskOption.channelId && helpDeskOption.helpDeskOptionModalComponents.length) {
+			console.log(
+				helpDeskOption.helpDeskOptionModalComponents.map((helpDeskOptionModalComponent) => {
+					const component: APITextInputComponent = {
+						type: ComponentType.TextInput,
+						custom_id: helpDeskOptionModalComponent.id,
+						label: helpDeskOptionModalComponent.label,
+						style: helpDeskOptionModalComponent.style === "PARAGRAPH" ? TextInputStyle.Paragraph : TextInputStyle.Short,
+					};
+
+					if (helpDeskOptionModalComponent.required) component.required = true;
+					if (helpDeskOptionModalComponent.minLength) component.min_length = helpDeskOptionModalComponent.minLength;
+					if (helpDeskOptionModalComponent.maxLength) component.max_length = helpDeskOptionModalComponent.maxLength;
+					if (helpDeskOptionModalComponent.value) component.value = helpDeskOptionModalComponent.value;
+					else if (helpDeskOptionModalComponent.placeholder)
+						component.placeholder = helpDeskOptionModalComponent.placeholder;
+
+					return component;
+				}),
+			);
+
+			return this.client.api.interactions.createModal(interaction.id, interaction.token, {
+				custom_id: `helpDeskOptionsModal.${helpDeskOption.id}`,
+				title: helpDeskOption.modalTitle,
+				components: helpDeskOption.helpDeskOptionModalComponents.map((helpDeskOptionModalComponent) => {
+					const component: APITextInputComponent = {
+						type: ComponentType.TextInput,
+						custom_id: helpDeskOptionModalComponent.id,
+						label: helpDeskOptionModalComponent.label,
+						style: helpDeskOptionModalComponent.style === "PARAGRAPH" ? TextInputStyle.Paragraph : TextInputStyle.Short,
+					};
+
+					if (helpDeskOptionModalComponent.required) component.required = true;
+					if (helpDeskOptionModalComponent.minLength) component.min_length = helpDeskOptionModalComponent.minLength;
+					if (helpDeskOptionModalComponent.maxLength) component.max_length = helpDeskOptionModalComponent.maxLength;
+					if (helpDeskOptionModalComponent.value) component.value = helpDeskOptionModalComponent.value;
+					else if (helpDeskOptionModalComponent.placeholder)
+						component.placeholder = helpDeskOptionModalComponent.placeholder;
+
+					return { type: ComponentType.ActionRow, components: [component] };
+				}),
+			});
 		}
 
 		if (helpDeskOption.roleIds.length)

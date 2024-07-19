@@ -589,7 +589,8 @@ export default class HelpDesk extends ApplicationCommand {
 			}
 
 			try {
-				await this.client.api.channels.deleteMessage(helpDesk.channelId!, helpDesk.messageId!);
+				if (helpDesk.channelId && helpDesk.messageId)
+					await this.client.api.channels.deleteMessage(helpDesk.channelId, helpDesk.messageId);
 			} catch (error) {
 				if (error instanceof DiscordAPIError) {
 					if (error.code === RESTJSONErrorCodes.UnknownMessage) {
