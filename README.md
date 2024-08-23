@@ -1,6 +1,6 @@
-# RunPod Community Discord Bot
+# Poddy
 
-Welcome to the repository for the RunPod Community Discord Bot, a Discord bot created to help the RunPod community server function.
+Welcome to the repository for Poddy, a Discord bot created to help the RunPod community server function.
 
 ## Self Hosting
 

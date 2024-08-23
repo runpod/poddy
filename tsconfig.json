@@ -36,6 +36,7 @@
 		"experimentalDecorators": true,
 		"lib": ["ESNext", "DOM"],
 		"target": "ES2021",
-		"useDefineForClassFields": true
+		"useDefineForClassFields": true,
+		"skipLibCheck": true
 	}
 }

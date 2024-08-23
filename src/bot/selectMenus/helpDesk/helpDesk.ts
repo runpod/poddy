@@ -51,27 +51,7 @@ export default class HelpDesk extends SelectMenu {
 			return;
 		}
 
-		if (helpDeskOption.modalTitle && helpDeskOption.channelId && helpDeskOption.helpDeskOptionModalComponents.length) {
-			console.log(
-				helpDeskOption.helpDeskOptionModalComponents.map((helpDeskOptionModalComponent) => {
-					const component: APITextInputComponent = {
-						type: ComponentType.TextInput,
-						custom_id: helpDeskOptionModalComponent.id,
-						label: helpDeskOptionModalComponent.label,
-						style: helpDeskOptionModalComponent.style === "PARAGRAPH" ? TextInputStyle.Paragraph : TextInputStyle.Short,
-					};
-
-					if (helpDeskOptionModalComponent.required) component.required = true;
-					if (helpDeskOptionModalComponent.minLength) component.min_length = helpDeskOptionModalComponent.minLength;
-					if (helpDeskOptionModalComponent.maxLength) component.max_length = helpDeskOptionModalComponent.maxLength;
-					if (helpDeskOptionModalComponent.value) component.value = helpDeskOptionModalComponent.value;
-					else if (helpDeskOptionModalComponent.placeholder)
-						component.placeholder = helpDeskOptionModalComponent.placeholder;
-
-					return component;
-				}),
-			);
-
+		if (helpDeskOption.modalTitle && helpDeskOption.channelId && helpDeskOption.helpDeskOptionModalComponents.length)
 			return this.client.api.interactions.createModal(interaction.id, interaction.token, {
 				custom_id: `helpDeskOptionsModal.${helpDeskOption.id}`,
 				title: helpDeskOption.modalTitle,
@@ -93,7 +73,6 @@ export default class HelpDesk extends SelectMenu {
 					return { type: ComponentType.ActionRow, components: [component] };
 				}),
 			});
-		}
 
 		if (helpDeskOption.roleIds.length)
 			await this.client.api.guilds.editMember(interaction.guild_id!, interaction.member!.user.id, {

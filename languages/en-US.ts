@@ -1064,4 +1064,27 @@ export default {
 	HELP_DESK_MODAL_COMPONENT_DELETED_TITLE: "Help Desk Modal Component Deleted",
 	HELP_DESK_MODAL_COMPONENT_DELETED_DESCRIPTION:
 		"A component has been deleted from the help desk modal for **{{helpDeskName}}** `[{{helpDeskId}}]`!",
+
+	ESCALATE_TO_ZENDESK_TITLE: "Escalate To Zendesk",
+
+	ESCALATED_TO_ZENDESK_TITLE: "Escalated To Zendesk",
+	ESCALATED_MESSAGE_TO_ZENDESK_DESCRIPTION: "The message has been escalated to Zendesk!",
+	ESCALATED_THREAD_TO_ZENDESK_DESCRIPTION: "The thread has been escalated to Zendesk!",
+
+	OPEN_ZENDESK_TICKET_BUTTON_LABEL: "Open Zendesk Ticket",
+
+	ESCALATE_TO_ZENDESK_EMAIL_LABEL: "RunPod Email",
+	ESCALATE_TO_ZENDESK_EMAIL_PLACEHOLDER: "example@example.com",
+
+	ESCALATED_TO_ZENDESK_ERROR_TITLE: "Error Escalating To Zendesk",
+	ESCALATED_TO_ZENDESK_ERROR_DESCRIPTION: "An error occurred while escalating to Zendesk, please try again later.",
+
+	TICKET_CREATED_TITLE: "Ticket Created",
+	TICKET_CREATED_DESCRIPTION: `Your ticket has been created, check your email for ticket #{{ticketId}}!`,
+
+	ESCALATION_FOR_ANOTHER_USER_TITLE: "Escalation For Another User",
+	ESCALATION_FOR_ANOTHER_USER_DESCRIPTION: "This escalation is for another user, you can't open this ticket!",
+
+	TICKET_ALREADY_EXISTS_TITLE: "Ticket Already Exists",
+	TICKET_ALREADY_EXISTS_DESCRIPTION: `You already have a ticket open (#{{ticketId}}), please wait for it to be resolved before opening a new one!`,
 };

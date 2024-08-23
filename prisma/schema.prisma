@@ -23,6 +23,11 @@ enum TextInputStyle {
     PARAGRAPH
 }
 
+enum EscalatedType {
+    MESSAGE
+    THREAD
+}
+
 model Cooldown {
     userId      String
     commandName String
@@ -229,4 +234,13 @@ model Invite {
     guildId     String
 
     @@map("invites")
+}
+
+model ZendeskTicket {
+    id            Int           @id
+    escalatedId   String        @unique
+    escalatedById String
+    type          EscalatedType
+
+    @@map("zendesk_tickets")
 }

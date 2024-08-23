@@ -14,7 +14,6 @@ export default class ThreadCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#thread-create
 	 */
 	public override async run({ data: channel }: WithIntrinsicProps<GatewayThreadCreateDispatchData>) {
-		console.log(channel);
 		if (channel.type !== ChannelType.PublicThread) return;
 
 		const parentChannel = await this.client.api.channels.get(channel.parent_id!);
