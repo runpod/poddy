@@ -150,8 +150,6 @@ export default class EscalateToZendesk extends Modal {
 					},
 				);
 
-				const data = await response.json();
-
 				return this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 					embeds: [
 						{
@@ -227,8 +225,6 @@ export default class EscalateToZendesk extends Modal {
 					response,
 				},
 			);
-
-			const data = await response.json();
 
 			return this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 				embeds: [
