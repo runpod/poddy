@@ -18,7 +18,18 @@ export default class Ready extends EventHandler {
 	public override async run({ shardId, data }: WithIntrinsicProps<GatewayReadyDispatchData>) {
 		this.client.dataDog.gauge("guild_count", data.guilds.length, [`shard:${shardId}`]);
 
-		for (const guild of data.guilds) this.client.guildOwnersCache.set(guild.id, "");
+		await Promise.all(
+			data.guilds.map(async (guild) => {
+				this.client.guildOwnersCache.set(guild.id, "");
+
+				const invites = await this.client.api.guilds.getInvites(guild.id);
+				const invitesCache =
+					this.client.invitesCache.get(guild.id) ??
+					new Map(new Map(invites.map((invite) => [invite.code, invite.uses])));
+
+				this.client.invitesCache.set(guild.id, invitesCache);
+			}),
+		);
 
 		this.client.logger.info(
 			`Logged in as ${data.user.username}#${data.user.discriminator} [${data.user.id}] on Shard ${shardId} with ${data.guilds.length} guilds.`,

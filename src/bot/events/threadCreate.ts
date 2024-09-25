@@ -20,11 +20,19 @@ export default class ThreadCreate extends EventHandler {
 
 		if (parentChannel.type !== ChannelType.GuildForum) return;
 
-		const autoTagOnForumChannel = await this.client.prisma.autoTagOnForumChannel.findMany({
-			where: {
-				channelId: channel.parent_id!,
-			},
-		});
+		const [autoTagOnForumChannel, _] = await Promise.all([
+			this.client.prisma.autoTagOnForumChannel.findMany({
+				where: {
+					channelId: channel.parent_id!,
+				},
+			}),
+			this.client.prisma.logChannel.findMany({
+				where: {
+					event: "THREAD_CREATED",
+					guildId: channel.guild_id!,
+				},
+			}),
+		]);
 
 		const tagIds = [...new Set((channel.applied_tags ?? []).concat(autoTagOnForumChannel.map(({ tagId }) => tagId)))];
 

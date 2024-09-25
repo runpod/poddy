@@ -28,6 +28,27 @@ enum EscalatedType {
     THREAD
 }
 
+enum LogEvent {
+    MESSAGE_EDITED
+    MESSAGE_DELETED
+    CHANNEL_CREATED
+    CHANNEL_DELETED
+    CHANNEL_UPDATED
+    ROLE_CREATED
+    ROLE_DELETED
+    ROLE_UPDATED
+    MEMBER_ROLE_UPDATED
+    MEMBER_UPDATED
+    MEMBER_JOINED
+    MEMBER_LEFT
+    VOICE_STATE_UPDATE
+    THREAD_CREATED
+    THREAD_UPDATED
+    THREAD_DELETED
+    INVITE_CREATED
+    INVITE_DELETED
+}
+
 model Cooldown {
     userId      String
     commandName String
@@ -243,4 +264,33 @@ model ZendeskTicket {
     type          EscalatedType
 
     @@map("zendesk_tickets")
+}
+
+model LogChannel {
+    guildId   String
+    channelId String
+    event     LogEvent
+
+    @@id([channelId, event])
+    @@map("log_channels")
+}
+
+model Message {
+    id        String   @id
+    content   String
+    guildId   String
+    authorId  String
+    createdAt DateTime
+
+    @@map("messages")
+}
+
+model MemberJoin {
+    id         String   @id @default(cuid())
+    inviteCode String?
+    userId     String
+    guildId    String
+    joinedAt   DateTime
+
+    @@map("member_joins")
 }

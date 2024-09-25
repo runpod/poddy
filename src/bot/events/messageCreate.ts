@@ -17,6 +17,16 @@ export default class MessageCreate extends EventHandler {
 	public override async run({ shardId, data: message }: WithIntrinsicProps<GatewayMessageCreateDispatchData>) {
 		if (message.author.bot) return;
 
+		await this.client.prisma.message.create({
+			data: {
+				id: message.id,
+				authorId: message.author.id,
+				content: message.content,
+				createdAt: new Date(message.timestamp),
+				guildId: message.guild_id!,
+			},
+		});
+
 		let channel: APIChannel | null = null;
 
 		try {

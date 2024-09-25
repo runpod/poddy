@@ -31,8 +31,6 @@ export default class ExtendedClient extends Client {
 	 */
 	public override readonly api: API;
 
-	// public override gateway: Gateway;
-
 	/**
 	 * The configuration for our bot.
 	 */
@@ -78,11 +76,6 @@ export default class ExtendedClient extends Client {
 			  }
 		)[];
 	}>;
-
-	/**
-	 * All of the different gauges we use for Metrics with Prometheus and Grafana.
-	 */
-	// private readonly gauges: Map<keyof typeof metrics, Gauge>;
 
 	/**
 	 * A map of guild ID to user ID, representing a guild and who owns it.
@@ -185,6 +178,16 @@ export default class ExtendedClient extends Client {
 	 */
 	public readonly usersInVoice: Map<string, Set<string>> = new Map();
 
+	/**
+	 * Cache of invites for the guild.
+	 */
+	public readonly invitesCache = new Map<string, Map<string, number>>();
+
+	/**
+	 * A cache for the names of a channel, this has a TTL of thirty seconds.
+	 */
+	public readonly channelNameCache = new Map<string, string>();
+
 	public constructor({ rest, gateway }: ClientOptions) {
 		super({ rest, gateway });
 
@@ -192,6 +195,7 @@ export default class ExtendedClient extends Client {
 
 		this.config = Config;
 		this.config.version =
+			// eslint-disable-next-line n/no-sync
 			execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + env.NODE_ENV === "development" ? "dev" : "";
 
 		this.logger = Logger;
