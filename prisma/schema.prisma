@@ -47,6 +47,7 @@ enum LogEvent {
     THREAD_DELETED
     INVITE_CREATED
     INVITE_DELETED
+    INCIDENT_CREATED
 }
 
 model Cooldown {
@@ -293,4 +294,17 @@ model MemberJoin {
     joinedAt   DateTime
 
     @@map("member_joins")
+}
+
+model BetterStackStatusReport {
+    id           String    @id
+    startsAt     DateTime
+    endsAt       DateTime?
+    statusPageId Int
+    messageId    String
+    channelId    String
+    guildId      String
+    lastUpdateAt DateTime  @updatedAt
+
+    @@map("better_stack_status_reports")
 }

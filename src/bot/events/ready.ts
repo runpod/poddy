@@ -4,6 +4,7 @@ import { GatewayDispatchEvents } from "@discordjs/core";
 import { schedule } from "node-cron";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
+import type { BetterStackStatusReport } from "../../../typings/index.js";
 
 export default class Ready extends EventHandler {
 	public constructor(client: ExtendedClient) {
@@ -54,7 +55,7 @@ export default class Ready extends EventHandler {
 			);
 		});
 
-		schedule("* * * * *", () => {
+		schedule("* * * * *", async () => {
 			this.client.dataDog.gauge("guilds", this.client.guildOwnersCache.size);
 			this.client.dataDog.gauge("approximate_user_count", this.client.approximateUserCount);
 
@@ -72,6 +73,27 @@ export default class Ready extends EventHandler {
 						this.client.logger.sentry.captureException(error);
 					},
 				);
+
+			const betterStackStatusReportsResponse = await fetch(
+				`https://betteruptime.com/api/v2/status-pages/162404/status-reports`,
+				{
+					headers: {
+						Authorization: `Bearer ${env.BETTER_UPTIME_API_KEY}`,
+					},
+				},
+			);
+
+			const betterStackStatusReports: { data: BetterStackStatusReport[] } =
+				await betterStackStatusReportsResponse.json();
+
+			await Promise.all(
+				betterStackStatusReports.data
+					.filter(
+						(statusReport) =>
+							new Date(statusReport.attributes.starts_at).getTime() >= Date.now() - 1_000 * 60 * 60 * 24 * 7,
+					)
+					.map(async (statusReport) => this.client.functions.updateBetterStackStatusReport(statusReport.id)),
+			);
 		});
 
 		const helpDesks = await this.client.prisma.helpDesk.findMany({
