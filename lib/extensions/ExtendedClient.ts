@@ -26,304 +26,304 @@ import TextCommandHandler from "../classes/TextCommandHandler.js";
 import Functions from "../utilities/functions.js";
 
 export default class ExtendedClient extends Client {
-	/**
-	 * An API instance to make using Discord's API much easier.
-	 */
-	public override readonly api: API;
+  /**
+   * An API instance to make using Discord's API much easier.
+   */
+  public override readonly api: API;
 
-	/**
-	 * The configuration for our bot.
-	 */
-	public readonly config: typeof Config;
+  /**
+   * The configuration for our bot.
+   */
+  public readonly config: typeof Config;
 
-	/**
-	 * The logger for our bot.
-	 */
-	public readonly logger: typeof Logger;
+  /**
+   * The logger for our bot.
+   */
+  public readonly logger: typeof Logger;
 
-	/**
-	 * The functions for our bot.
-	 */
-	public readonly functions: Functions;
+  /**
+   * The functions for our bot.
+   */
+  public readonly functions: Functions;
 
-	/**
-	 * The i18n instance for our bot.
-	 */
-	public readonly i18n: typeof i18next;
+  /**
+   * The i18n instance for our bot.
+   */
+  public readonly i18n: typeof i18next;
 
-	/**
-	 * __dirname is not in our version of ECMA, this is a workaround.
-	 */
-	public readonly __dirname: string;
+  /**
+   * __dirname is not in our version of ECMA, this is a workaround.
+   */
+  public readonly __dirname: string;
 
-	/**
-	 * Our Prisma client, this is an ORM to interact with our PostgreSQL instance.
-	 */
-	public readonly prisma: PrismaClient<{
-		errorFormat: "pretty";
-		log: (
-			| {
-					emit: "event";
-					level: "query";
-			  }
-			| {
-					emit: "stdout";
-					level: "error";
-			  }
-			| {
-					emit: "stdout";
-					level: "warn";
-			  }
-		)[];
-	}>;
+  /**
+   * Our Prisma client, this is an ORM to interact with our PostgreSQL instance.
+   */
+  public readonly prisma: PrismaClient<{
+    errorFormat: "pretty";
+    log: (
+      | {
+          emit: "event";
+          level: "query";
+        }
+      | {
+          emit: "stdout";
+          level: "error";
+        }
+      | {
+          emit: "stdout";
+          level: "warn";
+        }
+    )[];
+  }>;
 
-	/**
-	 * A map of guild ID to user ID, representing a guild and who owns it.
-	 */
-	public guildOwnersCache: Map<string, string>;
+  /**
+   * A map of guild ID to user ID, representing a guild and who owns it.
+   */
+  public guildOwnersCache: Map<string, string>;
 
-	/**
-	 * Guild roles cache.
-	 */
+  /**
+   * Guild roles cache.
+   */
 
-	public guildRolesCache: Map<string, Map<string, APIRole>>;
+  public guildRolesCache: Map<string, Map<string, APIRole>>;
 
-	/**
-	 * A cache of the bot's user in different guilds.
-	 */
-	public guildMeCache: Map<string, APIGuildMember & {}>;
+  /**
+   * A cache of the bot's user in different guilds.
+   */
+  public guildMeCache: Map<string, APIGuildMember & {}>;
 
-	/**
-	 * An approximation of how many users the bot can see.
-	 */
-	public approximateUserCount: number;
+  /**
+   * An approximation of how many users the bot can see.
+   */
+  public approximateUserCount: number;
 
-	/**
-	 * The language handler for our bot.
-	 */
-	public readonly languageHandler: LanguageHandler;
+  /**
+   * The language handler for our bot.
+   */
+  public readonly languageHandler: LanguageHandler;
 
-	/**
-	 * A map of events that our client is listening to.
-	 */
-	public events: Map<keyof MappedEvents, EventHandler>;
+  /**
+   * A map of events that our client is listening to.
+   */
+  public events: Map<keyof MappedEvents, EventHandler>;
 
-	/**
-	 * A map of the application commands that the bot is currently handling.
-	 */
-	public applicationCommands: Map<string, ApplicationCommand>;
+  /**
+   * A map of the application commands that the bot is currently handling.
+   */
+  public applicationCommands: Map<string, ApplicationCommand>;
 
-	/**
-	 * The application command handler for our bot.
-	 */
-	public readonly applicationCommandHandler: ApplicationCommandHandler;
+  /**
+   * The application command handler for our bot.
+   */
+  public readonly applicationCommandHandler: ApplicationCommandHandler;
 
-	/**
-	 * A map of the auto completes that the bot is currently handling.
-	 */
-	public autoCompletes: Map<string[], AutoComplete>;
+  /**
+   * A map of the auto completes that the bot is currently handling.
+   */
+  public autoCompletes: Map<string[], AutoComplete>;
 
-	/**
-	 * The auto complete handler for our bot.
-	 */
-	public readonly autoCompleteHandler: AutoCompleteHandler;
+  /**
+   * The auto complete handler for our bot.
+   */
+  public readonly autoCompleteHandler: AutoCompleteHandler;
 
-	/**
-	 * A map of the text commands that the bot is currently handling.
-	 */
-	public readonly textCommands: Map<string, TextCommand>;
+  /**
+   * A map of the text commands that the bot is currently handling.
+   */
+  public readonly textCommands: Map<string, TextCommand>;
 
-	/**
-	 * The text command handler for our bot.
-	 */
-	public readonly textCommandHandler: TextCommandHandler;
+  /**
+   * The text command handler for our bot.
+   */
+  public readonly textCommandHandler: TextCommandHandler;
 
-	/**
-	 * A map of the buttons that the bot is currently handling.
-	 */
-	public readonly buttons: Map<string, Button>;
+  /**
+   * A map of the buttons that the bot is currently handling.
+   */
+  public readonly buttons: Map<string, Button>;
 
-	/**
-	 * The button handler for our bot.
-	 */
-	public readonly buttonHandler: ButtonHandler;
+  /**
+   * The button handler for our bot.
+   */
+  public readonly buttonHandler: ButtonHandler;
 
-	/**
-	 * A map of the select menus the bot is currently handling.
-	 */
-	public readonly selectMenus: Map<string, SelectMenu>;
+  /**
+   * A map of the select menus the bot is currently handling.
+   */
+  public readonly selectMenus: Map<string, SelectMenu>;
 
-	/**
-	 * The select menu handler for our bot.
-	 */
-	public readonly selectMenuHandler: SelectMenuHandler;
+  /**
+   * The select menu handler for our bot.
+   */
+  public readonly selectMenuHandler: SelectMenuHandler;
 
-	/**
-	 * A map of modals the bot is currently handling.
-	 */
-	public readonly modals: Map<string, Modal>;
+  /**
+   * A map of modals the bot is currently handling.
+   */
+  public readonly modals: Map<string, Modal>;
 
-	/**
-	 * The modal handler for our bot.
-	 */
-	public readonly modalHandler: ModalHandler;
+  /**
+   * The modal handler for our bot.
+   */
+  public readonly modalHandler: ModalHandler;
 
-	/**
-	 * Our data dog client.
-	 */
-	public readonly dataDog: typeof metrics;
+  /**
+   * Our data dog client.
+   */
+  public readonly dataDog: typeof metrics;
 
-	/**
-	 * A map of guild IDs to a set of user IDs, representing a guild and who is in a voice channel.
-	 */
-	public readonly usersInVoice: Map<string, Set<string>> = new Map();
+  /**
+   * A map of guild IDs to a set of user IDs, representing a guild and who is in a voice channel.
+   */
+  public readonly usersInVoice: Map<string, Set<string>> = new Map();
 
-	/**
-	 * Cache of invites for the guild.
-	 */
-	public readonly invitesCache = new Map<string, Map<string, number>>();
+  /**
+   * Cache of invites for the guild.
+   */
+  public readonly invitesCache = new Map<string, Map<string, number>>();
 
-	/**
-	 * A cache for the names of a channel, this has a TTL of thirty seconds.
-	 */
-	public readonly channelNameCache = new Map<string, string>();
+  /**
+   * A cache for the names of a channel, this has a TTL of thirty seconds.
+   */
+  public readonly channelNameCache = new Map<string, string>();
 
-	public constructor({ rest, gateway }: ClientOptions) {
-		super({ rest, gateway });
+  public constructor({ rest, gateway }: ClientOptions) {
+    super({ rest, gateway });
 
-		this.api = new API(rest);
+    this.api = new API(rest);
 
-		this.config = Config;
-		this.config.version =
-			// eslint-disable-next-line n/no-sync
-			execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + env.NODE_ENV === "development" ? "dev" : "";
+    this.config = Config;
+    this.config.version =
+      // eslint-disable-next-line n/no-sync
+      execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + env.NODE_ENV === "development" ? "dev" : "";
 
-		this.logger = Logger;
-		this.functions = new Functions(this);
+    this.logger = Logger;
+    this.functions = new Functions(this);
 
-		this.prisma = new PrismaClient({
-			errorFormat: "pretty",
-			log: [
-				{
-					level: "warn",
-					emit: "stdout",
-				},
-				{
-					level: "error",
-					emit: "stdout",
-				},
-				{ level: "query", emit: "event" },
-			],
-		});
+    this.prisma = new PrismaClient({
+      errorFormat: "pretty",
+      log: [
+        {
+          level: "warn",
+          emit: "stdout",
+        },
+        {
+          level: "error",
+          emit: "stdout",
+        },
+        { level: "query", emit: "event" },
+      ],
+    });
 
-		this.guildOwnersCache = new Map();
-		this.guildRolesCache = new Map();
-		this.guildMeCache = new Map();
+    this.guildOwnersCache = new Map();
+    this.guildRolesCache = new Map();
+    this.guildMeCache = new Map();
 
-		this.approximateUserCount = 0;
+    this.approximateUserCount = 0;
 
-		// I forget what this is even used for, but Vlad from https://github.com/vladfrangu/highlight uses it and recommended me to use it a while ago.
-		if (env.NODE_ENV === "development") {
-			this.prisma.$on("query", (event) => {
-				try {
-					const paramsArray = JSON.parse(event.params);
-					const newQuery = event.query.replaceAll(/\$(?<captured>\d+)/g, (_, number) => {
-						const value = paramsArray[Number(number) - 1];
+    // I forget what this is even used for, but Vlad from https://github.com/vladfrangu/highlight uses it and recommended me to use it a while ago.
+    if (env.NODE_ENV === "development") {
+      this.prisma.$on("query", (event) => {
+        try {
+          const paramsArray = JSON.parse(event.params);
+          const newQuery = event.query.replaceAll(/\$(?<captured>\d+)/g, (_, number) => {
+            const value = paramsArray[Number(number) - 1];
 
-						if (typeof value === "string") return `"${value}"`;
-						else if (Array.isArray(value)) return `'${JSON.stringify(value)}'`;
+            if (typeof value === "string") return `"${value}"`;
+            else if (Array.isArray(value)) return `'${JSON.stringify(value)}'`;
 
-						return String(value);
-					});
+            return String(value);
+          });
 
-					this.logger.debug("prisma:query", newQuery);
-				} catch {
-					this.logger.debug("prisma:query", event.query, "PARAMETERS", event.params);
-				}
-			});
+          this.logger.debug("prisma:query", newQuery);
+        } catch {
+          this.logger.debug("prisma:query", event.query, "PARAMETERS", event.params);
+        }
+      });
 
-			this.prisma.$use(async (params, next) => {
-				const before = Date.now();
-				// eslint-disable-next-line n/callback-return
-				const result = await next(params);
-				const after = Date.now();
+      this.prisma.$use(async (params, next) => {
+        const before = Date.now();
+        // eslint-disable-next-line n/callback-return
+        const result = await next(params);
+        const after = Date.now();
 
-				this.logger.debug("prisma:query", `${params.model}.${params.action} took ${String(after - before)}ms`);
+        this.logger.debug("prisma:query", `${params.model}.${params.action} took ${String(after - before)}ms`);
 
-				return result;
-			});
-		}
+        return result;
+      });
+    }
 
-		// @ts-expect-error
-		this.dataDog = metrics.default;
+    // @ts-expect-error
+    this.dataDog = metrics.default;
 
-		this.dataDog.init({
-			flushIntervalSeconds: 0,
-			apiKey: env.DATADOG_API_KEY,
-			prefix: `${this.config.botName.toLowerCase().split(" ").join("_")}.`,
-			defaultTags: [`env:${env.NODE_ENV}`],
-		});
+    this.dataDog.init({
+      flushIntervalSeconds: 0,
+      apiKey: env.DATADOG_API_KEY,
+      prefix: `${this.config.botName.toLowerCase().split(" ").join("_")}.`,
+      defaultTags: [`env:${env.NODE_ENV}`],
+    });
 
-		this.i18n = i18next;
+    this.i18n = i18next;
 
-		this.__dirname = resolve();
+    this.__dirname = resolve();
 
-		this.languageHandler = new LanguageHandler(this);
+    this.languageHandler = new LanguageHandler(this);
 
-		this.applicationCommands = new Map();
-		this.applicationCommandHandler = new ApplicationCommandHandler(this);
+    this.applicationCommands = new Map();
+    this.applicationCommandHandler = new ApplicationCommandHandler(this);
 
-		this.autoCompletes = new Map();
-		this.autoCompleteHandler = new AutoCompleteHandler(this);
+    this.autoCompletes = new Map();
+    this.autoCompleteHandler = new AutoCompleteHandler(this);
 
-		this.textCommands = new Map();
-		this.textCommandHandler = new TextCommandHandler(this);
+    this.textCommands = new Map();
+    this.textCommandHandler = new TextCommandHandler(this);
 
-		this.buttons = new Map();
-		this.buttonHandler = new ButtonHandler(this);
+    this.buttons = new Map();
+    this.buttonHandler = new ButtonHandler(this);
 
-		this.selectMenus = new Map();
-		this.selectMenuHandler = new SelectMenuHandler(this);
+    this.selectMenus = new Map();
+    this.selectMenuHandler = new SelectMenuHandler(this);
 
-		this.modals = new Map();
-		this.modalHandler = new ModalHandler(this);
+    this.modals = new Map();
+    this.modalHandler = new ModalHandler(this);
 
-		this.events = new Map();
-		void this.loadEvents();
-	}
+    this.events = new Map();
+    void this.loadEvents();
+  }
 
-	/**
-	 * Start the client.
-	 */
-	public async start() {
-		await this.i18n.use(intervalPlural).init({
-			fallbackLng: "en-US",
-			resources: {},
-			fallbackNS: this.config.botName.toLowerCase().split(" ").join("_"),
-			lng: "en-US",
-		});
+  /**
+   * Start the client.
+   */
+  public async start() {
+    await this.i18n.use(intervalPlural).init({
+      fallbackLng: "en-US",
+      resources: {},
+      fallbackNS: this.config.botName.toLowerCase().split(" ").join("_"),
+      lng: "en-US",
+    });
 
-		await this.languageHandler.loadLanguages();
-		await this.autoCompleteHandler.loadAutoCompletes();
-		await this.applicationCommandHandler.loadApplicationCommands();
-		await this.textCommandHandler.loadTextCommands();
-		await this.buttonHandler.loadButtons();
-		await this.selectMenuHandler.loadSelectMenus();
-		await this.modalHandler.loadModals();
-	}
+    await this.languageHandler.loadLanguages();
+    await this.autoCompleteHandler.loadAutoCompletes();
+    await this.applicationCommandHandler.loadApplicationCommands();
+    await this.textCommandHandler.loadTextCommands();
+    await this.buttonHandler.loadButtons();
+    await this.selectMenuHandler.loadSelectMenus();
+    await this.modalHandler.loadModals();
+  }
 
-	/**
-	 * Load all the events in the events directory.
-	 */
-	private async loadEvents() {
-		for (const eventFileName of this.functions.getFiles(`${this.__dirname}/dist/src/bot/events`, ".js", true)) {
-			const EventFile = await import(`../../src/bot/events/${eventFileName}`);
+  /**
+   * Load all the events in the events directory.
+   */
+  private async loadEvents() {
+    for (const eventFileName of this.functions.getFiles(`${this.__dirname}/dist/src/bot/events`, ".js", true)) {
+      const EventFile = await import(`../../src/bot/events/${eventFileName}`);
 
-			const event = new EventFile.default(this) as EventHandler;
+      const event = new EventFile.default(this) as EventHandler;
 
-			event.listen();
+      event.listen();
 
-			this.events.set(event.name, event);
-		}
-	}
+      this.events.set(event.name, event);
+    }
+  }
 }

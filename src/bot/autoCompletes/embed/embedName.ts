@@ -5,53 +5,53 @@ import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "../../../../typings/index.js";
 
 export default class EmbedName extends AutoComplete {
-	/**
-	 * Create our embed name auto complete.
-	 *
-	 * @param client - Our extended client.
-	 */
-	public constructor(client: ExtendedClient) {
-		super(
-			[
-				"embed-delete-name",
-				"embed-preview-name",
-				"embed-rename-name",
-				"help_desk-options-add-response",
-				"help_desk-options-edit-response",
-				"help_desk_options-add-response",
-				"help_desk_options-response-response",
-			],
-			client,
-		);
-	}
+  /**
+   * Create our embed name auto complete.
+   *
+   * @param client - Our extended client.
+   */
+  public constructor(client: ExtendedClient) {
+    super(
+      [
+        "embed-delete-name",
+        "embed-preview-name",
+        "embed-rename-name",
+        "help_desk-options-add-response",
+        "help_desk-options-edit-response",
+        "help_desk_options-add-response",
+        "help_desk_options-response-response",
+      ],
+      client,
+    );
+  }
 
-	/**
-	 * Run this auto complete.
-	 *
-	 * @param options - The options for this auto complete.
-	 * @param options.shardId - The shard ID that this interaction was received on.
-	 * @param options.language - The language to use when replying to the interaction.
-	 * @param options.interaction - The interaction to run this auto complete on.
-	 */
-	public override async run({
-		interaction,
-	}: {
-		interaction: APIInteractionWithArguments<APIApplicationCommandAutocompleteInteraction>;
-		language: Language;
-		shardId: number;
-	}) {
-		const value = interaction.arguments.focused?.value;
+  /**
+   * Run this auto complete.
+   *
+   * @param options - The options for this auto complete.
+   * @param options.shardId - The shard ID that this interaction was received on.
+   * @param options.language - The language to use when replying to the interaction.
+   * @param options.interaction - The interaction to run this auto complete on.
+   */
+  public override async run({
+    interaction,
+  }: {
+    interaction: APIInteractionWithArguments<APIApplicationCommandAutocompleteInteraction>;
+    language: Language;
+    shardId: number;
+  }) {
+    const value = interaction.arguments.focused?.value;
 
-		const embeds = await this.client.prisma.embed.findMany({
-			where: { name: { startsWith: ((value as string | undefined) ?? "").toLowerCase() } },
-			take: 25,
-		});
+    const embeds = await this.client.prisma.embed.findMany({
+      where: { name: { startsWith: ((value as string | undefined) ?? "").toLowerCase() } },
+      take: 25,
+    });
 
-		return this.client.api.interactions.createAutocompleteResponse(interaction.id, interaction.token, {
-			choices: embeds.map((embed) => ({
-				name: embed.name,
-				value: embed.id,
-			})),
-		});
-	}
+    return this.client.api.interactions.createAutocompleteResponse(interaction.id, interaction.token, {
+      choices: embeds.map((embed) => ({
+        name: embed.name,
+        value: embed.id,
+      })),
+    });
+  }
 }
