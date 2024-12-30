@@ -6,12 +6,12 @@
     "build": "tsc && cross-env NODE_ENV=development node .",
     "start": "cross-env NODE_ENV=production node .",
     "prepare": "husky install",
-    "translate": "tsm languages/utils/interface.ts && pnpm prettier typings/language.d.ts --write"
+    "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts"
   },
   "lint-staged": {
-    "**/*.{ts,json}": [
-      "pnpm prettier --write"
-    ],
+    "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
+			"biome check --write --no-errors-on-unmatched"
+		],
     "languages/{en-US.json,interface.ts}": [
       "pnpm translate",
       "git add typings/language.d.ts"
@@ -43,19 +43,10 @@
   "devDependencies": {
     "@types/got": "^9.6.12",
     "@types/node": "18.18.0",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "@typescript-eslint/parser": "^5.58.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.38.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-neon": "^0.1.42",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
-    "prettier": "^2.8.7",
+    "@biomejs/biome": "^1.9.4",
     "prisma": "^5.3.1",
     "ts-node": "^10.9.1",
     "tsm": "^2.3.0",

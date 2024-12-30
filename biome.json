@@ -1,0 +1,80 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
+	},
+	"files": {
+		"ignore": ["typings/language.d.ts", "package.json", ".wrangler/", "node_modules/"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 120
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"complexity": {
+				"noUselessStringConcat": "error",
+				"noUselessUndefinedInitialization": "error",
+				"noVoid": "off",
+				"useDateNow": "error"
+			},
+			"correctness": {
+				"noNewSymbol": "error",
+				"noUnusedPrivateClassMembers": "off",
+				"noUnusedVariables": "error",
+				"useArrayLiterals": "error"
+			},
+			"nursery": {
+				"useSortedClasses": "warn"
+			},
+			"style": {
+				"noParameterAssign": "off",
+				"noNonNullAssertion": "off",
+				"useCollapsedElseIf": "error",
+				"useConsistentArrayType": {
+					"level": "error",
+					"options": {
+						"syntax": "shorthand"
+					}
+				},
+				"useDefaultSwitchClause": "error",
+				"useFilenamingConvention": {
+					"level": "off",
+					"options": {
+						"requireAscii": true,
+						"filenameCases": ["kebab-case"]
+					}
+				},
+				"useNamingConvention": {
+					"level": "off",
+					"options": {
+						"strictCase": false
+					}
+				},
+				"useShorthandAssign": "error",
+				"useThrowNewError": "error",
+				"useThrowOnlyError": "error"
+			},
+			"suspicious": {
+				"noImplicitAnyLet": "off",
+				"noExplicitAny": "off",
+				"noEmptyBlockStatements": "off",
+				"useErrorMessage": "error",
+				"useNumberToFixedDigitsArgument": "error"
+			},
+			"security": {
+				"noGlobalEval": "warn"
+			}
+		}
+	}
+}
