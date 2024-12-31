@@ -325,6 +325,16 @@ export default class EscalateToZendesk extends Modal {
 		}
 
 		return Promise.all([
+			this.client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
+				embeds: [
+					{
+						...interaction.message!.embeds![0],
+						footer: {
+							text: `Ticket ID: ${data.ticket.id}`,
+						},
+					},
+				],
+			}),
 			this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 				embeds: [
 					{
