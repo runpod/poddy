@@ -58,4 +58,4 @@ CREATE TABLE
     );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "zendesk_tickets_escalatedId_key" ON "zendesk_tickets" ("escalatedId");
+CREATE UNIQUE INDEX IF NOT EXISTS "zendesk_tickets_escalatedId_key" ON "zendesk_tickets" ("escalatedId");
