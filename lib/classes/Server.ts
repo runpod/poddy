@@ -83,7 +83,6 @@ export default class Server {
 
 			this.prisma.$use(async (params, next) => {
 				const before = Date.now();
-				// eslint-disable-next-line n/callback-return
 				const result = await next(params);
 				const after = Date.now();
 
@@ -96,18 +95,20 @@ export default class Server {
 		else
 			schedule("0 1 * * *", async () => {
 				const zapierNotifications = await this.prisma.zapierNotification.findMany({
-					where: { timestamp: { gte: new Date(Date.now() - 1_000 * 60 * 60 * 24) } },
+					where: {
+						timestamp: {
+							gte: new Date(Date.now() - 1_000 * 60 * 60 * 24),
+						},
+					},
 				});
 				const groups: Record<string, Record<string, Set<string>>> = {};
 
 				for (const zapierNotification of zapierNotifications) {
 					if (!groups[zapierNotification.type]) groups[zapierNotification.type] = {};
-					// biome-ignore lint/style/noNonNullAssertion: <explanation>
+
 					if (!groups[zapierNotification.type]![zapierNotification.message])
-						// biome-ignore lint/style/noNonNullAssertion: <explanation>
 						groups[zapierNotification.type]![zapierNotification.message] = new Set();
 
-					// biome-ignore lint/style/noNonNullAssertion: <explanation>
 					groups[zapierNotification.type]![zapierNotification.message]!.add(zapierNotification.email);
 				}
 
@@ -136,11 +137,9 @@ export default class Server {
 							const data = await response.json();
 
 							Logger.info(
-								`Failed to send ${type} notification ${message} with ${emails.size} emails!\n${JSON.stringify(
-									data,
-									null,
-									4,
-								)}`,
+								`Failed to send ${type} notification ${message} with ${
+									emails.size
+								} emails!\n${JSON.stringify(data, null, 4)}`,
 							);
 						}
 					}
@@ -151,8 +150,12 @@ export default class Server {
 	public async start() {
 		this.registerRoutes();
 
-		serve({ fetch: this.router.fetch, port: Number.parseInt(env.API_PORT, 10) }, (info) =>
-			Logger.info(`Hono server started, listening on ${info.address}:${info.port}`),
+		serve(
+			{
+				fetch: this.router.fetch,
+				port: Number.parseInt(env.API_PORT, 10),
+			},
+			(info) => Logger.info(`Hono server started, listening on ${info.address}:${info.port}`),
 		);
 	}
 
@@ -189,7 +192,10 @@ export default class Server {
 			if (!subscriptionGroup) {
 				context.status(200);
 
-				return context.json({ success: true, message: `I do not listen for "${body.group}"!` });
+				return context.json({
+					success: true,
+					message: `I do not listen for "${body.group}"!`,
+				});
 			}
 
 			const channelsToSendTo: Record<string, string[]> = {};
@@ -198,7 +204,6 @@ export default class Server {
 			for (const user of subscriptionGroup.subscribedUsers) {
 				if (!channelsToSendTo[user.channelId]) channelsToSendTo[user.channelId] = [];
 
-				// biome-ignore lint/style/noNonNullAssertion: <explanation>
 				channelsToSendTo[user.channelId]!.push(user.userId);
 				totalUserCount++;
 			}
