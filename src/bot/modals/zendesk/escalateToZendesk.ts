@@ -171,12 +171,22 @@ export default class EscalateToZendesk extends Modal {
 			const data: TicketCreatedResponse = await response.json();
 
 			return Promise.all([
+				this.client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
+					embeds: [
+						{
+							...interaction.message!.embeds![0],
+							footer: {
+								text: `Ticket ID: #${data.ticket.id.toLocaleString()}`,
+							},
+						},
+					],
+				}),
 				this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 					embeds: [
 						{
 							title: language.get("TICKET_CREATED_TITLE"),
 							description: language.get("TICKET_CREATED_DESCRIPTION", {
-								ticketId: data.ticket.id,
+								ticketId: data.ticket.id.toLocaleString(),
 							}),
 							color: this.client.config.colors.success,
 						},
@@ -330,7 +340,7 @@ export default class EscalateToZendesk extends Modal {
 					{
 						...interaction.message!.embeds![0],
 						footer: {
-							text: `Ticket ID: ${data.ticket.id}`,
+							text: `Ticket ID: #${data.ticket.id.toLocaleString()}`,
 						},
 					},
 				],
@@ -340,7 +350,7 @@ export default class EscalateToZendesk extends Modal {
 					{
 						title: language.get("TICKET_CREATED_TITLE"),
 						description: language.get("TICKET_CREATED_DESCRIPTION", {
-							ticketId: data.ticket.id,
+							ticketId: data.ticket.id.toLocaleString(),
 						}),
 						color: this.client.config.colors.success,
 					},
