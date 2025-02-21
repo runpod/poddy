@@ -1,5 +1,5 @@
 import { env } from "node:process";
-import type { GatewayReadyDispatchData, WithIntrinsicProps } from "@discordjs/core";
+import type { GatewayReadyDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
 import { schedule } from "node-cron";
 import EventHandler from "../../../lib/classes/EventHandler.js";
@@ -16,7 +16,7 @@ export default class Ready extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#ready
 	 */
-	public override async run({ shardId, data }: WithIntrinsicProps<GatewayReadyDispatchData>) {
+	public override async run({ shardId, data }: ToEventProps<GatewayReadyDispatchData>) {
 		this.client.dataDog.gauge("guild_count", data.guilds.length, [`shard:${shardId}`]);
 
 		await Promise.all(

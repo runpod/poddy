@@ -1,25 +1,24 @@
-FROM node:18 AS base
+ARG NODE_VERSION
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+FROM node:${NODE_VERSION:-20} AS base
 
-RUN corepack enable
-COPY . /app
-WORKDIR /app
+WORKDIR "/app"
+COPY . .
+VOLUME ["/app"]
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-RUN pnpm translate
-RUN pnpm prisma migrate dev
+RUN npm install --omit=dev
+RUN npx prisma generate
+RUN npx prisma migrate deploy
 
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm translate
-RUN pnpm prisma migrate dev
-RUN pnpm tsc
+RUN npm install
+RUN npm run translate
+RUN npx prisma generate
+RUN npx prisma migrate deploy
+RUN npx tsc
 
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
-EXPOSE 3000
-CMD [ "pnpm", "start" ]
+CMD [ "npm", "start" ]

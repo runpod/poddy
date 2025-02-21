@@ -4,7 +4,7 @@ import type {
 	APIGuildTextChannel,
 	GatewayMessageUpdateDispatchData,
 	GuildTextChannelType,
-	WithIntrinsicProps,
+	ToEventProps,
 } from "@discordjs/core";
 import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
@@ -21,7 +21,7 @@ export default class MessageUpdate extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#message-update
 	 */
-	public override async run({ data: message }: WithIntrinsicProps<GatewayMessageUpdateDispatchData>) {
+	public override async run({ data: message }: ToEventProps<GatewayMessageUpdateDispatchData>) {
 		if (message.author?.bot) return;
 
 		const oldMessage = await this.client.prisma.message.findUnique({

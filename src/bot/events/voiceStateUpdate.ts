@@ -1,4 +1,4 @@
-import type { GatewayVoiceStateUpdateDispatchData, WithIntrinsicProps } from "@discordjs/core";
+import type { GatewayVoiceStateUpdateDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
@@ -28,7 +28,7 @@ export default class GuildMemberAdd extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#voice-state-update
 	 */
-	public override async run({ data: voiceState }: WithIntrinsicProps<GatewayVoiceStateUpdateDispatchData>) {
+	public override async run({ data: voiceState }: ToEventProps<GatewayVoiceStateUpdateDispatchData>) {
 		const usersInVoiceChannel = this.client.usersInVoice.get(voiceState.guild_id ?? "@me");
 
 		if (usersInVoiceChannel?.has(voiceState.user_id)) {

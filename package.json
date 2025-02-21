@@ -1,55 +1,64 @@
 {
-  "name": "nimbus",
+  "name": "poddy",
   "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc && cross-env NODE_ENV=development node .",
-    "start": "cross-env NODE_ENV=production node .",
-    "prepare": "husky install",
+    "start": "NODE_ENV=production node .",
+    "prepare": "husky || prisma generate || true",
     "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts"
   },
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
-			"biome check --write --no-errors-on-unmatched"
-		],
+      "biome check --write --no-errors-on-unmatched"
+    ],
     "languages/{en-US.json,interface.ts}": [
       "pnpm translate",
       "git add typings/language.d.ts"
     ]
   },
   "dependencies": {
-    "@discordjs/core": "^1.1.1",
-    "@discordjs/rest": "^2.2.0",
-    "@discordjs/ws": "^1.0.2",
-    "@hono/node-server": "^1.5.0",
-    "@prisma/client": "^5.3.1",
-    "@sapphire/bitfield": "^1.0.0",
-    "@sapphire/snowflake": "^3.4.2",
-    "@sentry/node": "8.26.0",
+    "@discordjs/core": "^2.0.1",
+    "@discordjs/rest": "^2.4.3",
+    "@discordjs/ws": "^1.2.1",
+    "@hono/node-server": "^1.13.8",
+    "@prisma/client": "^6.4.1",
+    "@sapphire/bitfield": "^1.2.4",
+    "@sapphire/snowflake": "^3.5.5",
+    "@sentry/node": "9.1.0",
     "@types/node-cron": "^3.0.11",
-    "bufferutil": "^4.0.7",
-    "colorette": "^2.0.19",
-    "datadog-metrics": "^0.11.1",
-    "discord-api-types": "^0.37.66",
+    "bufferutil": "^4.0.9",
+    "colorette": "^2.0.20",
+    "datadog-metrics": "^0.12.1",
+    "discord-api-types": "^0.37.119",
     "dotenv-extended": "^2.9.0",
-    "fastify": "^4.15.0",
-    "hono": "^3.12.6",
-    "i18next": "^22.4.14",
+    "fastify": "^5.2.1",
+    "hono": "^4.7.2",
+    "i18next": "^24.2.2",
     "i18next-intervalplural-postprocessor": "^3.0.0",
-    "node-cron": "^3.0.3",
-    "utf-8-validate": "^6.0.3",
-    "zlib-sync": "^0.1.8"
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
-    "@types/got": "^9.6.12",
-    "@types/node": "18.18.0",
-    "cross-env": "^7.0.3",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.1",
     "@biomejs/biome": "^1.9.4",
-    "prisma": "^5.3.1",
-    "ts-node": "^10.9.1",
+    "@types/got": "^9.6.12",
+    "@types/node": "22.13.4",
+    "cross-env": "^7.0.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prisma": "^6.4.1",
+    "ts-node": "^10.9.2",
     "tsm": "^2.3.0",
-    "typescript": "^5.0.4"
-  }
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@prisma/client",
+      "@prisma/engines",
+      "bufferutil",
+      "esbuild",
+      "prisma"
+    ]
+  },
+  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
 }

@@ -1,4 +1,4 @@
-import type { LocaleString } from "@discordjs/core";
+import type { Locale } from "@discordjs/core";
 import type { TOptions } from "i18next";
 import type { LanguageValues } from "../../typings/language.js";
 import type ExtendedClient from "../extensions/ExtendedClient.js";
@@ -39,7 +39,7 @@ export default class LanguageHandler {
 		for (const fileName of this.client.functions.getFiles(`${this.client.__dirname}/dist/languages/`, ".js")) {
 			const languageFile: LanguageOptions = await import(`../../languages/${fileName}`).then((file) => file.default);
 
-			const language: Language = new Language(this.client, languageFile.LANGUAGE_ID! as LocaleString, {
+			const language: Language = new Language(this.client, languageFile.LANGUAGE_ID! as Locale, {
 				enabled: languageFile.LANGUAGE_ENABLED!,
 				language: languageFile,
 			});
