@@ -65,9 +65,13 @@ export default {
 	UseEmbeddedActivities: "Use Activities",
 	ModerateMembers: "Timeout Members",
 	ViewCreatorMonetizationAnalytics: "View Creator Monetization Analytics",
+	CreateGuildExpressions: "Create Guild Expressions",
 	UseSoundboard: "Use Soundboard",
+	CreateEvents: "Create Events",
 	UseExternalSounds: "Use External Sounds",
 	SendVoiceMessages: "Send Voice Messages",
+	SendPolls: "Send Polls",
+	UseExternalApps: "Use External Apps",
 
 	INVALID_ARGUMENT_TITLE: "Invalid Argument",
 

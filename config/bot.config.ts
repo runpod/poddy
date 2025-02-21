@@ -10,7 +10,7 @@ export default {
 	/**
 	 * The name the bot should use across the bot.
 	 */
-	botName: "Nimbus",
+	botName: "Poddy",
 
 	/**
 	 * The bot's current version, this is the first 7 characters from the current Git commit hash.

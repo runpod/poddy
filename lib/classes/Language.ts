@@ -1,4 +1,4 @@
-import type { LocaleString } from "@discordjs/core";
+import { Locale } from "@discordjs/core";
 import type { TOptions } from "i18next";
 import enUS from "../../languages/en-US.js";
 import type { LanguageValues } from "../../typings/language";
@@ -16,7 +16,7 @@ export default class Language {
 	/**
 	 * The ID of our language.
 	 */
-	public readonly id: LocaleString;
+	public readonly id: Locale;
 
 	/**
 	 * Whether or not this language is enabled.
@@ -37,11 +37,7 @@ export default class Language {
 	 * @param options.enabled Whether or not this language is enabled.
 	 * @param options.language The language options.
 	 */
-	public constructor(
-		client: ExtendedClient,
-		id: LocaleString,
-		options: { enabled: boolean; language?: LanguageOptions },
-	) {
+	public constructor(client: ExtendedClient, id: Locale, options: { enabled: boolean; language?: LanguageOptions }) {
 		if (!options)
 			options = {
 				enabled: true,
@@ -77,7 +73,7 @@ export default class Language {
 	public has(key: string) {
 		return (
 			this.client.i18n.t(key, {
-				lng: this.enabled ? this.id : "en-US",
+				lng: this.enabled ? this.id : Locale.EnglishUS,
 			}) !== key
 		);
 	}

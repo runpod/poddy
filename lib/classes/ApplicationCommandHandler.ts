@@ -4,8 +4,9 @@ import type {
 	APIApplicationCommandInteraction,
 	APIChatInputApplicationCommandInteraction,
 	APIInteractionDataResolved,
+	RESTPostAPIApplicationGuildCommandsJSONBody,
 	RESTPostAPIWebhookWithTokenJSONBody,
-	WithIntrinsicProps,
+	ToEventProps,
 } from "@discordjs/core";
 import {
 	ApplicationCommandOptionType,
@@ -114,7 +115,9 @@ export default class ApplicationCommandHandler {
 						.bulkOverwriteGuildCommands(
 							env.APPLICATION_ID,
 							guildId,
-							applicationCommands.map((applicationCommand) => applicationCommand.options),
+							applicationCommands.map(
+								(applicationCommand) => applicationCommand.options as RESTPostAPIApplicationGuildCommandsJSONBody,
+							),
 						)
 						.catch(async (error) => {
 							if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingAccess)
@@ -138,7 +141,9 @@ export default class ApplicationCommandHandler {
 			.bulkOverwriteGuildCommands(
 				env.APPLICATION_ID,
 				env.DEVELOPMENT_GUILD_ID,
-				[...this.client.applicationCommands.values()].map((applicationCommand) => applicationCommand.options),
+				[...this.client.applicationCommands.values()].map(
+					(applicationCommand) => applicationCommand.options as RESTPostAPIApplicationGuildCommandsJSONBody,
+				),
 			)
 			.catch(async (error) => {
 				if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingAccess)
@@ -192,7 +197,7 @@ export default class ApplicationCommandHandler {
 	public async handleApplicationCommand({
 		data: interaction,
 		shardId,
-	}: Omit<WithIntrinsicProps<APIApplicationCommandInteraction>, "api">) {
+	}: Omit<ToEventProps<APIApplicationCommandInteraction>, "api">) {
 		const userLanguage = await this.client.prisma.userLanguage.findUnique({
 			where: {
 				userId: (interaction.member?.user ?? interaction.user!).id,

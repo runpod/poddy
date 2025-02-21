@@ -1,0 +1,10 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_VERSION=22.14.0
+    volumes:
+      - .:/app
+      - /app/node_modules

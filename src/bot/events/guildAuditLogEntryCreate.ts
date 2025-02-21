@@ -1,4 +1,4 @@
-import type { GatewayGuildAuditLogEntryCreateDispatchData, WithIntrinsicProps } from "@discordjs/core";
+import type { GatewayGuildAuditLogEntryCreateDispatchData, ToEventProps } from "@discordjs/core";
 import { AuditLogEvent, ChannelType, GatewayDispatchEvents } from "@discordjs/core";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
@@ -32,7 +32,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create
 	 */
-	public override async run({ data: auditLogEntry }: WithIntrinsicProps<GatewayGuildAuditLogEntryCreateDispatchData>) {
+	public override async run({ data: auditLogEntry }: ToEventProps<GatewayGuildAuditLogEntryCreateDispatchData>) {
 		console.log(auditLogEntry);
 
 		if (auditLogEntry.action_type === AuditLogEvent.ChannelCreate) {

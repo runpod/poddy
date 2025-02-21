@@ -1,4 +1,4 @@
-import type { APIInteraction, WithIntrinsicProps } from "@discordjs/core";
+import type { APIInteraction, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents, InteractionType } from "@discordjs/core";
 import { isMessageComponentButtonInteraction, isMessageComponentSelectMenuInteraction } from "discord-api-types/utils";
 import EventHandler from "../../../lib/classes/EventHandler.js";
@@ -14,7 +14,7 @@ export default class InteractionCreate extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#interaction-create
 	 */
-	public override async run({ shardId, data }: WithIntrinsicProps<APIInteraction>) {
+	public override async run({ shardId, data }: ToEventProps<APIInteraction>) {
 		// This is very cursed, but it works.
 		const dd = data.data as any;
 

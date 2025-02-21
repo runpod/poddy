@@ -1,4 +1,4 @@
-import type { GatewayThreadCreateDispatchData, WithIntrinsicProps } from "@discordjs/core";
+import type { GatewayThreadCreateDispatchData, ToEventProps } from "@discordjs/core";
 import { ChannelType, GatewayDispatchEvents } from "@discordjs/core";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
@@ -13,7 +13,7 @@ export default class ThreadCreate extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#thread-create
 	 */
-	public override async run({ data: channel }: WithIntrinsicProps<GatewayThreadCreateDispatchData>) {
+	public override async run({ data: channel }: ToEventProps<GatewayThreadCreateDispatchData>) {
 		if (channel.type !== ChannelType.PublicThread) return;
 
 		const parentChannel = await this.client.api.channels.get(channel.parent_id!);

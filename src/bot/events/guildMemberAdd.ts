@@ -1,4 +1,4 @@
-import type { GatewayGuildMemberAddDispatchData, WithIntrinsicProps } from "@discordjs/core";
+import type { GatewayGuildMemberAddDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import EventHandler from "../../../lib/classes/EventHandler.js";
@@ -14,7 +14,7 @@ export default class GuildMemberAdd extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-member-add
 	 */
-	public override async run({ data: member }: WithIntrinsicProps<GatewayGuildMemberAddDispatchData>) {
+	public override async run({ data: member }: ToEventProps<GatewayGuildMemberAddDispatchData>) {
 		this.client.approximateUserCount++;
 
 		this.client.dataDog.increment("guild_members", 1, [`guildId:${member.guild_id}`]);

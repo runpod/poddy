@@ -1,6 +1,6 @@
 import { env } from "node:process";
 import { REST } from "@discordjs/rest";
-import { CompressionMethod, WebSocketManager, WebSocketShardEvents, WorkerShardingStrategy } from "@discordjs/ws";
+import { WebSocketManager, WebSocketShardEvents, WorkerShardingStrategy } from "@discordjs/ws";
 import { load } from "dotenv-extended";
 import botConfig from "../config/bot.config.js";
 import Logger from "../lib/classes/Logger.js";
@@ -17,7 +17,7 @@ const gateway = new WebSocketManager({
 	token: env.DISCORD_TOKEN,
 	intents: botConfig.intents,
 	initialPresence: botConfig.presence,
-	compression: CompressionMethod.ZlibStream,
+	//compression: CompressionMethod.ZlibStream,
 	rest,
 	// This will cause 2 workers to spawn, 3 shards per worker.
 	// "each shard gets its own bubble which handles decoding, heartbeats, etc. And your main thread just gets the final result" - Vlad.
