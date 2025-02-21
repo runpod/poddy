@@ -20,7 +20,7 @@
   "dependencies": {
     "@discordjs/core": "^2.0.1",
     "@discordjs/rest": "^2.4.3",
-    "@discordjs/ws": "^1.2.1",
+    "@discordjs/ws": "^2.0.1",
     "@hono/node-server": "^1.13.8",
     "@prisma/client": "^6.4.1",
     "@sapphire/bitfield": "^1.2.4",
