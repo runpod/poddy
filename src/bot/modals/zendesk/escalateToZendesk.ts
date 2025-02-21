@@ -223,6 +223,7 @@ export default class EscalateToZendesk extends Modal {
 						}">this thread</a> from Discord, all messages in the thread are included below as internal notes.`,
 					},
 					requester: { email, name: user.username },
+					tags: ["discord"],
 				},
 			}),
 			method: "POST",
