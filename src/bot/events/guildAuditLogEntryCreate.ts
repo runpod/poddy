@@ -33,8 +33,6 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create
 	 */
 	public override async run({ data: auditLogEntry }: ToEventProps<GatewayGuildAuditLogEntryCreateDispatchData>) {
-		console.log(auditLogEntry);
-
 		if (auditLogEntry.action_type === AuditLogEvent.ChannelCreate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
