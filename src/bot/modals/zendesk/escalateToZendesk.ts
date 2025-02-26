@@ -1,63 +1,11 @@
 import { env } from "node:process";
 import { MessageFlags } from "@discordjs/core";
-import type { APIMessage, APIModalSubmitInteraction, APIThreadChannel } from "@discordjs/core";
+import type { APIMessage, APIModalSubmitGuildInteraction, APIThreadChannel } from "@discordjs/core";
 import type Language from "../../../../lib/classes/Language.js";
 import Modal from "../../../../lib/classes/Modal.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-
-interface TicketCreatedResponse {
-	ticket: {
-		assignee_id: number;
-		collaborator_ids: number[];
-		created_at: string;
-		custom_fields: { id: number; value: string }[];
-		custom_status_id: number;
-		description: string;
-		due_at: string;
-		external_id: string;
-		follower_ids: number[];
-		from_messaging_channel: boolean;
-		group_id: number;
-		id: number;
-		organization_id: number;
-		priority: string;
-		problem_id: number;
-		raw_subject: string;
-		recipient: string;
-		requester_id: number;
-		satisfaction_rating: {
-			comment: string;
-			id: number;
-			score: string;
-		};
-		sharing_agreement_ids: number[];
-		status: string;
-		subject: string;
-		tags: string[];
-		updated_at: string;
-		url: string;
-		via: {
-			channel: string;
-		};
-	};
-}
-
-interface ZendeskAttachment {
-	content_type: string;
-	content_url: string;
-	file_name: string;
-	id: string;
-	url: string;
-}
-
-interface ZendeskUploadResponse {
-	upload: {
-		attachment: ZendeskAttachment;
-		attachments: ZendeskAttachment[];
-		expires_at: string;
-		token: string;
-	};
-}
+import type { ZendeskUploadResponse } from "../../../../typings/zendesk.js";
+import { submitTicket } from "../../../utils/zendesk.js";
 
 export default class EscalateToZendesk extends Modal {
 	/**
@@ -73,9 +21,8 @@ export default class EscalateToZendesk extends Modal {
 
 	public override async run({
 		interaction,
-		language,
 	}: {
-		interaction: APIModalSubmitInteraction;
+		interaction: APIModalSubmitGuildInteraction;
 		language: Language;
 		shardId: number;
 	}) {
@@ -118,144 +65,28 @@ export default class EscalateToZendesk extends Modal {
 				}),
 			);
 
-			const response = await fetch("https://runpodinc.zendesk.com/api/v2/tickets.json", {
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Basic ${env.ZENDESK_API_KEY}`,
+			await submitTicket(this.client, type, email, user, interaction, {
+				comment: {
+					html_body: `${user.username} [${user.id}] escalated 
+					<a href="https://discord.com/channels/${interaction.guild_id!}/${message.channel_id}/${message.id}">this message</a> 
+					from Discord:
+					\n\n${message.author.username} [${message.author.id}]: ${message.content}`,
+					uploads: uploadTokens,
 				},
-				body: JSON.stringify({
-					ticket: {
-						subject: "Message Escalated From Discord",
-						comment: {
-							html_body: `${user.username} [${
-								user.id
-							}] escalated <a href="https://discord.com/channels/${interaction.guild_id!}/${message.channel_id}/${
-								message.id
-							}">this message</a> from Discord:\n\n${
-								message.author.username
-							} [${message.author.id}]: ${message.content}`,
-							uploads: uploadTokens,
-						},
-						requester: { email, name: user.username },
-					},
-				}),
-				method: "POST",
 			});
-
-			if (response.status !== 201) {
-				const eventId = await this.client.logger.sentry.captureWithExtras(
-					new Error(`Zendesk Ticket Creation Failed With Status ${response.status} (${response.statusText})`),
-					{
-						response,
-					},
-				);
-
-				return this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("ESCALATED_TO_ZENDESK_ERROR_TITLE"),
-							description: language.get("ESCALATED_TO_ZENDESK_ERROR_DESCRIPTION"),
-							footer: {
-								text: language.get("SENTRY_EVENT_ID_FOOTER", {
-									eventId,
-								}),
-							},
-							color: this.client.config.colors.error,
-						},
-					],
-					flags: MessageFlags.Ephemeral,
-					allowed_mentions: { parse: [], replied_user: true },
-				});
-			}
-
-			const data: TicketCreatedResponse = await response.json();
-
-			return Promise.all([
-				this.client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
-					embeds: [
-						{
-							...interaction.message!.embeds![0],
-							footer: {
-								text: `Ticket ID: #${data.ticket.id.toLocaleString()}`,
-							},
-						},
-					],
-				}),
-				this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
-					embeds: [
-						{
-							title: language.get("TICKET_CREATED_TITLE"),
-							description: language.get("TICKET_CREATED_DESCRIPTION", {
-								ticketId: data.ticket.id.toLocaleString(),
-							}),
-							color: this.client.config.colors.success,
-						},
-					],
-					allowed_mentions: { parse: [], replied_user: true },
-					flags: MessageFlags.Ephemeral,
-				}),
-				this.client.prisma.zendeskTicket.create({
-					data: {
-						id: data.ticket.id,
-						escalatedId: message.id,
-						escalatedById: userId,
-						type: "MESSAGE",
-					},
-				}),
-			]);
 		}
 
 		const thread = (await this.client.api.channels.get(id)) as APIThreadChannel;
 
-		const response = await fetch("https://runpodinc.zendesk.com/api/v2/tickets.json", {
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Basic ${env.ZENDESK_API_KEY}`,
+		const data = await submitTicket(this.client, type, email, user, interaction, {
+			comment: {
+				html_body: `${user.username} [${user.id}] escalated 
+				<a href="https://discord.com/channels/${thread.guild_id!}/${thread.id}">this thread</a>
+				from Discord, all messages in the thread are included below as internal notes.`,
 			},
-			body: JSON.stringify({
-				ticket: {
-					subject: "Thread Escalated From Discord",
-					comment: {
-						html_body: `${user.username} [${
-							user.id
-						}] escalated <a href="https://discord.com/channels/${thread.guild_id!}/${
-							thread.id
-						}">this thread</a> from Discord, all messages in the thread are included below as internal notes.`,
-					},
-					requester: { email, name: user.username },
-					tags: ["discord"],
-				},
-			}),
-			method: "POST",
 		});
 
-		if (response.status !== 201) {
-			const eventId = await this.client.logger.sentry.captureWithExtras(
-				new Error(`Zendesk Ticket Creation Failed With Status ${response.status} (${response.statusText})`),
-				{
-					response,
-				},
-			);
-
-			return this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
-				embeds: [
-					{
-						title: language.get("ESCALATED_TO_ZENDESK_ERROR_TITLE"),
-						description: language.get("ESCALATED_TO_ZENDESK_ERROR_DESCRIPTION"),
-						footer: {
-							text: language.get("SENTRY_EVENT_ID_FOOTER", {
-								eventId,
-							}),
-						},
-						color: this.client.config.colors.error,
-					},
-				],
-				flags: MessageFlags.Ephemeral,
-				allowed_mentions: { parse: [], replied_user: true },
-			});
-		}
-
-		const data: TicketCreatedResponse = await response.json();
+		if (!data) return;
 
 		const allMessages: APIMessage[] = [];
 
@@ -324,7 +155,7 @@ export default class EscalateToZendesk extends Modal {
 				method: "PUT",
 			});
 
-			if (commentResponse.status !== 200)
+			if (commentResponse.status !== 200) {
 				await this.client.logger.sentry.captureWithExtras(
 					new Error(
 						`Zendesk Ticket Comment Failed With Status ${commentResponse.status} (${commentResponse.statusText})`,
@@ -333,40 +164,7 @@ export default class EscalateToZendesk extends Modal {
 						response: commentResponse,
 					},
 				);
+			}
 		}
-
-		return Promise.all([
-			this.client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
-				embeds: [
-					{
-						...interaction.message!.embeds![0],
-						footer: {
-							text: `Ticket ID: #${data.ticket.id.toLocaleString()}`,
-						},
-					},
-				],
-			}),
-			this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
-				embeds: [
-					{
-						title: language.get("TICKET_CREATED_TITLE"),
-						description: language.get("TICKET_CREATED_DESCRIPTION", {
-							ticketId: data.ticket.id.toLocaleString(),
-						}),
-						color: this.client.config.colors.success,
-					},
-				],
-				allowed_mentions: { parse: [], replied_user: true },
-				flags: MessageFlags.Ephemeral,
-			}),
-			this.client.prisma.zendeskTicket.create({
-				data: {
-					id: data.ticket.id,
-					escalatedId: thread.id,
-					escalatedById: userId,
-					type: "THREAD",
-				},
-			}),
-		]);
 	}
 }
