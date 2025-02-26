@@ -81,7 +81,7 @@ export async function submitTicket(
 				{
 					...interaction.message!.embeds![0],
 					footer: {
-						text: `Ticket ID: #${data.ticket.id.toLocaleString()}`,
+						text: `Ticket ID: #${data.ticket.id}`,
 					},
 				},
 			],
