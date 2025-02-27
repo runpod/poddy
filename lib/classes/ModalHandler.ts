@@ -6,7 +6,7 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type Modal from "./Modal.js";
 
-export default class ModalHandler<C extends ExtendedClient> {
+export default class ModalHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */

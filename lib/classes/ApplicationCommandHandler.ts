@@ -21,7 +21,7 @@ import applicationCommandOptionTypeReference from "../utilities/reference.js";
 import type ApplicationCommand from "./ApplicationCommand.js";
 import type Language from "./Language.js";
 
-export default class ApplicationCommandHandler<C extends ExtendedClient> {
+export default class ApplicationCommandHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */

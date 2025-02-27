@@ -4,7 +4,7 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type TextCommand from "./TextCommand";
 
-export default class TextCommandHandler<C extends ExtendedClient> {
+export default class TextCommandHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */

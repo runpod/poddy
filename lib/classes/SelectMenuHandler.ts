@@ -10,7 +10,7 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type SelectMenu from "./SelectMenu.js";
 
-export default class SelectMenuHandler<C extends ExtendedClient> {
+export default class SelectMenuHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */

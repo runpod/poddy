@@ -5,12 +5,12 @@ import type {
 } from "@discordjs/core";
 import { ApplicationCommandOptionType } from "@discordjs/core";
 import type { APIInteractionWithArguments, InteractionArguments } from "../../typings";
-import type ExtendedClient from "../extensions/ExtendedClient";
+import type ExtendedClient from "../extensions/ExtendedClient.js";
 import applicationCommandOptionTypeReference from "../utilities/reference.js";
 import type AutoComplete from "./AutoComplete";
 import type Language from "./Language";
 
-export default class AutoCompleteHandler<C extends ExtendedClient> {
+export default class AutoCompleteHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */

@@ -5,7 +5,7 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type { LanguageKeys, LanguageOptions } from "./Language.js";
 import Language from "./Language.js";
 
-export default class LanguageHandler<C extends ExtendedClient> {
+export default class LanguageHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client
 	 */

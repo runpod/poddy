@@ -1,4 +1,4 @@
-import ExtendedClient from "../lib/extensions/ExtendedClient";
+import ExtendedClient from "../lib/extensions/ExtendedClient.js";
 import type PoddyFunctions from "./utilities/functions";
 
 export class PoddyClient extends ExtendedClient {

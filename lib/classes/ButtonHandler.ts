@@ -10,7 +10,7 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Button from "./Button.js";
 import type Language from "./Language.js";
 
-export default class ButtonHandler<C extends ExtendedClient> {
+export default class ButtonHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */

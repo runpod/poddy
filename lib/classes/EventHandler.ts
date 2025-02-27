@@ -1,7 +1,7 @@
 import type { MappedEvents } from "@discordjs/core";
 import type ExtendedClient from "../extensions/ExtendedClient.js";
 
-export default class EventHandler<C extends ExtendedClient> {
+export default class EventHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * The name of our event, this is what we will use to listen to the event.
 	 */
