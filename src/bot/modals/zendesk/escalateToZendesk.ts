@@ -3,17 +3,16 @@ import { MessageFlags } from "@discordjs/core";
 import type { APIMessage, APIModalSubmitGuildInteraction, APIThreadChannel } from "@discordjs/core";
 import type Language from "../../../../lib/classes/Language.js";
 import Modal from "../../../../lib/classes/Modal.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
 import type { ZendeskUploadResponse } from "../../../../typings/zendesk.js";
-import { submitTicket } from "../../../utils/zendesk.js";
+import type { PoddyClient } from "../../../client.js";
 
-export default class EscalateToZendesk extends Modal {
+export default class EscalateToZendesk extends Modal<PoddyClient> {
 	/**
 	 * Create our escalate to Zendesk modal.
 	 *
 	 * @param client - Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: PoddyClient) {
 		super(client, {
 			name: "escalateToZendesk",
 		});
@@ -65,7 +64,7 @@ export default class EscalateToZendesk extends Modal {
 				}),
 			);
 
-			await submitTicket(this.client, type, email, user, interaction, {
+			await this.client.functions.submitTicket(this.client, type, email, user, interaction, {
 				comment: {
 					html_body: `${user.username} [${user.id}] escalated 
 					<a href="https://discord.com/channels/${interaction.guild_id!}/${message.channel_id}/${message.id}">this message</a> 
@@ -78,7 +77,7 @@ export default class EscalateToZendesk extends Modal {
 
 		const thread = (await this.client.api.channels.get(id)) as APIThreadChannel;
 
-		const data = await submitTicket(this.client, type, email, user, interaction, {
+		const data = await this.client.functions.submitTicket(this.client, type, email, user, interaction, {
 			comment: {
 				html_body: `${user.username} [${user.id}] escalated 
 				<a href="https://discord.com/channels/${thread.guild_id!}/${thread.id}">this thread</a>

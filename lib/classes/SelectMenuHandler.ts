@@ -10,11 +10,11 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type SelectMenu from "./SelectMenu.js";
 
-export default class SelectMenuHandler {
+export default class SelectMenuHandler<C extends ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * How long a user must wait before being able to run a select menu again.
@@ -31,7 +31,7 @@ export default class SelectMenuHandler {
 	 *
 	 * @param client Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 
 		this.coolDownTime = 200;

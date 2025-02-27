@@ -5,11 +5,11 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type { LanguageKeys, LanguageOptions } from "./Language.js";
 import Language from "./Language.js";
 
-export default class LanguageHandler {
+export default class LanguageHandler<C extends ExtendedClient> {
 	/**
 	 * Our extended client
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * A set containing all of our languages.
@@ -26,7 +26,7 @@ export default class LanguageHandler {
 	 *
 	 * @param client Our client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 
 		this.defaultLanguage = null;
