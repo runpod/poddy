@@ -200,7 +200,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 	}: Omit<ToEventProps<APIApplicationCommandInteraction>, "api">) {
 		const userLanguage = await this.client.prisma.userLanguage.findUnique({
 			where: {
-				userId: (interaction.member?.user ?? interaction.user!).id,
+				userId: (interaction.member ?? interaction).user!.id,
 			},
 		});
 		const language = this.client.languageHandler.getLanguage(userLanguage?.languageId ?? interaction.locale);
@@ -210,11 +210,9 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 		if (!applicationCommand) {
 			this.client.logger.error(
 				null,
-				`${(interaction.member?.user ?? interaction.user!).username}#${
-					(interaction.member?.user ?? interaction.user!).discriminator
-				} [${(interaction.member?.user ?? interaction.user!).id}] invoked application command ${
-					interaction.data.name
-				} but it does not exist.`,
+				`@${(interaction.member ?? interaction).user!.username} (${
+					(interaction.member ?? interaction).user!.id
+				}) invoked application command ${interaction.data.name} but it does not exist.`,
 			);
 			const eventId = await this.client.logger.sentry.captureWithInteraction(
 				new Error("Non existent application command invoked."),
@@ -257,7 +255,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 						description: language.get("NON_EXISTENT_APPLICATION_COMMAND_DESCRIPTION", {
 							name: interaction.data.name,
 							type: interaction.data.type === ApplicationCommandType.ChatInput ? "slash command" : "context menu",
-							username: (interaction.member?.user ?? interaction.user!).username,
+							username: (interaction.member ?? interaction).user!.username,
 						}),
 						footer: {
 							text: language.get("SENTRY_EVENT_ID_FOOTER", {
@@ -393,7 +391,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 		shardId: number,
 		language: Language,
 	) {
-		if (this.cooldowns.has((interaction.member?.user ?? interaction.user!).id))
+		if (this.cooldowns.has((interaction.member ?? interaction).user!.id))
 			return this.client.api.interactions.reply(interaction.id, interaction.token, {
 				embeds: [
 					{
@@ -418,16 +416,16 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 			});
 
 			if (applicationCommand.cooldown)
-				await applicationCommand.applyCooldown((interaction.member?.user ?? interaction.user!).id);
+				await applicationCommand.applyCooldown((interaction.member ?? interaction).user!.id);
 
-			this.client.dataDog.increment("command_used", 1, [
+			this.client.dataDog?.increment("command_used", 1, [
 				`command:${applicationCommand.name}`,
 				`type:${applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context"}`,
 				"success:true",
 				`shard:${shardId}`,
 			]);
 		} catch (error) {
-			this.client.dataDog.increment("command_used", 1, [
+			this.client.dataDog?.increment("command_used", 1, [
 				`command:${applicationCommand.name}`,
 				`type:${applicationCommand.type === ApplicationCommandType.ChatInput ? "slash" : "context"}`,
 				"success:false",
@@ -466,7 +464,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 			}
 		}
 
-		this.cooldowns.add((interaction.member?.user ?? interaction.user!).id);
-		setTimeout(() => this.cooldowns.delete((interaction.member?.user ?? interaction.user!).id), this.coolDownTime);
+		this.cooldowns.add((interaction.member ?? interaction).user!.id);
+		setTimeout(() => this.cooldowns.delete((interaction.member ?? interaction).user!.id), this.coolDownTime);
 	}
 }
