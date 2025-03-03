@@ -38,7 +38,7 @@ export default class MessageCreate extends EventHandler {
 			} else throw error;
 		}
 
-		this.client.dataDog.increment("total_messages_sent", 1, [
+		this.client.dataDog?.increment("total_messages_sent", 1, [
 			`guildId:${message.guild_id ?? "@me"}`,
 			`userId:${message.author.id}`,
 			`channelId:${message.channel_id}`,
@@ -53,14 +53,14 @@ export default class MessageCreate extends EventHandler {
 				(parentChannel.type === ChannelType.GuildForum &&
 					parentChannel.parent_id !== this.client.config.supportCategoryId)
 			)
-				this.client.dataDog.increment("total_messages_sent.engaging", 1, [
+				this.client.dataDog?.increment("total_messages_sent.engaging", 1, [
 					`guildId:${message.guild_id ?? "@me"}`,
 					`userId:${message.author.id}`,
 					`channelId:${message.channel_id}`,
 					`channelName:${channel?.name}`,
 				]);
 		} else if (channel?.type === ChannelType.GuildText && channel.parent_id !== this.client.config.supportCategoryId) {
-			this.client.dataDog.increment("total_messages_sent.engaging", 1, [
+			this.client.dataDog?.increment("total_messages_sent.engaging", 1, [
 				`guildId:${message.guild_id ?? "@me"}`,
 				`userId:${message.author.id}`,
 				`channelId:${message.channel_id}`,
@@ -74,7 +74,7 @@ export default class MessageCreate extends EventHandler {
 			// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
 			// Discord server, and if we need an easier onboarding flow for it.
 			if (new Date(message.member!.joined_at).getTime() > Date.now() - 604_800_000)
-				this.client.dataDog.increment("total_messages_sent.new_user", 1, [
+				this.client.dataDog?.increment("total_messages_sent.new_user", 1, [
 					`guildId:${message.guild_id}`,
 					`userId:${message.author.id}`,
 					`channelId:${message.channel_id}`,
@@ -99,10 +99,10 @@ export default class MessageCreate extends EventHandler {
 					},
 				});
 
-				this.client.dataDog.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
+				this.client.dataDog?.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
 
 				if (new Date(message.member!.joined_at).getTime() + 86_400 > Date.now())
-					this.client.dataDog.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
+					this.client.dataDog?.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
 			}
 
 			const autoThreadChannel = await this.client.prisma.autoThreadChannel.findUnique({
@@ -112,12 +112,7 @@ export default class MessageCreate extends EventHandler {
 			if (autoThreadChannel) {
 				const name = autoThreadChannel.threadName
 					? autoThreadChannel.threadName
-							.replaceAll(
-								"{{author}}",
-								`${message.author.username}${
-									message.author.discriminator === "0" ? "" : `#${message.author.discriminator}`
-								}`,
-							)
+							.replaceAll("{{author}}", `${message.author.username}`)
 							.replaceAll("{{content}}", message.content)
 					: message.content;
 

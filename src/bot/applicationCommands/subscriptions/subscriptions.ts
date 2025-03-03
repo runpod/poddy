@@ -350,7 +350,7 @@ export default class Ping extends ApplicationCommand {
 					this.client.languageHandler.defaultLanguage!.get(
 						"SUBSCRIPTIONS_COMMAND_SUBSCRIBE_SUB_COMMAND_USER_OPTION_NAME",
 					)
-				]?.id ?? (interaction.member?.user ?? interaction.user!).id;
+				]?.id ?? (interaction.member ?? interaction).user!.id;
 
 			return Promise.all([
 				this.client.prisma.subscribedUser.upsert({

@@ -43,8 +43,8 @@ export default function init(): typeof Sentry & {
 				Sentry.withScope((scope) => {
 					scope.setExtra("Environment", env.NODE_ENV);
 					scope.setUser({
-						username: (interaction.member?.user ?? interaction.user!).username,
-						id: (interaction.member?.user ?? interaction.user!).id,
+						username: (interaction.member ?? interaction).user!.username,
+						id: (interaction.member ?? interaction).user!.id,
 					});
 					scope.setExtra("Interaction", format(interaction));
 
@@ -65,7 +65,7 @@ export default function init(): typeof Sentry & {
 				Sentry.withScope((scope) => {
 					scope.setExtra("Environment", env.NODE_ENV);
 					scope.setUser({
-						username: `${message.author.username}#${message.author.discriminator}`,
+						username: message.author.username,
 						id: message.author.id,
 					});
 					scope.setExtra("Message", format(message));

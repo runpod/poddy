@@ -49,10 +49,10 @@ export default class Upvote extends Button {
 		return Promise.all([
 			this.client.prisma.submissionUpvote.upsert({
 				where: {
-					userId_eventId: { userId: (interaction.member?.user ?? interaction.user!).id, eventId: submission.eventId },
+					userId_eventId: { userId: (interaction.member ?? interaction).user!.id, eventId: submission.eventId },
 				},
 				create: {
-					userId: (interaction.member?.user ?? interaction.user!).id,
+					userId: (interaction.member ?? interaction).user!.id,
 					eventId: submission.eventId,
 					submissionId: submission.messageId,
 				},
