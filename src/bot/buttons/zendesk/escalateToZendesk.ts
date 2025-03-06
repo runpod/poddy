@@ -5,7 +5,6 @@ import {
 	PermissionFlagsBits,
 	TextInputStyle,
 } from "@discordjs/core";
-import { BitField } from "@sapphire/bitfield";
 import Button from "../../../../lib/classes/Button.js";
 import type Language from "../../../../lib/classes/Language.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
