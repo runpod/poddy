@@ -2,11 +2,14 @@ import {
 	type APIMessageComponentButtonInteraction,
 	ComponentType,
 	MessageFlags,
+	PermissionFlagsBits,
 	TextInputStyle,
 } from "@discordjs/core";
+import { BitField } from "@sapphire/bitfield";
 import Button from "../../../../lib/classes/Button.js";
 import type Language from "../../../../lib/classes/Language.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
+import PermissionsBitField from "../../../../lib/utilities/permissions.js";
 
 export default class EscalateToZendesk extends Button {
 	/**
@@ -44,7 +47,10 @@ export default class EscalateToZendesk extends Button {
 			string,
 		];
 
-		if (escalatedUserId !== interaction.member!.user.id)
+		if (
+			escalatedUserId !== interaction.member!.user.id ||
+			!PermissionsBitField.has(BigInt(interaction.member!.permissions), PermissionFlagsBits.ViewAuditLog)
+		) {
 			return this.client.api.interactions.reply(interaction.id, interaction.token, {
 				embeds: [
 					{
@@ -56,6 +62,7 @@ export default class EscalateToZendesk extends Button {
 				flags: MessageFlags.Ephemeral,
 				allowed_mentions: { parse: [], replied_user: true },
 			});
+		}
 
 		const ticket = await this.client.prisma.zendeskTicket.findUnique({
 			where: {
