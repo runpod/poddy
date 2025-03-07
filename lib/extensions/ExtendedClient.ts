@@ -23,6 +23,7 @@ import type SelectMenu from "../classes/SelectMenu.js";
 import SelectMenuHandler from "../classes/SelectMenuHandler.js";
 import type TextCommand from "../classes/TextCommand.js";
 import TextCommandHandler from "../classes/TextCommandHandler.js";
+import type { BotOptions } from "../typings/options.js";
 import Functions from "../utilities/functions.js";
 
 export default class ExtendedClient extends Client {
@@ -40,11 +41,6 @@ export default class ExtendedClient extends Client {
 	 * The logger for our bot.
 	 */
 	public readonly logger: typeof Logger;
-
-	/**
-	 * The functions for our bot.
-	 */
-	public readonly functions: Functions;
 
 	/**
 	 * The i18n instance for our bot.
@@ -101,12 +97,12 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The language handler for our bot.
 	 */
-	public readonly languageHandler: LanguageHandler;
+	public readonly languageHandler: LanguageHandler<this>;
 
 	/**
 	 * A map of events that our client is listening to.
 	 */
-	public events: Map<keyof MappedEvents, EventHandler>;
+	public events: Map<keyof MappedEvents, EventHandler<this>>;
 
 	/**
 	 * A map of the application commands that the bot is currently handling.
@@ -116,7 +112,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The application command handler for our bot.
 	 */
-	public readonly applicationCommandHandler: ApplicationCommandHandler;
+	public readonly applicationCommandHandler: ApplicationCommandHandler<this>;
 
 	/**
 	 * A map of the auto completes that the bot is currently handling.
@@ -126,7 +122,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The auto complete handler for our bot.
 	 */
-	public readonly autoCompleteHandler: AutoCompleteHandler;
+	public readonly autoCompleteHandler: AutoCompleteHandler<this>;
 
 	/**
 	 * A map of the text commands that the bot is currently handling.
@@ -136,7 +132,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The text command handler for our bot.
 	 */
-	public readonly textCommandHandler: TextCommandHandler;
+	public readonly textCommandHandler: TextCommandHandler<this>;
 
 	/**
 	 * A map of the buttons that the bot is currently handling.
@@ -146,7 +142,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The button handler for our bot.
 	 */
-	public readonly buttonHandler: ButtonHandler;
+	public readonly buttonHandler: ButtonHandler<this>;
 
 	/**
 	 * A map of the select menus the bot is currently handling.
@@ -156,7 +152,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The select menu handler for our bot.
 	 */
-	public readonly selectMenuHandler: SelectMenuHandler;
+	public readonly selectMenuHandler: SelectMenuHandler<this>;
 
 	/**
 	 * A map of modals the bot is currently handling.
@@ -166,7 +162,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The modal handler for our bot.
 	 */
-	public readonly modalHandler: ModalHandler;
+	public readonly modalHandler: ModalHandler<this>;
 
 	/**
 	 * Our data dog client.
@@ -188,7 +184,12 @@ export default class ExtendedClient extends Client {
 	 */
 	public readonly channelNameCache = new Map<string, string>();
 
-	public constructor({ rest, gateway }: ClientOptions) {
+	/**
+	 * The options for our bot.
+	 */
+	public options: BotOptions;
+
+	public constructor({ rest, gateway, options }: ClientOptions & { options: BotOptions }) {
 		super({ rest, gateway });
 
 		this.api = new API(rest);
@@ -198,7 +199,7 @@ export default class ExtendedClient extends Client {
 			execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + env.NODE_ENV === "development" ? "dev" : "";
 
 		this.logger = Logger;
-		this.functions = new Functions(this);
+		this.options = options;
 
 		this.prisma = new PrismaClient({
 			errorFormat: "pretty",
@@ -311,6 +312,10 @@ export default class ExtendedClient extends Client {
 		await this.modalHandler.loadModals();
 	}
 
+	get functions() {
+		return new Functions(this);
+	}
+
 	/**
 	 * Load all the events in the events directory.
 	 */
@@ -318,7 +323,7 @@ export default class ExtendedClient extends Client {
 		for (const eventFileName of this.functions.getFiles(`${this.__dirname}/dist/src/bot/events`, ".js", true)) {
 			const EventFile = await import(`../../src/bot/events/${eventFileName}`);
 
-			const event = new EventFile.default(this) as EventHandler;
+			const event = new EventFile.default(this) as EventHandler<this>;
 
 			event.listen();
 

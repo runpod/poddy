@@ -5,23 +5,23 @@ import type {
 } from "@discordjs/core";
 import { ApplicationCommandOptionType } from "@discordjs/core";
 import type { APIInteractionWithArguments, InteractionArguments } from "../../typings";
-import type ExtendedClient from "../extensions/ExtendedClient";
+import type ExtendedClient from "../extensions/ExtendedClient.js";
 import applicationCommandOptionTypeReference from "../utilities/reference.js";
 import type AutoComplete from "./AutoComplete";
 import type Language from "./Language";
 
-export default class AutoCompleteHandler {
+export default class AutoCompleteHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * Create our auto complete handler.
 	 *
 	 * @param client Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 	}
 

@@ -5,7 +5,7 @@ import { load } from "dotenv-extended";
 import botConfig from "../config/bot.config.js";
 import Logger from "../lib/classes/Logger.js";
 import Server from "../lib/classes/Server.js";
-import ExtendedClient from "../lib/extensions/ExtendedClient.js";
+import { PoddyClient } from "./client.js";
 
 load({
 	path: env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
@@ -26,7 +26,13 @@ const gateway = new WebSocketManager({
 
 await new Server().start();
 
-const client = new ExtendedClient({ rest, gateway });
+const client = new PoddyClient({
+	rest,
+	gateway,
+	options: {
+		name: "Poddy", // functionally useless, proof of concept for now.
+	},
+});
 await client.start();
 
 await gateway.connect().then(async () => {

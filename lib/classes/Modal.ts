@@ -5,11 +5,11 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import PermissionsBitField from "../utilities/permissions.js";
 import type Language from "./Language.js";
 
-export default class Modal {
+export default class Modal<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * The name of this modal, we look for this at the start of each interaction.
@@ -51,7 +51,7 @@ export default class Modal {
 	 * @param options.permissions The permissions the user requires to run this modal.
 	 */
 	public constructor(
-		client: ExtendedClient,
+		client: C,
 		options: {
 			clientPermissions?: Permissions;
 			devOnly?: boolean;

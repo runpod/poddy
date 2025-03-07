@@ -10,11 +10,11 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Button from "./Button.js";
 import type Language from "./Language.js";
 
-export default class ButtonHandler {
+export default class ButtonHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * How long a user must wait before being able to run a button again.
@@ -31,7 +31,7 @@ export default class ButtonHandler {
 	 *
 	 * @param client Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 
 		this.coolDownTime = 200;

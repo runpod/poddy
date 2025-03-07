@@ -1,7 +1,7 @@
 import type { MappedEvents } from "@discordjs/core";
 import type ExtendedClient from "../extensions/ExtendedClient.js";
 
-export default class EventHandler {
+export default class EventHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * The name of our event, this is what we will use to listen to the event.
 	 */
@@ -10,7 +10,7 @@ export default class EventHandler {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * The listener for our events;
@@ -29,7 +29,7 @@ export default class EventHandler {
 	 * @param name The name of our event, this is what we will use to listen to the event.
 	 * @param once Whether or not this event should only be handled once.
 	 */
-	public constructor(client: ExtendedClient, name: keyof MappedEvents, once = false) {
+	public constructor(client: C, name: keyof MappedEvents, once = false) {
 		this.name = name;
 		this.client = client;
 		this.once = once;

@@ -21,11 +21,11 @@ import applicationCommandOptionTypeReference from "../utilities/reference.js";
 import type ApplicationCommand from "./ApplicationCommand.js";
 import type Language from "./Language.js";
 
-export default class ApplicationCommandHandler {
+export default class ApplicationCommandHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * How long a user must wait before being able to run an application command again.
@@ -42,7 +42,7 @@ export default class ApplicationCommandHandler {
 	 *
 	 * @param client Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 
 		this.coolDownTime = 200;

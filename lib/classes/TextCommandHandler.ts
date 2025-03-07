@@ -4,11 +4,11 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type TextCommand from "./TextCommand";
 
-export default class TextCommandHandler {
+export default class TextCommandHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * How long a user must wait before being able to run a text command again.
@@ -25,7 +25,7 @@ export default class TextCommandHandler {
 	 *
 	 * @param client Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 
 		this.coolDownTime = 200;

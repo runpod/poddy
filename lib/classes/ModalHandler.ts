@@ -6,11 +6,11 @@ import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type Modal from "./Modal.js";
 
-export default class ModalHandler {
+export default class ModalHandler<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * How long a user must wait before being able to use a modal again.
@@ -27,7 +27,7 @@ export default class ModalHandler {
 	 *
 	 * @param client Our extended client.
 	 */
-	public constructor(client: ExtendedClient) {
+	public constructor(client: C) {
 		this.client = client;
 
 		this.coolDownTime = 200;
