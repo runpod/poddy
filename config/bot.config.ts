@@ -19,7 +19,7 @@ export default {
 	/**
 	 * A list of users that are marked as administrators of the bot, these users have access to eval commands.
 	 */
-	admins: ["619284841187246090"],
+	admins: ["619284841187246090", "194861788926443520"],
 
 	/**
 	 * The presence that should be displayed when the bot starts running.
