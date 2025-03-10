@@ -47,7 +47,7 @@ export default class EscalateToZendesk extends Button {
 		];
 
 		if (
-			escalatedUserId !== interaction.member!.user.id ||
+			escalatedUserId !== interaction.member!.user.id &&
 			!PermissionsBitField.has(BigInt(interaction.member!.permissions), PermissionFlagsBits.ViewAuditLog)
 		) {
 			return this.client.api.interactions.reply(interaction.id, interaction.token, {
