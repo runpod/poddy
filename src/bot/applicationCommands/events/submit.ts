@@ -96,7 +96,7 @@ export default class Submit extends ApplicationCommand {
 		const submission = await this.client.prisma.submission.findUnique({
 			where: {
 				userId_eventId: {
-					userId: (interaction.member?.user ?? interaction.user!).id,
+					userId: (interaction.member ?? interaction).user!.id,
 					eventId: event.id,
 				},
 			},
@@ -151,7 +151,7 @@ export default class Submit extends ApplicationCommand {
 								}?size=2048`,
 							},
 							image: {
-								url: `attachment://submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
+								url: `attachment://submission_${(interaction.member ?? interaction).user!.id}.${extension}`,
 							},
 							color: this.client.config.colors.primary,
 						},
@@ -164,7 +164,7 @@ export default class Submit extends ApplicationCommand {
 			attachments: [
 				{
 					id: attachment.id,
-					filename: `submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
+					filename: `submission_${(interaction.member ?? interaction).user!.id}.${extension}`,
 					description: "test",
 				},
 			],
@@ -187,7 +187,7 @@ export default class Submit extends ApplicationCommand {
 			files: [
 				{
 					data: buffer,
-					name: `submission_${(interaction.member?.user ?? interaction.user!).id}.${extension}`,
+					name: `submission_${(interaction.member ?? interaction).user!.id}.${extension}`,
 					key: `files[${attachment.id}]`,
 				},
 			],
@@ -198,7 +198,7 @@ export default class Submit extends ApplicationCommand {
 				data: {
 					eventId: event.id,
 					messageId: message.id,
-					userId: (interaction.member?.user ?? interaction.user!).id,
+					userId: (interaction.member ?? interaction).user!.id,
 				},
 			}),
 			this.client.api.interactions.reply(interaction.id, interaction.token, {

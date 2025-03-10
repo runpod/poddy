@@ -17,7 +17,7 @@ export default class Ready extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#ready
 	 */
 	public override async run({ shardId, data }: ToEventProps<GatewayReadyDispatchData>) {
-		this.client.dataDog.gauge("guild_count", data.guilds.length, [`shard:${shardId}`]);
+		this.client.dataDog?.gauge("guild_count", data.guilds.length, [`shard:${shardId}`]);
 
 		await Promise.all(
 			data.guilds.map(async (guild) => {
@@ -56,14 +56,14 @@ export default class Ready extends EventHandler {
 		});
 
 		schedule("* * * * *", async () => {
-			this.client.dataDog.gauge("guilds", this.client.guildOwnersCache.size);
-			this.client.dataDog.gauge("approximate_user_count", this.client.approximateUserCount);
+			this.client.dataDog?.gauge("guilds", this.client.guildOwnersCache.size);
+			this.client.dataDog?.gauge("approximate_user_count", this.client.approximateUserCount);
 
 			for (const [guildId, usersInVoice] of this.client.usersInVoice.entries())
-				this.client.dataDog.increment("minutes_in_voice", usersInVoice.size, [`guild:${guildId}`]);
+				this.client.dataDog?.increment("minutes_in_voice", usersInVoice.size, [`guild:${guildId}`]);
 
 			if (env.DATADOG_API_KEY)
-				this.client.dataDog.flush(
+				this.client.dataDog?.flush(
 					() => {
 						if (env.NODE_ENV === "development") this.client.logger.debug("Flushed DataDog metrics.");
 					},

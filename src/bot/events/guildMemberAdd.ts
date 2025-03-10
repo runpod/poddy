@@ -17,7 +17,7 @@ export default class GuildMemberAdd extends EventHandler {
 	public override async run({ data: member }: ToEventProps<GatewayGuildMemberAddDispatchData>) {
 		this.client.approximateUserCount++;
 
-		this.client.dataDog.increment("guild_members", 1, [`guildId:${member.guild_id}`]);
+		this.client.dataDog?.increment("guild_members", 1, [`guildId:${member.guild_id}`]);
 
 		const newInvites = await this.client.api.guilds.getInvites(member.guild_id);
 
@@ -28,11 +28,11 @@ export default class GuildMemberAdd extends EventHandler {
 		const usedInvite = newInvites.find((invite) => invite.uses > (invitesCache?.get(invite.code) ?? 0));
 
 		if (usedInvite) {
-			this.client.dataDog.increment("guild_joins", 1, [`guildId:${member.guild_id}`, `invite:${usedInvite.code}`]);
+			this.client.dataDog?.increment("guild_joins", 1, [`guildId:${member.guild_id}`, `invite:${usedInvite.code}`]);
 
 			invitesCache.set(usedInvite.code, usedInvite.uses);
 			this.client.invitesCache.set(member.guild_id, invitesCache);
-		} else this.client.dataDog.increment("guild_joins", 1, [`guildId:${member.guild_id}`]);
+		} else this.client.dataDog?.increment("guild_joins", 1, [`guildId:${member.guild_id}`]);
 
 		const [loggingChannels] = await Promise.all([
 			this.client.prisma.logChannel.findMany({
