@@ -150,7 +150,7 @@ export default class RedeemCode extends ApplicationCommand {
 				flags: MessageFlags.Ephemeral,
 			});
 
-		const userExistsResponse = await fetch(`https://api.runpod.io/graphql`, {
+		const userExistsResponse = await fetch("https://api.runpod.io/graphql", {
 			method: "POST",
 			body: JSON.stringify({
 				operationName: "getUserByEmail",
@@ -166,7 +166,7 @@ export default class RedeemCode extends ApplicationCommand {
 				"User-Agent":
 					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${env.RUNPOD_API_KEY}`,
+				Authorization: `Bearer ${env.RUNPOD_API_KEY}`,
 			},
 		});
 
@@ -194,7 +194,7 @@ export default class RedeemCode extends ApplicationCommand {
 				allowed_mentions: { parse: [], replied_user: true },
 			});
 
-		const generatedCodeResponse = await fetch(`https://api.runpod.io/graphql`, {
+		const generatedCodeResponse = await fetch("https://api.runpod.io/graphql", {
 			method: "POST",
 			body: JSON.stringify({
 				operationName: "generateCode",
@@ -209,7 +209,7 @@ export default class RedeemCode extends ApplicationCommand {
 				"User-Agent":
 					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${env.RUNPOD_API_KEY}`,
+				Authorization: `Bearer ${env.RUNPOD_API_KEY}`,
 			},
 		});
 

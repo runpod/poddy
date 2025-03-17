@@ -1121,4 +1121,58 @@ export default {
 
 	LOG_CHANNEL_REMOVED_TITLE: "Log Channel Removed",
 	LOG_CHANNEL_REMOVED_DESCRIPTION: "{{event}} will no longer be logged into {{channel}}!",
+
+	TAG_COMMAND_NAME: "tag",
+	TAG_COMMAND_DESCRIPTION: "Retrieve a tag by name or ID",
+
+	TAG_COMMAND_NAME_OPTION_NAME: "name",
+	TAG_COMMAND_NAME_OPTION_DESCRIPTION: "The name or ID of the tag to retrieve",
+
+	TAGS_COMMAND_NAME: "tags",
+	TAGS_COMMAND_DESCRIPTION: "Manage tags (create, edit, delete, list)",
+
+	TAGS_COMMAND_CREATE_SUB_COMMAND_NAME: "create",
+	TAGS_COMMAND_CREATE_SUB_COMMAND_DESCRIPTION: "Create a new tag",
+	TAGS_COMMAND_CREATE_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	TAGS_COMMAND_CREATE_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name of the tag",
+	TAGS_COMMAND_CREATE_SUB_COMMAND_CONTENT_OPTION_NAME: "content",
+	TAGS_COMMAND_CREATE_SUB_COMMAND_CONTENT_OPTION_DESCRIPTION: "The content of the tag",
+
+	TAGS_COMMAND_LIST_SUB_COMMAND_NAME: "list",
+	TAGS_COMMAND_LIST_SUB_COMMAND_DESCRIPTION: "List all available tags",
+
+	TAGS_COMMAND_DELETE_SUB_COMMAND_NAME: "delete",
+	TAGS_COMMAND_DELETE_SUB_COMMAND_DESCRIPTION: "Delete a tag",
+	TAGS_COMMAND_DELETE_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	TAGS_COMMAND_DELETE_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name or ID of the tag to delete",
+
+	TAGS_COMMAND_EDIT_SUB_COMMAND_NAME: "edit",
+	TAGS_COMMAND_EDIT_SUB_COMMAND_DESCRIPTION: "Edit a tag's content",
+	TAGS_COMMAND_EDIT_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	TAGS_COMMAND_EDIT_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name or ID of the tag to edit",
+	TAGS_COMMAND_EDIT_SUB_COMMAND_CONTENT_OPTION_NAME: "content",
+	TAGS_COMMAND_EDIT_SUB_COMMAND_CONTENT_OPTION_DESCRIPTION: "The new content for the tag",
+
+	TAGS_COMMAND_GET_SUB_COMMAND_NAME: "get",
+	TAGS_COMMAND_GET_SUB_COMMAND_DESCRIPTION: "Retrieve a tag",
+	TAGS_COMMAND_GET_SUB_COMMAND_NAME_OPTION_NAME: "name",
+	TAGS_COMMAND_GET_SUB_COMMAND_NAME_OPTION_DESCRIPTION: "The name or ID of the tag to retrieve",
+
+	TAG_NOT_FOUND_TITLE: "Tag Not Found",
+	TAG_NOT_FOUND_DESCRIPTION: "A tag with a name of `{{tagName}}` was not found!",
+
+	TAG_ALREADY_EXISTS_TITLE: "Tag Already Exists",
+	TAG_ALREADY_EXISTS_DESCRIPTION: "A tag with the name `{{tagName}}` already exists!",
+
+	TAG_CREATED_TITLE: "Tag Created",
+	TAG_CREATED_DESCRIPTION: "The tag **{{tagName}}** has been created!",
+
+	TAG_DELETED_TITLE: "Tag Deleted",
+	TAG_DELETED_DESCRIPTION: "The tag **{{tagName}}** has been deleted!",
+
+	TAG_UPDATED_TITLE: "Tag Updated",
+	TAG_UPDATED_DESCRIPTION: "The tag **{{tagName}}** has been updated!",
+
+	TAG_LIST_TITLE: "Tags",
+	TAG_LIST_EMPTY_DESCRIPTION: "There are currently no tags, add some by doing `/tags create`!",
 };

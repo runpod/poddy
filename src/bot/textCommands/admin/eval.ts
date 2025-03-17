@@ -95,6 +95,7 @@ export default class Eval extends TextCommand {
 		let type;
 		try {
 			if (message.content.includes("--async")) code = `(async () => {\n${code}\n})();`;
+			// biome-ignore lint/security/noGlobalEval: intentional
 			result = eval(code);
 			syncTime = stopwatch.toString();
 			type = new Type(result);
