@@ -140,12 +140,12 @@ export default class AutoCompleteHandler<C extends ExtendedClient = ExtendedClie
 
 		const userLanguage = await this.client.prisma.userLanguage.findUnique({
 			where: {
-				userId: (interaction.member?.user ?? interaction.user!).id,
+				userId: (interaction.member ?? interaction).user!.id,
 			},
 		});
 		const language = this.client.languageHandler.getLanguage(userLanguage?.languageId ?? interaction.locale);
 
-		this.client.dataDog.increment("autocomplete_responses", 1, [`name:${name.join("-")}`, `shard:${shardId}`]);
+		this.client.dataDog?.increment("autocomplete_responses", 1, [`name:${name.join("-")}`, `shard:${shardId}`]);
 
 		return this.runAutoComplete(autoComplete, interactionWithArguments, language, shardId);
 	}

@@ -39,7 +39,7 @@ export default class Eval extends TextCommand {
 		shardId: number;
 	}) {
 		this.client.logger.info(
-			`${message.author.username}#${message.author.discriminator} ran eval in ${message.guild_id}, ${args.join(" ")}`,
+			`@${message.author.username} (${message.author.id}) ran eval in ${message.guild_id}, ${args.join(" ")}`,
 		);
 
 		const { success, result, time, type } = await this.eval(message, args.join(" "));

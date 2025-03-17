@@ -36,7 +36,7 @@ export default class ThreadCreate extends EventHandler {
 
 		const tagIds = [...new Set((channel.applied_tags ?? []).concat(autoTagOnForumChannel.map(({ tagId }) => tagId)))];
 
-		this.client.dataDog.increment("forum_posts", 1, [
+		this.client.dataDog?.increment("forum_posts", 1, [
 			`channelId:${parentChannel.id}`,
 			`guildId:${channel.guild_id}`,
 			`userId:${channel.owner_id}`,

@@ -165,9 +165,9 @@ export default class ExtendedClient extends Client {
 	public readonly modalHandler: ModalHandler<this>;
 
 	/**
-	 * Our data dog client.
+	 * Our DataDog client.
 	 */
-	public readonly dataDog: typeof metrics;
+	public readonly dataDog?: typeof metrics;
 
 	/**
 	 * A map of guild IDs to a set of user IDs, representing a guild and who is in a voice channel.
@@ -196,7 +196,7 @@ export default class ExtendedClient extends Client {
 
 		this.config = Config;
 		this.config.version =
-			execSync("git rev-parse HEAD").toString().trim().slice(0, 7) + env.NODE_ENV === "development" ? "dev" : "";
+			env.NODE_ENV === "production" ? execSync("git rev-parse --short HEAD").toString().trim() : "dev";
 
 		this.logger = Logger;
 		this.options = options;
@@ -254,15 +254,17 @@ export default class ExtendedClient extends Client {
 			});
 		}
 
-		// @ts-expect-error
-		this.dataDog = metrics.default;
+		if (env.DATADOG_API_KEY) {
+			// @ts-expect-error
+			this.dataDog = metrics.default;
 
-		this.dataDog.init({
-			flushIntervalSeconds: 0,
-			apiKey: env.DATADOG_API_KEY,
-			prefix: `${this.config.botName.toLowerCase().split(" ").join("_")}.`,
-			defaultTags: [`env:${env.NODE_ENV}`],
-		});
+			this.dataDog?.init({
+				flushIntervalSeconds: 0,
+				apiKey: env.DATADOG_API_KEY,
+				prefix: `${this.config.botName.toLowerCase().split(" ").join("_")}.`,
+				defaultTags: [`env:${env.NODE_ENV}`],
+			});
+		}
 
 		this.i18n = i18next;
 
