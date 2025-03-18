@@ -106,7 +106,6 @@ dist
 # TernJS port file
 .tern-port
 
-.vscode/
 .idea/
 
 # this is a pnpm project, only localdev can generate this and having it is confusing
