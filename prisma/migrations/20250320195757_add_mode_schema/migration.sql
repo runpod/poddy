@@ -1,18 +1,11 @@
-/*
-  Warnings:
-
-  - Added the required column `uses` to the `invites` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `channelId` to the `messages` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- AlterTable
 ALTER TABLE "invites" ADD COLUMN     "channelId" TEXT,
 ADD COLUMN     "maxAge" INTEGER,
 ADD COLUMN     "maxUses" INTEGER,
-ADD COLUMN     "uses" INTEGER NOT NULL;
+ADD COLUMN     "uses" INTEGER NOT NULL DEFAULT 0;
 
 -- AlterTable
-ALTER TABLE "messages" ADD COLUMN     "channelId" TEXT NOT NULL,
+ALTER TABLE "messages" ADD COLUMN     "channelId" TEXT,
 ADD COLUMN     "deletedAt" TIMESTAMP(3),
 ADD COLUMN     "editedAt" TIMESTAMP(3),
 ALTER COLUMN "content" DROP NOT NULL;

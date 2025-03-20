@@ -292,7 +292,7 @@ model BetterStackStatusReport {
 model Message {
   id        String    @id
   authorId  String
-  channelId String
+  channelId String?
   guildId   String
   content   String?
   createdAt DateTime
@@ -362,7 +362,7 @@ model Invite {
   channelId   String?
   createdBy   String
   guildId     String
-  uses        Int
+  uses        Int     @default(0)
   maxAge      Int?
   maxUses     Int?
 
