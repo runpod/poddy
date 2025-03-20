@@ -8,6 +8,7 @@ import type {
 } from "@discordjs/core";
 import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import { LogEvent } from "@prisma/client";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -30,9 +31,13 @@ export default class MessageDelete extends EventHandler {
 					id: message.id,
 				},
 			}),
-			this.client.prisma.message.deleteMany({
+			this.client.prisma.message.update({
 				where: {
 					id: message.id,
+				},
+				data: {
+					content: null,
+					deletedAt: new Date(),
 				},
 			}),
 		]);
@@ -43,7 +48,7 @@ export default class MessageDelete extends EventHandler {
 
 		const loggingChannels = await this.client.prisma.logChannel.findMany({
 			where: {
-				event: "MESSAGE_DELETED",
+				event: LogEvent.MESSAGE_DELETED,
 				guildId: message.guild_id!,
 			},
 		});

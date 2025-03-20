@@ -266,8 +266,8 @@ model LogChannel {
   @@map("log_channels")
 }
 
-model MemberJoin {
-  id         String   @id @default(cuid())
+model MemberEvent {
+  id         String   @id @default(cuid(2))
   inviteCode String?
   userId     String
   guildId    String
@@ -317,7 +317,6 @@ model AuditLog {
   targetId   String?
   actorId    String?
   actionType String?
-  changes    Json?
   reason     String?
 
   @@map("audit_log")
@@ -332,19 +331,11 @@ model Ban {
   @@map("bans")
 }
 
-model MemberEvent {
-  userId   String    @id
-  joinedAt DateTime?
-  leaveAt  DateTime?
-  editedAt DateTime?
-
-  @@map("member_events")
-}
-
 model Role {
-  id          Int       @id
+  id          String    @id
   name        String
-  permissions BigInt
+  permissions String
+  deleted     Boolean   @default(false)
   editedAt    DateTime?
 
   @@map("roles")
@@ -355,10 +346,10 @@ model ScheduledEvent {
   name        String
   description String?
   startTime   DateTime
-  endTime     DateTime
+  endTime     DateTime?
   entityType  String
-  userCount   Int
-  creatorId   String
+  userCount   Int?
+  creatorId   String?
   deletedAt   DateTime?
 
   @@map("scheduled_events")
@@ -372,15 +363,15 @@ model Invite {
   createdBy   String
   guildId     String
   uses        Int
-  maxAge      Int
-  maxUses     Int
+  maxAge      Int?
+  maxUses     Int?
 
   @@map("invites")
 }
 
 model ThreadEvent {
-  id          String   @id
-  type        String
+  id          String   @id @default(cuid(2))
+  threadId    String
   appliedTags String[]
   timestamp   DateTime
 

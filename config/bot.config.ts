@@ -54,12 +54,13 @@ export default {
 	 */
 	intents:
 		GatewayIntentBits.Guilds |
-		GatewayIntentBits.GuildMessages |
-		GatewayIntentBits.GuildPresences |
-		GatewayIntentBits.MessageContent |
-		GatewayIntentBits.GuildVoiceStates |
 		GatewayIntentBits.GuildMembers |
-		GatewayIntentBits.GuildModeration,
+		GatewayIntentBits.GuildModeration |
+		GatewayIntentBits.GuildVoiceStates |
+		GatewayIntentBits.GuildPresences |
+		GatewayIntentBits.GuildMessages |
+		GatewayIntentBits.MessageContent |
+		GatewayIntentBits.GuildScheduledEvents,
 
 	/**
 	 * A list of permissions that the bot needs to function at all.

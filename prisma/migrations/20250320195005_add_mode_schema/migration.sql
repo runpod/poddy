@@ -1,16 +1,14 @@
 /*
   Warnings:
 
-  - Added the required column `maxAge` to the `invites` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `maxUses` to the `invites` table without a default value. This is not possible if the table is not empty.
   - Added the required column `uses` to the `invites` table without a default value. This is not possible if the table is not empty.
   - Added the required column `channelId` to the `messages` table without a default value. This is not possible if the table is not empty.
 
 */
 -- AlterTable
 ALTER TABLE "invites" ADD COLUMN     "channelId" TEXT,
-ADD COLUMN     "maxAge" INTEGER NOT NULL,
-ADD COLUMN     "maxUses" INTEGER NOT NULL,
+ADD COLUMN     "maxAge" INTEGER,
+ADD COLUMN     "maxUses" INTEGER,
 ADD COLUMN     "uses" INTEGER NOT NULL;
 
 -- AlterTable
@@ -36,7 +34,6 @@ CREATE TABLE "audit_log" (
     "targetId" TEXT,
     "actorId" TEXT,
     "actionType" TEXT,
-    "changes" JSONB,
     "reason" TEXT,
 
     CONSTRAINT "audit_log_pkey" PRIMARY KEY ("id")
@@ -53,20 +50,11 @@ CREATE TABLE "bans" (
 );
 
 -- CreateTable
-CREATE TABLE "member_events" (
-    "userId" TEXT NOT NULL,
-    "joinedAt" TIMESTAMP(3),
-    "leaveAt" TIMESTAMP(3),
-    "editedAt" TIMESTAMP(3),
-
-    CONSTRAINT "member_events_pkey" PRIMARY KEY ("userId")
-);
-
--- CreateTable
 CREATE TABLE "roles" (
-    "id" INTEGER NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "permissions" BIGINT NOT NULL,
+    "permissions" TEXT NOT NULL,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
     "editedAt" TIMESTAMP(3),
 
     CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
@@ -78,10 +66,10 @@ CREATE TABLE "scheduled_events" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "startTime" TIMESTAMP(3) NOT NULL,
-    "endTime" TIMESTAMP(3) NOT NULL,
+    "endTime" TIMESTAMP(3),
     "entityType" TEXT NOT NULL,
-    "userCount" INTEGER NOT NULL,
-    "creatorId" TEXT NOT NULL,
+    "userCount" INTEGER,
+    "creatorId" TEXT,
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "scheduled_events_pkey" PRIMARY KEY ("id")
@@ -90,7 +78,7 @@ CREATE TABLE "scheduled_events" (
 -- CreateTable
 CREATE TABLE "thread_events" (
     "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "threadId" TEXT NOT NULL,
     "appliedTags" TEXT[],
     "timestamp" TIMESTAMP(3) NOT NULL,
 

@@ -1,4 +1,4 @@
-import type { APIApplicationCommandInteraction, APIExtendedInvite, APIInvite } from "@discordjs/core";
+import type { APIApplicationCommandInteraction, APIExtendedInvite } from "@discordjs/core";
 import {
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
@@ -225,8 +225,12 @@ export default class Invites extends ApplicationCommand {
 						name,
 						description,
 						code: invite.code,
-						guildId: interaction.guild_id!,
+						channelId: channel.id,
 						createdBy: interaction.member!.user.id,
+						guildId: interaction.guild_id!,
+						maxAge: invite.max_age,
+						maxUses: invite.max_uses,
+						uses: invite.uses, // this is 0 right now but lol
 					},
 				}),
 				this.client.api.interactions.reply(interaction.id, interaction.token, {
@@ -279,12 +283,13 @@ export default class Invites extends ApplicationCommand {
 					this.client.languageHandler.defaultLanguage!.get("INVITES_COMMAND_TRACK_SUB_COMMAND_DESCRIPTION_OPTION_NAME")
 				]?.value ?? null;
 
-			let inviteData: APIInvite;
+			let inviteData: APIExtendedInvite;
 
 			try {
-				inviteData = await this.client.api.invites.get(inviteCode, {
+				inviteData = (await this.client.api.invites.get(inviteCode, {
 					with_counts: true,
-				});
+					with_expiration: true,
+				})) as APIExtendedInvite;
 			} catch (error) {
 				if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.UnknownInvite)
 					return this.client.api.interactions.reply(interaction.id, interaction.token, {
@@ -302,7 +307,7 @@ export default class Invites extends ApplicationCommand {
 				throw error;
 			}
 
-			if (inviteData.guild?.id !== interaction.guild_id!)
+			if (inviteData.guild?.id !== interaction.guild_id!) {
 				return this.client.api.interactions.reply(interaction.id, interaction.token, {
 					embeds: [
 						{
@@ -314,6 +319,7 @@ export default class Invites extends ApplicationCommand {
 					allowed_mentions: { parse: [], replied_user: true },
 					flags: MessageFlags.Ephemeral,
 				});
+			}
 
 			return Promise.all([
 				this.client.prisma.invite.upsert({
@@ -322,8 +328,12 @@ export default class Invites extends ApplicationCommand {
 					},
 					create: {
 						code: inviteCode,
+						channelId: interaction.channel.id,
 						createdBy: interaction.member!.user.id,
 						guildId: interaction.guild_id!,
+						uses: inviteData.uses ?? 0,
+						maxAge: inviteData.max_age,
+						maxUses: inviteData.max_uses,
 						name,
 						description,
 					},

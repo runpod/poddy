@@ -8,6 +8,7 @@ import type {
 } from "@discordjs/core";
 import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import { LogEvent } from "@prisma/client";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -38,6 +39,7 @@ export default class MessageUpdate extends EventHandler {
 					id: message.id,
 				},
 				create: {
+					channelId: message.channel_id,
 					authorId: message.author!.id,
 					guildId: message.guild_id!,
 					id: message.id,
@@ -46,12 +48,13 @@ export default class MessageUpdate extends EventHandler {
 				},
 				update: {
 					content: message.content,
+					editedAt: message.edited_timestamp,
 				},
 			});
 
 		const loggingChannels = await this.client.prisma.logChannel.findMany({
 			where: {
-				event: "MESSAGE_EDITED",
+				event: LogEvent.MESSAGE_EDITED,
 				guildId: message.guild_id!,
 			},
 		});
