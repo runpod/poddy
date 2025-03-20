@@ -308,3 +308,11 @@ model BetterStackStatusReport {
 
     @@map("better_stack_status_reports")
 }
+
+model Tag {
+    id        String    @id
+    name      String
+    content   String
+    authorId  String
+    createdAt DateTime
+}
