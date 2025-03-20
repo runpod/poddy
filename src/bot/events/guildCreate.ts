@@ -5,7 +5,7 @@ import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.GuildCreate, false);
+		super(client, GatewayDispatchEvents.GuildCreate);
 	}
 
 	/**

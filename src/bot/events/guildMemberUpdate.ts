@@ -6,7 +6,7 @@ import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildMemberUpdate extends EventHandler {
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.GuildMemberUpdate, false);
+		super(client, GatewayDispatchEvents.GuildMemberUpdate);
 	}
 
 	/**
@@ -15,8 +15,8 @@ export default class GuildMemberUpdate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-member-update
 	 */
 	public override async run({ data }: ToEventProps<GatewayGuildMemberUpdateDispatchData>) {
-		if (data.user.id !== env.APPLICATION_ID) return;
-
-		this.client.guildMeCache.set(data.guild_id, data as APIGuildMember);
+		if (data.user.id === env.APPLICATION_ID) {
+			this.client.guildMeCache.set(data.guild_id, data as APIGuildMember);
+		}
 	}
 }

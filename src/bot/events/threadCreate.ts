@@ -1,5 +1,6 @@
 import type { GatewayThreadCreateDispatchData, ToEventProps } from "@discordjs/core";
 import { ChannelType, GatewayDispatchEvents } from "@discordjs/core";
+import { LogEvent } from "@prisma/client";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -28,7 +29,7 @@ export default class ThreadCreate extends EventHandler {
 			}),
 			this.client.prisma.logChannel.findMany({
 				where: {
-					event: "THREAD_CREATED",
+					event: LogEvent.THREAD_CREATED,
 					guildId: channel.guild_id!,
 				},
 			}),
@@ -44,9 +45,35 @@ export default class ThreadCreate extends EventHandler {
 			...tagIds.map((tag) => `tagId:${tag}`),
 		]);
 
-		if (tagIds !== channel.applied_tags)
+		if (tagIds !== channel.applied_tags) {
 			return this.client.api.channels.edit(channel.id, {
 				applied_tags: tagIds,
 			});
+		}
+
+		await this.client.prisma.channel.upsert({
+			where: {
+				id: channel.id,
+			},
+			update: {
+				type: channel.type,
+				name: channel.name,
+				appliedTags: channel.applied_tags,
+			},
+			create: {
+				id: channel.id,
+				name: channel.name,
+				type: channel.type,
+				appliedTags: channel.applied_tags,
+			},
+		});
+
+		await this.client.prisma.threadEvent.create({
+			data: {
+				threadId: channel.id,
+				appliedTags: channel.applied_tags,
+				timestamp: new Date(),
+			},
+		});
 	}
 }

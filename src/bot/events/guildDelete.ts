@@ -5,7 +5,7 @@ import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildDelete extends EventHandler {
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.GuildDelete, false);
+		super(client, GatewayDispatchEvents.GuildDelete);
 	}
 
 	/**

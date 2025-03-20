@@ -5,7 +5,7 @@ import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildRoleCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.GuildRoleCreate, false);
+		super(client, GatewayDispatchEvents.GuildRoleCreate);
 	}
 
 	/**
@@ -18,5 +18,13 @@ export default class GuildRoleCreate extends EventHandler {
 		previousGuildRoles.set(data.role.id, data.role);
 
 		this.client.guildRolesCache.set(data.guild_id, previousGuildRoles);
+
+		await this.client.prisma.role.create({
+			data: {
+				id: data.role.id,
+				name: data.role.name,
+				permissions: data.role.permissions,
+			},
+		});
 	}
 }

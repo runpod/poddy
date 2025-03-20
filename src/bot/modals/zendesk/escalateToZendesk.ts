@@ -64,7 +64,7 @@ export default class EscalateToZendesk extends Modal<PoddyClient> {
 				}),
 			);
 
-			await this.client.functions.submitTicket(this.client, type, email, user, interaction, {
+			await this.client.functions.submitTicket(type, email, user, interaction, {
 				comment: {
 					html_body: `${user.username} [${user.id}] escalated 
 					<a href="https://discord.com/channels/${interaction.guild_id!}/${message.channel_id}/${message.id}">this message</a> 
@@ -77,7 +77,7 @@ export default class EscalateToZendesk extends Modal<PoddyClient> {
 
 		const thread = (await this.client.api.channels.get(id)) as APIThreadChannel;
 
-		const data = await this.client.functions.submitTicket(this.client, type, email, user, interaction, {
+		const data = await this.client.functions.submitTicket(type, email, user, interaction, {
 			comment: {
 				html_body: `${user.username} [${user.id}] escalated 
 				<a href="https://discord.com/channels/${thread.guild_id!}/${thread.id}">this thread</a>

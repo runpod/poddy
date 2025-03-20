@@ -1,5 +1,5 @@
 import type { APIChannel, GatewayMessageCreateDispatchData, ToEventProps } from "@discordjs/core";
-import { ChannelType, GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
+import { ChannelType, GatewayDispatchEvents, MessageType, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
@@ -15,12 +15,13 @@ export default class MessageCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#interaction-create
 	 */
 	public override async run({ shardId, data: message }: ToEventProps<GatewayMessageCreateDispatchData>) {
-		if (message.author.bot) return;
+		if (message.author.bot || message.type !== MessageType.Default) return;
 
 		await this.client.prisma.message.create({
 			data: {
 				id: message.id,
 				authorId: message.author.id,
+				channelId: message.channel_id,
 				content: message.content,
 				createdAt: new Date(message.timestamp),
 				guildId: message.guild_id!,

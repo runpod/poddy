@@ -7,7 +7,6 @@ import {
 	MessageFlags,
 } from "discord-api-types/v10";
 import botConfig from "../../config/bot.config.js";
-import type ExtendedClient from "../../lib/extensions/ExtendedClient.js";
 import Functions from "../../lib/utilities/functions";
 import type { ZendeskCreateTicketRequest, ZendeskCreateTicketResponse } from "../../typings/zendesk.js";
 
@@ -22,7 +21,6 @@ type SubmittableTicket = {
 
 export default class PoddyFunctions extends Functions {
 	public async submitTicket(
-		client: ExtendedClient,
 		type: "message" | "thread",
 		email: string,
 		user: APIUser,
@@ -46,17 +44,17 @@ export default class PoddyFunctions extends Functions {
 			method: "POST",
 		});
 
-		const lang = client.languageHandler.getLanguage("en-US");
+		const lang = this.client.languageHandler.getLanguage("en-US");
 
 		if (response.status !== 201) {
-			const eventId = await client.logger.sentry.captureWithExtras(
+			const eventId = await this.client.logger.sentry.captureWithExtras(
 				new Error(`Zendesk Ticket Creation Failed With Status ${response.status} (${response.statusText})`),
 				{
 					response,
 				},
 			);
 
-			client.api.interactions.editReply(interaction.application_id, interaction.token, {
+			this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 				embeds: [
 					{
 						title: lang.get("ESCALATED_TO_ZENDESK_ERROR_TITLE"),
@@ -78,7 +76,7 @@ export default class PoddyFunctions extends Functions {
 		const data: ZendeskCreateTicketResponse = await response.json();
 
 		await Promise.all([
-			client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
+			this.client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
 				embeds: [
 					{
 						...interaction.message!.embeds![0],
@@ -88,20 +86,20 @@ export default class PoddyFunctions extends Functions {
 					},
 				],
 			}),
-			client.api.interactions.editReply(interaction.application_id, interaction.token, {
+			this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 				embeds: [
 					{
 						title: lang.get("TICKET_CREATED_TITLE"),
 						description: lang.get("TICKET_CREATED_DESCRIPTION", {
 							ticketId: data.ticket.id,
 						}),
-						color: client.config.colors.success,
+						color: this.client.config.colors.success,
 					},
 				],
 				allowed_mentions: { parse: [], replied_user: true },
 				flags: MessageFlags.Ephemeral,
 			}),
-			client.prisma.zendeskTicket.create({
+			this.client.prisma.zendeskTicket.create({
 				data: {
 					id: data.ticket.id,
 					escalatedId: thread?.id ?? interaction.message!.id,
