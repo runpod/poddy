@@ -8,7 +8,7 @@ import {
 } from "discord-api-types/v10";
 import botConfig from "../../config/bot.config.js";
 import type ExtendedClient from "../../lib/extensions/ExtendedClient.js";
-import Functions from "../../lib/utilities/functions";
+import Functions from "../../lib/utilities/functions.js";
 import type { ZendeskCreateTicketRequest, ZendeskCreateTicketResponse } from "../../typings/zendesk.js";
 
 type SubmittableTicket = {
@@ -39,8 +39,8 @@ export default class PoddyFunctions extends Functions {
 				ticket: {
 					subject: ticket.subject ?? `${type[0]?.toUpperCase() + type.slice(1)} Escalated From Discord`, // "message" => "Message", shorter than a ternary
 					comment: ticket.comment,
-					requester: { email, name: user.username },
-					tags: [...(ticket.tags ?? []), "discord"],
+					requester: { email, name: interaction.member.user.username },
+					tags: ["discord"],
 				} satisfies ZendeskCreateTicketRequest,
 			}),
 			method: "POST",
