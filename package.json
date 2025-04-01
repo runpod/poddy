@@ -19,9 +19,12 @@
     ]
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.779.0",
+    "@aws-sdk/lib-storage": "^3.779.0",
     "@discordjs/core": "^2.0.1",
     "@discordjs/rest": "^2.4.3",
     "@discordjs/ws": "^2.0.1",
+    "@dsnp/parquetjs": "^1.8.6",
     "@hono/node-server": "^1.13.8",
     "@prisma/client": "^6.4.1",
     "@sapphire/bitfield": "^1.2.4",
@@ -47,7 +50,6 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "prisma": "^6.4.1",
-    "ts-node": "^10.9.2",
     "tsm": "^2.3.0",
     "typescript": "^5.7.3"
   },

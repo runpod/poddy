@@ -1,8 +1,12 @@
 -- AlterTable
 ALTER TABLE "invites" ADD COLUMN     "channelId" TEXT,
+ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN     "maxAge" INTEGER,
 ADD COLUMN     "maxUses" INTEGER,
 ADD COLUMN     "uses" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "member_joins" ADD COLUMN     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 -- AlterTable
 ALTER TABLE "messages" ADD COLUMN     "channelId" TEXT,
@@ -36,6 +40,7 @@ CREATE TABLE "audit_log" (
 CREATE TABLE "bans" (
     "user_id" TEXT NOT NULL,
     "actorId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
     "reason" TEXT,
     "deletedAt" TIMESTAMP(3),
 
@@ -76,4 +81,14 @@ CREATE TABLE "thread_events" (
     "timestamp" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "thread_events_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SnowflakeMigrations" (
+    "id" TEXT NOT NULL,
+    "startedAt" TIMESTAMP(3) NOT NULL,
+    "endedAt" TIMESTAMP(3),
+    "success" BOOLEAN NOT NULL,
+
+    CONSTRAINT "SnowflakeMigrations_pkey" PRIMARY KEY ("id")
 );

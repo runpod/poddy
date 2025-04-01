@@ -110,3 +110,5 @@ dist
 
 # this is a pnpm project, only localdev can generate this and having it is confusing
 package-lock.json
+
+.exports/

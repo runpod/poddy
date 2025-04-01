@@ -272,6 +272,7 @@ model MemberEvent {
   userId     String
   guildId    String
   joinedAt   DateTime
+  timestamp  DateTime @default(now())
 
   @@map("member_joins")
 }
@@ -325,6 +326,7 @@ model AuditLog {
 model Ban {
   userId    String    @id @map("user_id")
   actorId   String
+  createdAt DateTime
   reason    String?
   deletedAt DateTime?
 
@@ -356,13 +358,14 @@ model ScheduledEvent {
 }
 
 model Invite {
-  code        String  @id
+  code        String   @id
   name        String
   description String?
   channelId   String?
   createdBy   String
   guildId     String
-  uses        Int     @default(0)
+  uses        Int      @default(0)
+  createdAt   DateTime @default(now())
   maxAge      Int?
   maxUses     Int?
 
@@ -376,4 +379,11 @@ model ThreadEvent {
   timestamp   DateTime
 
   @@map("thread_events")
+}
+
+model SnowflakeMigrations {
+  id        String    @id @default(cuid(2))
+  startedAt DateTime
+  endedAt   DateTime?
+  success   Boolean
 }
