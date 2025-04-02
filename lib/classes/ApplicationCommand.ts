@@ -8,6 +8,7 @@ import type {
 } from "@discordjs/core";
 import { ApplicationCommandType, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import { CommandType } from "@prisma/client";
 import type { APIInteractionWithArguments } from "../../typings";
 import type ExtendedClient from "../extensions/ExtendedClient.js";
 import PermissionsBitField from "../utilities/permissions.js";
@@ -120,7 +121,7 @@ export default class ApplicationCommand {
 					where: {
 						commandName_commandType_userId: {
 							commandName: this.name,
-							commandType: "APPLICATION_COMMAND",
+							commandType: CommandType.APPLICATION_COMMAND,
 							userId,
 						},
 					},
@@ -129,7 +130,7 @@ export default class ApplicationCommand {
 					},
 					create: {
 						commandName: this.name,
-						commandType: "APPLICATION_COMMAND",
+						commandType: CommandType.APPLICATION_COMMAND,
 						expiresAt,
 						userId,
 					},
@@ -314,7 +315,7 @@ export default class ApplicationCommand {
 				where: {
 					commandName_commandType_userId: {
 						commandName: this.name,
-						commandType: "APPLICATION_COMMAND",
+						commandType: CommandType.APPLICATION_COMMAND,
 						userId: (interaction.member ?? interaction).user!.id,
 					},
 				},

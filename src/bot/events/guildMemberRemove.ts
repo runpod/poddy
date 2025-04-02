@@ -1,12 +1,13 @@
 import type { GatewayGuildMemberRemoveDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
+import { LogEvent } from "@prisma/client";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildMemberAdd extends EventHandler {
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.GuildMemberRemove, false);
+		super(client, GatewayDispatchEvents.GuildMemberRemove);
 	}
 
 	/**
@@ -22,7 +23,7 @@ export default class GuildMemberAdd extends EventHandler {
 
 		const loggingChannels = await this.client.prisma.logChannel.findMany({
 			where: {
-				event: "MEMBER_LEFT",
+				event: LogEvent.MEMBER_LEFT,
 				guildId: member.guild_id,
 			},
 		});
@@ -36,7 +37,7 @@ export default class GuildMemberAdd extends EventHandler {
 					authorId: member.user!.id,
 				},
 			}),
-			this.client.prisma.memberJoin.findFirst({
+			this.client.prisma.memberEvent.findFirst({
 				where: {
 					guildId: member.guild_id,
 					userId: member.user!.id,

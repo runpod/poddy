@@ -1,312 +1,391 @@
 datasource db {
-    // Change provider to whichever provide you're using.
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  // Change provider to whichever provide you're using.
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 enum CommandType {
-    TEXT_COMMAND
-    APPLICATION_COMMAND
+  TEXT_COMMAND
+  APPLICATION_COMMAND
 }
 
 enum ZapierNotificationType {
-    CUSTOMER_SUCCESS
-    SALES
+  CUSTOMER_SUCCESS
+  SALES
 }
 
 enum TextInputStyle {
-    SHORT
-    PARAGRAPH
+  SHORT
+  PARAGRAPH
 }
 
 enum EscalatedType {
-    MESSAGE
-    THREAD
+  MESSAGE
+  THREAD
 }
 
 enum LogEvent {
-    MESSAGE_EDITED
-    MESSAGE_DELETED
-    CHANNEL_CREATED
-    CHANNEL_DELETED
-    CHANNEL_UPDATED
-    ROLE_CREATED
-    ROLE_DELETED
-    ROLE_UPDATED
-    MEMBER_ROLE_UPDATED
-    MEMBER_UPDATED
-    MEMBER_JOINED
-    MEMBER_LEFT
-    VOICE_STATE_UPDATE
-    THREAD_CREATED
-    THREAD_UPDATED
-    THREAD_DELETED
-    INVITE_CREATED
-    INVITE_DELETED
-    INCIDENT_CREATED
+  MESSAGE_EDITED
+  MESSAGE_DELETED
+  CHANNEL_CREATED
+  CHANNEL_DELETED
+  CHANNEL_UPDATED
+  ROLE_CREATED
+  ROLE_DELETED
+  ROLE_UPDATED
+  MEMBER_ROLE_UPDATED
+  MEMBER_UPDATED
+  MEMBER_JOINED
+  MEMBER_LEFT
+  VOICE_STATE_UPDATE
+  THREAD_CREATED
+  THREAD_UPDATED
+  THREAD_DELETED
+  INVITE_CREATED
+  INVITE_DELETED
+  INCIDENT_CREATED
 }
 
 model Cooldown {
-    userId      String
-    commandName String
+  userId      String
+  commandName String
 
-    expiresAt DateTime
+  expiresAt DateTime
 
-    commandType CommandType
+  commandType CommandType
 
-    @@id([commandName, commandType, userId])
-    @@map("command_cooldowns")
+  @@id([commandName, commandType, userId])
+  @@map("command_cooldowns")
 }
 
 model UserLanguage {
-    userId     String @id
-    languageId String
+  userId     String @id
+  languageId String
 
-    @@map("user_languages")
+  @@map("user_languages")
 }
 
 model AutoThreadChannel {
-    channelId  String  @id
-    guildId    String
-    threadName String?
+  channelId  String  @id
+  guildId    String
+  threadName String?
 
-    @@map("auto_thread_channels")
+  @@map("auto_thread_channels")
 }
 
 model AutoTagOnForumChannel {
-    channelId String
-    guildId   String
-    tagId     String
+  channelId String
+  guildId   String
+  tagId     String
 
-    @@id([channelId, tagId])
-    @@map("auto_tag_on_forum_channels")
+  @@id([channelId, tagId])
+  @@map("auto_tag_on_forum_channels")
 }
 
 // We store this temporarily to avoid sending duplicate data to DataDog.
 model NewCommunicator {
-    userId   String
-    guildId  String
-    joinedAt DateTime
+  userId   String
+  guildId  String
+  joinedAt DateTime
 
-    @@id([userId, guildId])
-    @@map("new_communicators")
+  @@id([userId, guildId])
+  @@map("new_communicators")
 }
 
 model Embed {
-    id      String @id @default(cuid())
-    name    String
-    data    String
-    guildId String
+  id      String @id @default(cuid())
+  name    String
+  data    String
+  guildId String
 
-    helpDeskOptions HelpDeskOption[]
+  helpDeskOptions HelpDeskOption[]
 
-    @@unique([name, guildId])
-    @@map("embeds")
+  @@unique([name, guildId])
+  @@map("embeds")
 }
 
 model HelpDesk {
-    id            String  @id @default(cuid())
-    guildId       String
-    channelId     String?
-    name          String
-    description   String?
-    embedColor    String?
-    messageId     String?
-    footer        String?
-    footerIconUrl String?
+  id            String  @id @default(cuid())
+  guildId       String
+  channelId     String?
+  name          String
+  description   String?
+  embedColor    String?
+  messageId     String?
+  footer        String?
+  footerIconUrl String?
 
-    helpDeskOptions HelpDeskOption[]
+  helpDeskOptions HelpDeskOption[]
 
-    @@unique([guildId, name])
-    @@map("help_desks")
+  @@unique([guildId, name])
+  @@map("help_desks")
 }
 
 model HelpDeskOption {
-    id            String   @id @default(cuid())
-    name          String
-    responseId    String
-    description   String?
-    helpDeskId    String
-    emojiName     String?
-    emojiId       String?
-    emojiAnimated Boolean?
-    modalTitle    String?
-    channelId     String?
-    roleIds       String[]
-    position      Int
+  id            String   @id @default(cuid())
+  name          String
+  responseId    String
+  description   String?
+  helpDeskId    String
+  emojiName     String?
+  emojiId       String?
+  emojiAnimated Boolean?
+  modalTitle    String?
+  channelId     String?
+  roleIds       String[]
+  position      Int
 
-    helpDesk HelpDesk @relation(fields: [helpDeskId], references: [id], onDelete: Cascade)
-    response Embed    @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  helpDesk HelpDesk @relation(fields: [helpDeskId], references: [id], onDelete: Cascade)
+  response Embed    @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
-    helpDeskOptionModalComponents HelpDeskOptionModalComponent[]
+  helpDeskOptionModalComponents HelpDeskOptionModalComponent[]
 
-    @@unique([helpDeskId, name])
-    @@map("help_desk_options")
+  @@unique([helpDeskId, name])
+  @@map("help_desk_options")
 }
 
 model HelpDeskOptionModalComponent {
-    id               String         @id @default(cuid())
-    label            String
-    style            TextInputStyle
-    required         Boolean
-    minLength        Int?
-    maxLength        Int?
-    placeholder      String?
-    value            String?
-    helpDeskOptionId String
-    position         Int
+  id               String         @id @default(cuid())
+  label            String
+  style            TextInputStyle
+  required         Boolean
+  minLength        Int?
+  maxLength        Int?
+  placeholder      String?
+  value            String?
+  helpDeskOptionId String
+  position         Int
 
-    helpDeskOption HelpDeskOption @relation(fields: [helpDeskOptionId], references: [id], onDelete: Cascade)
+  helpDeskOption HelpDeskOption @relation(fields: [helpDeskOptionId], references: [id], onDelete: Cascade)
 }
 
 model SubscriptionGroup {
-    id          String  @id
-    name        String  @unique
-    category    String?
-    description String?
+  id          String  @id
+  name        String  @unique
+  category    String?
+  description String?
 
-    subscribedUsers SubscribedUser[]
+  subscribedUsers SubscribedUser[]
 
-    @@map("subscription_groups")
+  @@map("subscription_groups")
 }
 
 model SubscribedUser {
-    id        String @id @default(cuid())
-    userId    String
-    groupId   String
-    channelId String
+  id        String @id @default(cuid())
+  userId    String
+  groupId   String
+  channelId String
 
-    group SubscriptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group SubscriptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-    @@unique([userId, groupId])
-    @@map("subscribed_users")
+  @@unique([userId, groupId])
+  @@map("subscribed_users")
 }
 
 model Event {
-    id               String  @id @default(cuid())
-    guildId          String
-    channelId        String
-    name             String
-    active           Boolean @default(true)
-    description      String?
-    codeAmount       Int?
-    codeLogChannelId String?
+  id               String  @id @default(cuid())
+  guildId          String
+  channelId        String
+  name             String
+  active           Boolean @default(true)
+  description      String?
+  codeAmount       Int?
+  codeLogChannelId String?
 
-    submissions    Submission[]
-    generatedCodes GeneratedCode[]
+  submissions    Submission[]
+  generatedCodes GeneratedCode[]
 
-    @@unique([name, guildId])
+  @@unique([name, guildId])
 }
 
 model GeneratedCode {
-    code        String @id
-    eventId     String
-    userId      String
-    runpodEmail String
+  code        String @id
+  eventId     String
+  userId      String
+  runpodEmail String
 
-    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-    @@unique([runpodEmail, eventId])
-    @@unique([userId, eventId])
-    @@map("generated_codes")
+  @@unique([runpodEmail, eventId])
+  @@unique([userId, eventId])
+  @@map("generated_codes")
 }
 
 model Submission {
-    userId    String
-    eventId   String
-    messageId String @unique
+  userId    String
+  eventId   String
+  messageId String @unique
 
-    event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-    upvotes SubmissionUpvote[]
+  upvotes SubmissionUpvote[]
 
-    @@id([userId, eventId])
+  @@id([userId, eventId])
 }
 
 model SubmissionUpvote {
-    userId       String
-    submissionId String
-    eventId      String
+  userId       String
+  submissionId String
+  eventId      String
 
-    submission Submission @relation(fields: [submissionId], references: [messageId], onDelete: Cascade)
+  submission Submission @relation(fields: [submissionId], references: [messageId], onDelete: Cascade)
 
-    @@id([userId, submissionId])
-    @@unique([userId, eventId])
+  @@id([userId, submissionId])
+  @@unique([userId, eventId])
 }
 
 model ZapierNotification {
-    id        String                 @id @default(cuid())
-    email     String
-    message   String
-    type      ZapierNotificationType
-    timestamp DateTime               @default(now())
+  id        String                 @id @default(cuid())
+  email     String
+  message   String
+  type      ZapierNotificationType
+  timestamp DateTime               @default(now())
 
-    @@map("zapier_notifications")
-}
-
-model Invite {
-    code        String  @id
-    name        String
-    description String?
-    createdBy   String
-    guildId     String
-
-    @@map("invites")
+  @@map("zapier_notifications")
 }
 
 model ZendeskTicket {
-    id            Int           @id
-    escalatedId   String        @unique
-    escalatedById String
-    type          EscalatedType
+  id            Int           @id
+  escalatedId   String        @unique
+  escalatedById String
+  type          EscalatedType
 
-    @@map("zendesk_tickets")
+  @@map("zendesk_tickets")
 }
 
 model LogChannel {
-    guildId   String
-    channelId String
-    event     LogEvent
+  guildId   String
+  channelId String
+  event     LogEvent
 
-    @@id([channelId, event])
-    @@map("log_channels")
+  @@id([channelId, event])
+  @@map("log_channels")
 }
 
-model Message {
-    id        String   @id
-    content   String
-    guildId   String
-    authorId  String
-    createdAt DateTime
+model MemberEvent {
+  id         String   @id @default(cuid(2))
+  inviteCode String?
+  userId     String
+  guildId    String
+  joinedAt   DateTime
+  timestamp  DateTime @default(now())
 
-    @@map("messages")
-}
-
-model MemberJoin {
-    id         String   @id @default(cuid())
-    inviteCode String?
-    userId     String
-    guildId    String
-    joinedAt   DateTime
-
-    @@map("member_joins")
+  @@map("member_joins")
 }
 
 model BetterStackStatusReport {
-    id           String    @id
-    startsAt     DateTime
-    endsAt       DateTime?
-    statusPageId Int
-    messageId    String
-    channelId    String
-    guildId      String
-    lastUpdateAt DateTime  @updatedAt
+  id           String    @id
+  startsAt     DateTime
+  endsAt       DateTime?
+  statusPageId Int
+  messageId    String
+  channelId    String
+  guildId      String
+  lastUpdateAt DateTime  @updatedAt
 
-    @@map("better_stack_status_reports")
+  @@map("better_stack_status_reports")
+}
+
+model Message {
+  id        String    @id
+  authorId  String
+  channelId String?
+  guildId   String
+  content   String?
+  createdAt DateTime
+  editedAt  DateTime?
+  deletedAt DateTime?
+
+  @@map("messages")
+}
+
+model Channel {
+  id            String   @id
+  name          String
+  type          Int
+  availableTags String[]
+  appliedTags   String[]
+
+  @@map("channels")
+}
+
+model AuditLog {
+  id         String  @id
+  targetId   String?
+  actorId    String?
+  actionType String?
+  reason     String?
+
+  @@map("audit_log")
+}
+
+model Ban {
+  userId    String    @id @map("user_id")
+  actorId   String
+  createdAt DateTime
+  reason    String?
+  deletedAt DateTime?
+
+  @@map("bans")
+}
+
+model Role {
+  id          String    @id
+  name        String
+  permissions String
+  deleted     Boolean   @default(false)
+  editedAt    DateTime?
+
+  @@map("roles")
+}
+
+model ScheduledEvent {
+  id          String    @id
+  name        String
+  description String?
+  startTime   DateTime
+  endTime     DateTime?
+  entityType  String
+  userCount   Int?
+  creatorId   String?
+  deletedAt   DateTime?
+
+  @@map("scheduled_events")
+}
+
+model Invite {
+  code        String   @id
+  name        String
+  description String?
+  channelId   String?
+  createdBy   String
+  guildId     String
+  uses        Int      @default(0)
+  createdAt   DateTime @default(now())
+  maxAge      Int?
+  maxUses     Int?
+
+  @@map("invites")
+}
+
+model ThreadEvent {
+  id          String   @id @default(cuid(2))
+  threadId    String
+  appliedTags String[]
+  timestamp   DateTime
+
+  @@map("thread_events")
+}
+
+model SnowflakeMigrations {
+  id        String    @id @default(cuid(2))
+  startedAt DateTime
+  endedAt   DateTime?
+  success   Boolean
 }
 
 model Tag {

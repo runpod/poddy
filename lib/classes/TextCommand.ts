@@ -2,6 +2,7 @@ import { env } from "node:process";
 import type { APIEmbed, APIRole, GatewayMessageCreateDispatchData, Permissions } from "@discordjs/core";
 import { RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import { CommandType } from "@prisma/client";
 import type ExtendedClient from "../extensions/ExtendedClient.js";
 import PermissionsBitField from "../utilities/permissions.js";
 import type Language from "./Language.js";
@@ -95,7 +96,7 @@ export default class TextCommand {
 				where: {
 					commandName_commandType_userId: {
 						commandName: this.name,
-						commandType: "TEXT_COMMAND",
+						commandType: CommandType.TEXT_COMMAND,
 						userId,
 					},
 				},
@@ -104,7 +105,7 @@ export default class TextCommand {
 				},
 				create: {
 					commandName: this.name,
-					commandType: "TEXT_COMMAND",
+					commandType: CommandType.TEXT_COMMAND,
 					expiresAt,
 					userId,
 				},
@@ -328,7 +329,7 @@ export default class TextCommand {
 				where: {
 					commandName_commandType_userId: {
 						commandName: this.name,
-						commandType: "APPLICATION_COMMAND",
+						commandType: CommandType.TEXT_COMMAND,
 						userId: message.author.id,
 					},
 				},

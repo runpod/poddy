@@ -1,5 +1,6 @@
 import type { GatewayVoiceStateUpdateDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
+import { LogEvent } from "@prisma/client";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -20,7 +21,7 @@ export default class GuildMemberAdd extends EventHandler {
 	>();
 
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.VoiceStateUpdate, false);
+		super(client, GatewayDispatchEvents.VoiceStateUpdate);
 	}
 
 	/**
@@ -100,7 +101,7 @@ export default class GuildMemberAdd extends EventHandler {
 
 		const loggingChannels = await this.client.prisma.logChannel.findMany({
 			where: {
-				event: "VOICE_STATE_UPDATE",
+				event: LogEvent.VOICE_STATE_UPDATE,
 				guildId: voiceState.guild_id!,
 			},
 		});

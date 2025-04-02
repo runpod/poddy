@@ -1,5 +1,6 @@
 import type { GatewayGuildAuditLogEntryCreateDispatchData, ToEventProps } from "@discordjs/core";
 import { AuditLogEvent, ChannelType, GatewayDispatchEvents } from "@discordjs/core";
+import { LogEvent } from "@prisma/client";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
@@ -33,10 +34,20 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 	 * https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create
 	 */
 	public override async run({ data: auditLogEntry }: ToEventProps<GatewayGuildAuditLogEntryCreateDispatchData>) {
+		await this.client.prisma.auditLog.create({
+			data: {
+				id: auditLogEntry.id,
+				targetId: auditLogEntry.target_id,
+				actorId: auditLogEntry.user_id,
+				actionType: AuditLogEvent[auditLogEntry.action_type],
+				reason: auditLogEntry.reason ?? "",
+			},
+		});
+
 		if (auditLogEntry.action_type === AuditLogEvent.ChannelCreate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "CHANNEL_CREATED",
+					event: LogEvent.CHANNEL_CREATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -72,7 +83,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.ChannelDelete) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "CHANNEL_DELETED",
+					event: LogEvent.CHANNEL_DELETED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -165,7 +176,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.ChannelUpdate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "CHANNEL_UPDATED",
+					event: LogEvent.CHANNEL_UPDATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -255,7 +266,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.RoleCreate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "ROLE_CREATED",
+					event: LogEvent.ROLE_CREATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -324,7 +335,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.RoleDelete) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "ROLE_DELETED",
+					event: LogEvent.ROLE_DELETED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -393,7 +404,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.RoleUpdate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "ROLE_UPDATED",
+					event: LogEvent.ROLE_UPDATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -464,7 +475,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.MemberRoleUpdate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "MEMBER_ROLE_UPDATED",
+					event: LogEvent.MEMBER_ROLE_UPDATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -521,7 +532,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.MemberUpdate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "MEMBER_UPDATED",
+					event: LogEvent.MEMBER_UPDATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -572,7 +583,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.ThreadCreate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "THREAD_CREATED",
+					event: LogEvent.THREAD_CREATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -649,7 +660,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.ThreadUpdate) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "THREAD_UPDATED",
+					event: LogEvent.THREAD_UPDATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -747,7 +758,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.ThreadDelete) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "THREAD_DELETED",
+					event: LogEvent.THREAD_DELETED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -849,7 +860,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "INVITE_CREATED",
+					event: LogEvent.INVITE_CREATED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});
@@ -926,7 +937,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 		if (auditLogEntry.action_type === AuditLogEvent.InviteDelete) {
 			const loggingChannels = await this.client.prisma.logChannel.findMany({
 				where: {
-					event: "INVITE_DELETED",
+					event: LogEvent.INVITE_DELETED,
 					guildId: auditLogEntry.guild_id!,
 				},
 			});

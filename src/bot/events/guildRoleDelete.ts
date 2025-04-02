@@ -5,7 +5,7 @@ import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildRoleDelete extends EventHandler {
 	public constructor(client: ExtendedClient) {
-		super(client, GatewayDispatchEvents.GuildRoleDelete, false);
+		super(client, GatewayDispatchEvents.GuildRoleDelete);
 	}
 
 	/**
@@ -18,5 +18,15 @@ export default class GuildRoleDelete extends EventHandler {
 		previousGuildRoles.delete(data.guild_id);
 
 		this.client.guildRolesCache.set(data.guild_id, previousGuildRoles);
+
+		await this.client.prisma.role.update({
+			where: {
+				id: data.role_id,
+			},
+			data: {
+				deleted: true,
+				editedAt: new Date(),
+			},
+		});
 	}
 }

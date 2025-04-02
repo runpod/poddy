@@ -15,7 +15,7 @@ export default class Functions {
 	/**
 	 * Our extended client.
 	 */
-	private readonly client: ExtendedClient;
+	protected readonly client: ExtendedClient;
 
 	/**
 	 * One second in milliseconds.
