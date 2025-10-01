@@ -260,7 +260,7 @@ export default class RedeemCode extends ApplicationCommand {
 									eventName: event.name,
 									userMention: `<@${(interaction.member ?? interaction).user!.id}>`,
 									creationDate: `<t:${Math.floor(userCreationEpoch / 1_000)}:R>`,
-									joinDate: `<t:${Math.floor(new Date(interaction.member!.joined_at).getTime() / 1_000)}:R>`,
+									joinDate: `<t:${Math.floor(new Date(interaction.member!.joined_at ?? 0).getTime() / 1_000)}:R>`,
 								}),
 								allowed_mentions: { parse: [], replied_user: true },
 							}),

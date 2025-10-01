@@ -6,17 +6,15 @@
 		"useIgnoreFile": true,
 		"defaultBranch": "main"
 	},
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"files": {
-		"ignore": ["typings/language.d.ts", "package.json", ".wrangler/", "node_modules/"]
+		"includes": ["**", "!typings/language.d.ts", "!package.json", "!.wrangler/", "!node_modules/"]
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab",
 		"indentWidth": 2,
 		"lineWidth": 120
-	},
-	"organizeImports": {
-		"enabled": true
 	},
 	"linter": {
 		"enabled": true,
@@ -29,10 +27,9 @@
 				"useDateNow": "error"
 			},
 			"correctness": {
-				"noNewSymbol": "error",
+				"noInvalidBuiltinInstantiation": "error",
 				"noUnusedPrivateClassMembers": "off",
-				"noUnusedVariables": "error",
-				"useArrayLiterals": "error"
+				"noUnusedVariables": "error"
 			},
 			"nursery": {
 				"useSortedClasses": "warn"
@@ -63,7 +60,8 @@
 				},
 				"useShorthandAssign": "error",
 				"useThrowNewError": "error",
-				"useThrowOnlyError": "error"
+				"useThrowOnlyError": "error",
+				"useArrayLiterals": "error"
 			},
 			"suspicious": {
 				"noImplicitAnyLet": "off",

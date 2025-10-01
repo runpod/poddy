@@ -1137,7 +1137,7 @@ export default class HelpDesk extends ApplicationCommand {
 					this.client.languageHandler.defaultLanguage!.get(
 						"HELP_DESK_OPTIONS_COMMAND_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
 					)
-				]?.value ?? helpDeskOptionsCount + 1;
+				]?.value as number ?? helpDeskOptionsCount + 1;
 
 			const { animated, emojiName, emojiId } = this.customEmojiRegex.exec(emoji ?? "")?.groups ?? {
 				animated: undefined,
@@ -1408,7 +1408,7 @@ export default class HelpDesk extends ApplicationCommand {
 					this.client.languageHandler.defaultLanguage!.get(
 						"HELP_DESK_OPTIONS_COMMAND_POSITION_SUB_COMMAND_POSITION_OPTION_NAME",
 					)
-				]!.value;
+				]!.value as number;
 
 			if (position === helpDeskOption.position)
 				return this.client.api.interactions.reply(interaction.id, interaction.token, {

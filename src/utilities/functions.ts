@@ -1,13 +1,13 @@
 import { env } from "node:process";
 import type { EscalatedType } from "@prisma/client";
 import {
+	type APIMessage,
 	type APIModalSubmitGuildInteraction,
 	type APIThreadChannel,
 	type APIUser,
 	MessageFlags,
 } from "discord-api-types/v10";
 import botConfig from "../../config/bot.config.js";
-import type ExtendedClient from "../../lib/extensions/ExtendedClient.js";
 import Functions from "../../lib/utilities/functions.js";
 import type { ZendeskCreateTicketRequest, ZendeskCreateTicketResponse } from "../../typings/zendesk.js";
 
@@ -23,12 +23,14 @@ type SubmittableTicket = {
 export default class PoddyFunctions extends Functions {
 	public async submitTicket(
 		type: "message" | "thread",
-		email: string,
+		email: string | undefined,
 		user: APIUser,
 		interaction: APIModalSubmitGuildInteraction,
 		ticket: SubmittableTicket,
 		thread?: APIThreadChannel,
 	) {
+		if(!email) return;
+
 		const response = await fetch("https://runpodinc.zendesk.com/api/v2/tickets.json", {
 			headers: {
 				"Content-Type": "application/json",
@@ -111,5 +113,50 @@ export default class PoddyFunctions extends Functions {
 		]);
 
 		return data;
+	}
+
+	public async fetchAllThreadMessages(threadId: string, options: {
+		excludeBots?: boolean;
+		limit?: number;
+		sortOrder?: 'chronological' | 'reverse';
+	} = {}) {
+		const { excludeBots = false, limit, sortOrder = 'chronological' } = options;
+		const allMessages: APIMessage[] = [];
+		
+		let messages = await this.client.api.channels.getMessages(threadId, {
+			limit: 100,
+		});
+
+		allMessages.push(...messages.filter(message => excludeBots ? !message.author.bot : true));
+
+		console.log(`📚 Fetched ${messages.length} initial messages for thread ${threadId}`);
+
+		while (messages.length === 100 && (!limit || allMessages.length < limit)) {
+			messages = await this.client.api.channels.getMessages(threadId, {
+				limit: 100,
+				before: messages[messages.length - 1]!.id,
+			});
+
+			const filteredMessages = messages.filter(message => excludeBots ? !message.author.bot : true);
+			
+			// If we have a limit, only add what we need
+			if (limit && allMessages.length + filteredMessages.length > limit) {
+				const remaining = limit - allMessages.length;
+				allMessages.push(...filteredMessages.slice(0, remaining));
+				break;
+			}
+
+			allMessages.push(...filteredMessages);
+
+			console.log(`📚 Fetched ${messages.length} additional messages (${allMessages.length} total) for thread ${threadId}`);
+		}
+
+		// Sort messages based on requested order
+		if (sortOrder === 'chronological') {
+			allMessages.reverse(); // Discord returns newest first, we want oldest first
+		}
+
+		console.log(`✅ Completed fetching ${allMessages.length} messages from thread ${threadId}`);
+		return allMessages;
 	}
 }

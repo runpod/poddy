@@ -1,18 +1,16 @@
 # Poddy
 
-Welcome to the repository for Poddy, a Discord bot created to help the RunPod community server function.
+Welcome to the repository for Poddy, a Discord bot created to help the Runpod community server function.
 
 ## Self Hosting
 
-To run this bot you need to be on at least node.js `v18`, from there make sure you have
+To run this bot you need to be on at least node.js `v20`, from there make sure you have
 PNPM installed and run `pnpm install` to install all of our dependencies.
 
 Once all of our dependencies are installed please duplicate `.env.example` to `.env.prod`
 and `.env.dev`, then modify all the values accordingly, and the same for `./prisma/.env`.
 
-To run the production version of this bot please run `pnpm start`, if any errors come
-out feel free to contact the developer (`@polar.blue` on Discord) if he still works on the project! (Make sure to compile
-your TypeScript files first with `tsc`)
+To run the production version of this bot please run `pnpm start`, for support - please open an issue.
 
 If you want to run the development version run `pnpm build`.
 

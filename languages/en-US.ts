@@ -72,6 +72,7 @@ export default {
 	SendVoiceMessages: "Send Voice Messages",
 	SendPolls: "Send Polls",
 	UseExternalApps: "Use External Apps",
+	PinMessages: "Pin Messages",
 
 	INVALID_ARGUMENT_TITLE: "Invalid Argument",
 
@@ -908,7 +909,7 @@ export default {
 	REDEEM_CODE_COMMAND_EVENT_OPTION_NAME: "event",
 	REDEEM_CODE_COMMAND_EVENT_OPTION_DESCRIPTION: "The event you want to redeem the code from.",
 	REDEEM_CODE_COMMAND_RUNPOD_EMAIL_OPTION_NAME: "runpod_email",
-	REDEEM_CODE_COMMAND_RUNPOD_EMAIL_OPTION_DESCRIPTION: "The RunPod email to redeem the code with.",
+	REDEEM_CODE_COMMAND_RUNPOD_EMAIL_OPTION_DESCRIPTION: "The Runpod email to redeem the code with.",
 
 	EVENT_CREATED_TITLE: "Event Created",
 	EVENT_CREATED_DESCRIPTION: "Event **{{eventName}}** `[{{eventId}}]` has been created!",
@@ -968,7 +969,7 @@ export default {
 		"You may only vote on a singular submission so if you have already voted, your vote has been changed.",
 
 	NOT_A_VALID_EMAIL_TITLE: "Not A Valid Email",
-	NOT_A_VALID_EMAIL_DESCRIPTION: "Please provide a valid RunPod email.",
+	NOT_A_VALID_EMAIL_DESCRIPTION: "Please provide a valid Runpod email.",
 
 	REDEEMED_CODE_TITLE: "Redeemed Code",
 	REDEEMED_CODE_DESCRIPTION: "`{{code}}` is your code for the event **{{eventName}}** `[{{eventId}}]`.",
@@ -1097,8 +1098,8 @@ export default {
 
 	OPEN_ZENDESK_TICKET_BUTTON_LABEL: "Open Zendesk Ticket",
 
-	ESCALATE_TO_ZENDESK_EMAIL_LABEL: "RunPod Email",
-	ESCALATE_TO_ZENDESK_EMAIL_PLACEHOLDER: "example@example.com",
+	ESCALATE_TO_ZENDESK_EMAIL_LABEL: "Runpod Email",
+	ESCALATE_TO_ZENDESK_EMAIL_PLACEHOLDER: "help@runpod.io",
 
 	ESCALATED_TO_ZENDESK_ERROR_TITLE: "Error Escalating To Zendesk",
 	ESCALATED_TO_ZENDESK_ERROR_DESCRIPTION: "An error occurred while escalating to Zendesk, please try again later.",
@@ -1170,4 +1171,16 @@ export default {
 
 	TAG_LIST_TITLE: "Tags",
 	TAG_LIST_EMPTY_DESCRIPTION: "There are currently no tags, add some by doing `/tags create`!",
+
+	SAVE_COMMAND_NAME: "save",
+	SAVE_COMMAND_DESCRIPTION: "Save a thread conversation to the knowledge base",
+	SAVE_COMMAND_TITLE_OPTION_NAME: "title",
+	SAVE_COMMAND_TITLE_OPTION_DESCRIPTION: "Custom title for the saved thread",
+	SAVE_COMMAND_TAGS_OPTION_NAME: "tags",
+	SAVE_COMMAND_TAGS_OPTION_DESCRIPTION: "Comma-separated tags for categorization",
+	SAVE_COMMAND_PROMPT_OPTION_NAME: "prompt",
+	SAVE_COMMAND_PROMPT_OPTION_DESCRIPTION: "Custom summary prompt to focus on specific aspects",
+	SAVE_COMMAND_NO_MESSAGES_ERROR: "No messages found in this thread.",
+	SAVE_COMMAND_SUCCESS: "✅ Thread saved successfully to the knowledge base!",
+	SAVE_COMMAND_ERROR: "❌ Failed to save thread. Please try again later.",
 };

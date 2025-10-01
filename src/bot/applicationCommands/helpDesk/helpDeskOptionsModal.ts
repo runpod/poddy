@@ -573,19 +573,19 @@ export default class HelpDeskOptionsModal extends ApplicationCommand {
 						this.client.languageHandler.defaultLanguage!.get(
 							"HELP_DESK_OPTIONS_MODAL_COMPONENTS_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_MIN_LENGTH_OPTION_NAME",
 						)
-					]?.value ?? null;
+					]?.value as number ?? null;
 				const maxLength =
 					interaction.arguments.integers?.[
 						this.client.languageHandler.defaultLanguage!.get(
 							"HELP_DESK_OPTIONS_MODAL_COMPONENTS_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_MAX_LENGTH_OPTION_NAME",
 						)
-					]?.value ?? null;
+					]?.value as number ?? null;
 				let position =
 					interaction.arguments.integers?.[
 						this.client.languageHandler.defaultLanguage!.get(
 							"HELP_DESK_OPTIONS_MODAL_COMPONENTS_SUB_COMMAND_GROUP_ADD_SUB_COMMAND_POSITION_OPTION_NAME",
 						)
-					]?.value;
+					]?.value as number;
 
 				if (!position) position = componentCount + 1;
 

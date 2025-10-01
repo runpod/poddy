@@ -1,8 +1,39 @@
-import type { APIChannel, GatewayMessageCreateDispatchData, ToEventProps } from "@discordjs/core";
+import { env } from "node:process";
+import type { APIChannel, GatewayMessageCreateDispatchData, ToEventProps, APIThreadChannel } from "@discordjs/core";
 import { ChannelType, GatewayDispatchEvents, MessageType, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
+import { extractImagesFromThread } from "../../utilities/qa/imageprocessor.js";
+import { addUserMessage, addBotResponse, createQAThread, threadExists } from "../../utilities/qa/threads.js";
+import { analyzeQuestionType } from "../../utilities/qa/classifier.js";
+import { processRunPodQuery, handleRAGResponse, handlePassthroughResponse } from "../../utilities/runpod.js";
+import { 
+    MESSAGES, 
+    ANIMATION_FRAMES, 
+    INITIAL_MESSAGES, 
+    CONSTANTS, 
+    CLARIFICATION_PROMPT
+} from "../../utilities/qa/messages.js";
+/**
+ * Split long messages into chunks under Discord's limit
+ */
+function splitMessage(text: string, maxLength = CONSTANTS.MAX_MESSAGE_LENGTH): string[] {
+	const chunks: string[] = [];
+	let current = text;
+
+	while (current.length > maxLength) {
+		let splitIndex = current.lastIndexOf('\n', maxLength);
+		if (splitIndex === -1) splitIndex = current.lastIndexOf(' ', maxLength);
+		if (splitIndex === -1) splitIndex = maxLength;
+
+		chunks.push(current.substring(0, splitIndex));
+		current = current.substring(splitIndex).trim();
+	}
+
+	if (current) chunks.push(current);
+	return chunks;
+}
 
 export default class MessageCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
@@ -74,7 +105,7 @@ export default class MessageCreate extends EventHandler {
 			// by new users are consistent with new_communicators (do we on average see a couple of messages per new user, or do we see a lot of
 			// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
 			// Discord server, and if we need an easier onboarding flow for it.
-			if (new Date(message.member!.joined_at).getTime() > Date.now() - 604_800_000)
+			if (new Date(message.member!.joined_at!).getTime() > Date.now() - 604_800_000)
 				this.client.dataDog?.increment("total_messages_sent.new_user", 1, [
 					`guildId:${message.guild_id}`,
 					`userId:${message.author.id}`,
@@ -96,13 +127,13 @@ export default class MessageCreate extends EventHandler {
 					data: {
 						userId: message.author.id,
 						guildId: message.guild_id,
-						joinedAt: new Date(message.member!.joined_at),
+						joinedAt: new Date(message.member!.joined_at!),
 					},
 				});
 
 				this.client.dataDog?.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
 
-				if (new Date(message.member!.joined_at).getTime() + 86_400 > Date.now())
+				if (new Date(message.member!.joined_at!).getTime() + 86_400 > Date.now())
 					this.client.dataDog?.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
 			}
 
@@ -125,6 +156,235 @@ export default class MessageCreate extends EventHandler {
 					message.id,
 				);
 			}
+		}
+
+		// Handle bot mentions for Q&A assistance
+		if (message.content.includes(`<@${env.APPLICATION_ID}>`) || message.content.includes(`<@!${env.APPLICATION_ID}>`)) {
+			const question = message.content.replace(/<@!?\d+>/g, '').trim();
+
+			if (!question) {
+				await this.client.api.channels.createMessage(message.channel_id, {
+					content: MESSAGES.GREETING,
+					message_reference: {
+						message_id: message.id,
+						fail_if_not_exists: false,
+					},
+					allowed_mentions: { parse: [], replied_user: true },
+				});
+				return;
+			}
+
+			// Create or get thread for Q&A conversation
+			let thread: APIThreadChannel;
+			try {
+				if (channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread) {
+					thread = channel as APIThreadChannel;
+				} else {
+					thread = await this.client.api.channels.createThread(
+						message.channel_id,
+						{
+							name: `Q&A: ${question.substring(0, 50)}...`,
+							auto_archive_duration: 60,
+						},
+						message.id,
+					) as APIThreadChannel;
+				}
+			} catch (error) {
+				this.client.logger.error('Failed to create Q&A thread:', error);
+				return;
+			}
+
+			const images = await extractImagesFromThread(thread);
+    		if (images) {
+    		    console.log(`🖼️ Found ${images.length} total image(s) in the thread for context`);
+    		}
+			
+			let threadContext: string | null = null;
+			if (thread.type === ChannelType.PublicThread || thread.type === ChannelType.PrivateThread) {
+				try {
+					const messages = await this.client.api.channels.getMessages(thread.id, { limit: 5 });
+					const previousMessages = messages
+						.filter(m => m.id !== message.id)
+						.map(m => m.content)
+						.join('\n');
+					if (previousMessages) {
+						threadContext = previousMessages.substring(0, 500);
+					}
+				} catch (err) {
+					console.error('Failed to fetch thread context:', err);
+				}
+			}
+
+			const isNewThread = !await threadExists(this.client.prisma, thread.id);
+			if (isNewThread) {
+				await createQAThread(this.client.prisma, thread.id, 'discord', question);
+			}
+
+			await addUserMessage(this.client.prisma, thread.id, question);
+
+
+			const textToAnalyze = threadContext ? `${threadContext}\n\nNew question: ${question}` : question;
+			const hasContext = !!threadContext;
+			const analysis = await analyzeQuestionType(textToAnalyze, hasContext);
+			
+			if (analysis.clarity === 'unclear') {
+				const thinkingMsg = await this.client.api.channels.createMessage(thread.id, {
+					content: INITIAL_MESSAGES.CLARIFICATION_THINKING,
+				});
+
+				let frameIndex = 0;
+				const clarificationInterval = setInterval(async () => {
+					try {
+						await this.client.api.channels.editMessage(thread.id, thinkingMsg.id, {
+							content: ANIMATION_FRAMES.CLARIFICATION[frameIndex % ANIMATION_FRAMES.CLARIFICATION.length],
+						});
+						frameIndex++;
+					} catch (err) {
+						clearInterval(clarificationInterval);
+					}
+				}, CONSTANTS.ANIMATION_INTERVALS.CLARIFICATION);
+
+				try {
+					// Generate intelligent clarification using Runpod
+					const clarificationResponse = await processRunPodQuery(
+						CLARIFICATION_PROMPT(question, images), 
+						false, 
+						threadContext, 
+						images, 
+						'openai_4o_mini'
+					);
+
+					clearInterval(clarificationInterval);
+
+					try {
+						await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
+					} catch (err) {
+						// Ignore deletion errors
+					}
+
+					if (clarificationResponse.success) {
+						await this.client.api.channels.createMessage(thread.id, {
+							content: clarificationResponse.answer,
+						});
+						await addBotResponse(this.client.prisma, thread.id, clarificationResponse.answer, 'gpt-4o-mini');
+					} else {
+						await this.client.api.channels.createMessage(thread.id, {
+							content: MESSAGES.CLARIFICATION_FALLBACK,
+						});
+						await addBotResponse(this.client.prisma, thread.id, MESSAGES.CLARIFICATION_FALLBACK, 'fallback');
+					}
+
+				} catch (error) {
+					console.error('Error generating clarification:', error);
+					clearInterval(clarificationInterval);
+
+					try {
+						await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
+					} catch (err) {
+						// Ignore deletion errors
+					}
+
+					await this.client.api.channels.createMessage(thread.id, {
+						content: MESSAGES.CLARIFICATION_FALLBACK,
+					});
+					await addBotResponse(this.client.prisma, thread.id, MESSAGES.CLARIFICATION_FALLBACK, 'fallback');
+				}
+
+				return;
+			}
+
+			// Show processing animation for normal questions
+			const thinkingMsg = await this.client.api.channels.createMessage(thread.id, {
+				content: INITIAL_MESSAGES.PROCESSING_THINKING,
+			});
+
+			let frameIndex = 0;
+			const processingInterval = setInterval(async () => {
+				try {
+					await this.client.api.channels.editMessage(thread.id, thinkingMsg.id, {
+						content: ANIMATION_FRAMES.PROCESSING[frameIndex % ANIMATION_FRAMES.PROCESSING.length],
+					});
+					frameIndex++;
+				} catch (err) {
+					clearInterval(processingInterval);
+				}
+			}, CONSTANTS.ANIMATION_INTERVALS.PROCESSING);
+
+			try {
+				let response;
+
+				// Decide whether to use RAG or passthrough based on classification
+				const useComplexModel = analysis.complexity === 'complex';
+				if (useComplexModel) {
+					console.log('🧠 Using GPT-4o for complex reasoning');
+				}
+
+				if (analysis.needs_rag) {
+					console.log('🔍 Using RAG to search documentation');
+					response = await handleRAGResponse(question, threadContext, images, useComplexModel);
+				} else {
+					console.log('🔄 Using passthrough (no RAG needed)');
+					response = await handlePassthroughResponse(question, threadContext, images, useComplexModel);
+				}
+
+				clearInterval(processingInterval);
+
+				try {
+					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
+				} catch (err) {
+					// Ignore deletion errors
+				}
+
+				if (response.success) {
+					let answer = response.answer || MESSAGES.ERROR_FORMAT_FALLBACK;
+
+					// Clean up excessive blank lines
+					answer = answer.replace(/\n{2,}/g, '\n');
+
+					// Add beta message footer
+					answer += MESSAGES.BETA_FOOTER;
+
+					// Split long messages if needed
+					if (answer.length > CONSTANTS.MAX_MESSAGE_LENGTH) {
+						const chunks = splitMessage(answer);
+						for (const chunk of chunks) {
+							await this.client.api.channels.createMessage(thread.id, {
+								content: chunk,
+							});
+						}
+					} else {
+						await this.client.api.channels.createMessage(thread.id, {
+							content: answer,
+						});
+					}
+
+					// Save bot response to database
+					const llmUsed = response.metadata?.model || (useComplexModel ? 'gpt-4o' : 'gpt-4o-mini');
+					await addBotResponse(this.client.prisma, thread.id, answer, llmUsed);
+					console.log(`💾 Bot response saved to Q&A database (${response.type} mode used)`);
+
+				} else {
+					await this.client.api.channels.createMessage(thread.id, {
+						content: `❌ ${response.error || MESSAGES.ERROR_FAILED_RESPONSE}`,
+					});
+				}
+
+			} catch (error) {
+				console.error('Error processing question:', error);
+				clearInterval(processingInterval);
+
+				try {
+					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
+				} catch (err) {
+					// Ignore deletion errors
+				}
+
+				await this.client.api.channels.createMessage(thread.id, {
+					content: MESSAGES.ERROR_GENERIC,
+				});
+			}
+
+			return;
 		}
 
 		return this.client.textCommandHandler.handleTextCommand({

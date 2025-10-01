@@ -546,7 +546,7 @@ export default class Events extends ApplicationCommand {
 						this.client.languageHandler.defaultLanguage!.get(
 							"EVENTS_COMMAND_EDIT_SUB_COMMAND_GROUP_CODE_AMOUNT_SUB_COMMAND_AMOUNT_OPTION_NAME",
 						)
-					]?.value;
+					]?.value as number;
 
 				return Promise.all([
 					this.client.prisma.event.update({
@@ -704,7 +704,7 @@ export default class Events extends ApplicationCommand {
 					this.client.languageHandler.defaultLanguage!.get(
 						"EVENTS_COMMAND_TOP_SUBMISSIONS_SUB_COMMAND_AMOUNT_OPTION_NAME",
 					)
-				]?.value ?? 10;
+				]?.value as number ?? 10;
 
 			const id =
 				interaction.arguments.strings![

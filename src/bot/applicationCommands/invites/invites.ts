@@ -207,11 +207,11 @@ export default class Invites extends ApplicationCommand {
 			const max_age =
 				interaction.arguments.integers![
 					this.client.languageHandler.defaultLanguage!.get("INVITES_COMMAND_CREATE_SUB_COMMAND_EXPIRATION_OPTION_NAME")
-				]?.value ?? 0;
+				]?.value as number ?? 0;
 			const max_uses =
 				interaction.arguments.integers![
 					this.client.languageHandler.defaultLanguage!.get("INVITES_COMMAND_CREATE_SUB_COMMAND_MAX_USES_OPTION_NAME")
-				]?.value ?? 0;
+				]?.value as number ?? 0;
 
 			const invite = await this.client.api.channels.createInvite(channel.id, {
 				max_age,
