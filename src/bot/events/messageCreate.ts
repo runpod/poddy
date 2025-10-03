@@ -1,20 +1,22 @@
 import { env } from "node:process";
-import type { APIChannel, GatewayMessageCreateDispatchData, ToEventProps, APIThreadChannel } from "@discordjs/core";
+import type { APIChannel, APIThreadChannel, GatewayMessageCreateDispatchData, ToEventProps } from "@discordjs/core";
 import { ChannelType, GatewayDispatchEvents, MessageType, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { extractImagesFromThread } from "../../utilities/qa/imageprocessor.js";
-import { addUserMessage, addBotResponse, createQAThread, threadExists } from "../../utilities/qa/threads.js";
+import { classifyQuestionCategory } from "../../utilities/qa/categoryclassifier.js";
 import { analyzeQuestionType } from "../../utilities/qa/classifier.js";
-import { processRunPodQuery, handleRAGResponse, handlePassthroughResponse } from "../../utilities/runpod.js";
-import { 
-    MESSAGES, 
-    ANIMATION_FRAMES, 
-    INITIAL_MESSAGES, 
-    CONSTANTS, 
-    CLARIFICATION_PROMPT
+import { extractImagesFromThread } from "../../utilities/qa/imageprocessor.js";
+import {
+	ANIMATION_FRAMES,
+	CLARIFICATION_PROMPT,
+	CONSTANTS,
+	INITIAL_MESSAGES,
+	MESSAGES,
 } from "../../utilities/qa/messages.js";
+import { addBotResponse, addUserMessage, createQAThread, threadExists } from "../../utilities/qa/threads.js";
+import { handlePassthroughResponse, handleRAGResponse, processRunPodQuery } from "../../utilities/runpod.js";
+
 /**
  * Split long messages into chunks under Discord's limit
  */
@@ -23,8 +25,8 @@ function splitMessage(text: string, maxLength = CONSTANTS.MAX_MESSAGE_LENGTH): s
 	let current = text;
 
 	while (current.length > maxLength) {
-		let splitIndex = current.lastIndexOf('\n', maxLength);
-		if (splitIndex === -1) splitIndex = current.lastIndexOf(' ', maxLength);
+		let splitIndex = current.lastIndexOf("\n", maxLength);
+		if (splitIndex === -1) splitIndex = current.lastIndexOf(" ", maxLength);
 		if (splitIndex === -1) splitIndex = maxLength;
 
 		chunks.push(current.substring(0, splitIndex));
@@ -158,9 +160,28 @@ export default class MessageCreate extends EventHandler {
 			}
 		}
 
-		// Handle bot mentions for Q&A assistance
-		if (message.content.includes(`<@${env.APPLICATION_ID}>`) || message.content.includes(`<@!${env.APPLICATION_ID}>`)) {
-			const question = message.content.replace(/<@!?\d+>/g, '').trim();
+		// Handle bot mentions for Q&A assistance (only direct mentions, not role mentions or @everyone/@here)
+		const botMentionPattern = new RegExp(`<@!?${env.APPLICATION_ID}>`);
+		const isBotDirectlyMentioned = botMentionPattern.test(message.content);
+		const mentionsEveryone = message.mention_everyone;
+
+		if (isBotDirectlyMentioned && !mentionsEveryone) {
+			// Check if channel is allowed for QA (if any restrictions are set)
+			const allowedChannels = await this.client.prisma.qAAllowedChannel.findMany({
+				where: {
+					guildId: message.guild_id!,
+				},
+			});
+
+			// If there are allowed channels configured, check if current channel is in the list
+			if (allowedChannels.length > 0) {
+				const isAllowed = allowedChannels.some((ch) => ch.channelId === message.channel_id);
+				if (!isAllowed) {
+					// Silently ignore - bot only responds in allowed channels
+					return;
+				}
+			}
+			const question = message.content.replace(/<@!?\d+>/g, "").trim();
 
 			if (!question) {
 				await this.client.api.channels.createMessage(message.channel_id, {
@@ -180,54 +201,46 @@ export default class MessageCreate extends EventHandler {
 				if (channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread) {
 					thread = channel as APIThreadChannel;
 				} else {
-					thread = await this.client.api.channels.createThread(
+					thread = (await this.client.api.channels.createThread(
 						message.channel_id,
 						{
 							name: `Q&A: ${question.substring(0, 50)}...`,
 							auto_archive_duration: 60,
 						},
 						message.id,
-					) as APIThreadChannel;
+					)) as APIThreadChannel;
 				}
 			} catch (error) {
-				this.client.logger.error('Failed to create Q&A thread:', error);
+				this.client.logger.error("Failed to create Q&A thread:", error);
 				return;
 			}
 
 			const images = await extractImagesFromThread(thread);
-    		if (images) {
-    		    console.log(`🖼️ Found ${images.length} total image(s) in the thread for context`);
-    		}
-			
+			if (images) {
+				console.log(`🖼️ Found ${images.length} total image(s) in the thread for context`);
+			}
+
 			let threadContext: string | null = null;
 			if (thread.type === ChannelType.PublicThread || thread.type === ChannelType.PrivateThread) {
 				try {
 					const messages = await this.client.api.channels.getMessages(thread.id, { limit: 5 });
 					const previousMessages = messages
-						.filter(m => m.id !== message.id)
-						.map(m => m.content)
-						.join('\n');
+						.filter((m) => m.id !== message.id)
+						.map((m) => m.content)
+						.join("\n");
 					if (previousMessages) {
 						threadContext = previousMessages.substring(0, 500);
 					}
 				} catch (err) {
-					console.error('Failed to fetch thread context:', err);
+					console.error("Failed to fetch thread context:", err);
 				}
 			}
-
-			const isNewThread = !await threadExists(this.client.prisma, thread.id);
-			if (isNewThread) {
-				await createQAThread(this.client.prisma, thread.id, 'discord', question);
-			}
-
-			await addUserMessage(this.client.prisma, thread.id, question);
-
 
 			const textToAnalyze = threadContext ? `${threadContext}\n\nNew question: ${question}` : question;
 			const hasContext = !!threadContext;
 			const analysis = await analyzeQuestionType(textToAnalyze, hasContext);
-			
-			if (analysis.clarity === 'unclear') {
+
+			if (analysis.clarity === "unclear") {
 				const thinkingMsg = await this.client.api.channels.createMessage(thread.id, {
 					content: INITIAL_MESSAGES.CLARIFICATION_THINKING,
 				});
@@ -239,7 +252,7 @@ export default class MessageCreate extends EventHandler {
 							content: ANIMATION_FRAMES.CLARIFICATION[frameIndex % ANIMATION_FRAMES.CLARIFICATION.length],
 						});
 						frameIndex++;
-					} catch (err) {
+					} catch (_err) {
 						clearInterval(clarificationInterval);
 					}
 				}, CONSTANTS.ANIMATION_INTERVALS.CLARIFICATION);
@@ -247,18 +260,18 @@ export default class MessageCreate extends EventHandler {
 				try {
 					// Generate intelligent clarification using Runpod
 					const clarificationResponse = await processRunPodQuery(
-						CLARIFICATION_PROMPT(question, images), 
-						false, 
-						threadContext, 
-						images, 
-						'openai_4o_mini'
+						CLARIFICATION_PROMPT(question, images),
+						false,
+						threadContext,
+						images,
+						"openai_4o_mini",
 					);
 
 					clearInterval(clarificationInterval);
 
 					try {
 						await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
-					} catch (err) {
+					} catch (_err) {
 						// Ignore deletion errors
 					}
 
@@ -266,28 +279,27 @@ export default class MessageCreate extends EventHandler {
 						await this.client.api.channels.createMessage(thread.id, {
 							content: clarificationResponse.answer,
 						});
-						await addBotResponse(this.client.prisma, thread.id, clarificationResponse.answer, 'gpt-4o-mini');
+						await addBotResponse(this.client.prisma, thread.id, clarificationResponse.answer, "gpt-4o-mini");
 					} else {
 						await this.client.api.channels.createMessage(thread.id, {
 							content: MESSAGES.CLARIFICATION_FALLBACK,
 						});
-						await addBotResponse(this.client.prisma, thread.id, MESSAGES.CLARIFICATION_FALLBACK, 'fallback');
+						await addBotResponse(this.client.prisma, thread.id, MESSAGES.CLARIFICATION_FALLBACK, "fallback");
 					}
-
 				} catch (error) {
-					console.error('Error generating clarification:', error);
+					console.error("Error generating clarification:", error);
 					clearInterval(clarificationInterval);
 
 					try {
 						await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
-					} catch (err) {
+					} catch (_err) {
 						// Ignore deletion errors
 					}
 
 					await this.client.api.channels.createMessage(thread.id, {
 						content: MESSAGES.CLARIFICATION_FALLBACK,
 					});
-					await addBotResponse(this.client.prisma, thread.id, MESSAGES.CLARIFICATION_FALLBACK, 'fallback');
+					await addBotResponse(this.client.prisma, thread.id, MESSAGES.CLARIFICATION_FALLBACK, "fallback");
 				}
 
 				return;
@@ -305,7 +317,7 @@ export default class MessageCreate extends EventHandler {
 						content: ANIMATION_FRAMES.PROCESSING[frameIndex % ANIMATION_FRAMES.PROCESSING.length],
 					});
 					frameIndex++;
-				} catch (err) {
+				} catch (_err) {
 					clearInterval(processingInterval);
 				}
 			}, CONSTANTS.ANIMATION_INTERVALS.PROCESSING);
@@ -314,16 +326,25 @@ export default class MessageCreate extends EventHandler {
 				let response;
 
 				// Decide whether to use RAG or passthrough based on classification
-				const useComplexModel = analysis.complexity === 'complex';
+				const useComplexModel = analysis.complexity === "complex";
 				if (useComplexModel) {
-					console.log('🧠 Using GPT-4o for complex reasoning');
+					console.log("🧠 Using GPT-4o for complex reasoning");
 				}
 
 				if (analysis.needs_rag) {
-					console.log('🔍 Using RAG to search documentation');
+					console.log("🔍 Using RAG to search documentation");
+
+					// Create QA thread entry only when using RAG
+					const isNewThread = !(await threadExists(this.client.prisma, thread.id));
+					if (isNewThread) {
+						await createQAThread(this.client.prisma, thread.id, "discord", question);
+					} else {
+						await addUserMessage(this.client.prisma, thread.id, question);
+					}
+
 					response = await handleRAGResponse(question, threadContext, images, useComplexModel);
 				} else {
-					console.log('🔄 Using passthrough (no RAG needed)');
+					console.log("🔄 Using passthrough (no RAG needed)");
 					response = await handlePassthroughResponse(question, threadContext, images, useComplexModel);
 				}
 
@@ -331,7 +352,7 @@ export default class MessageCreate extends EventHandler {
 
 				try {
 					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
-				} catch (err) {
+				} catch (_err) {
 					// Ignore deletion errors
 				}
 
@@ -339,7 +360,7 @@ export default class MessageCreate extends EventHandler {
 					let answer = response.answer || MESSAGES.ERROR_FORMAT_FALLBACK;
 
 					// Clean up excessive blank lines
-					answer = answer.replace(/\n{2,}/g, '\n');
+					answer = answer.replace(/\n{2,}/g, "\n");
 
 					// Add beta message footer
 					answer += MESSAGES.BETA_FOOTER;
@@ -358,24 +379,33 @@ export default class MessageCreate extends EventHandler {
 						});
 					}
 
-					// Save bot response to database
-					const llmUsed = response.metadata?.model || (useComplexModel ? 'gpt-4o' : 'gpt-4o-mini');
-					await addBotResponse(this.client.prisma, thread.id, answer, llmUsed);
-					console.log(`💾 Bot response saved to Q&A database (${response.type} mode used)`);
+					// Save bot response to database (only if RAG was used)
+					if (analysis.needs_rag) {
+						const llmUsed = response.metadata?.model || (useComplexModel ? "gpt-4o" : "gpt-4o-mini");
 
+						// Classify question category asynchronously (don't block response)
+						classifyQuestionCategory(question)
+							.then((category) => {
+								addBotResponse(this.client.prisma, thread.id, answer, llmUsed, category);
+								console.log(`💾 Bot response saved to Q&A database (${response.type} mode, category: ${category})`);
+							})
+							.catch((err) => {
+								console.error("Category classification failed:", err);
+								addBotResponse(this.client.prisma, thread.id, answer, llmUsed, "GENERAL");
+							});
+					}
 				} else {
 					await this.client.api.channels.createMessage(thread.id, {
 						content: `❌ ${response.error || MESSAGES.ERROR_FAILED_RESPONSE}`,
 					});
 				}
-
 			} catch (error) {
-				console.error('Error processing question:', error);
+				console.error("Error processing question:", error);
 				clearInterval(processingInterval);
 
 				try {
 					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
-				} catch (err) {
+				} catch (_err) {
 					// Ignore deletion errors
 				}
 

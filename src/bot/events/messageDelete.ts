@@ -25,24 +25,23 @@ export default class MessageDelete extends EventHandler {
 	public override async run({ data: message }: ToEventProps<GatewayMessageUpdateDispatchData>) {
 		if (message.author?.bot) return;
 
-		const [oldMessage] = await this.client.prisma.$transaction([
-			this.client.prisma.message.findUnique({
-				where: {
-					id: message.id,
-				},
-			}),
-			this.client.prisma.message.update({
-				where: {
-					id: message.id,
-				},
-				data: {
-					content: null,
-					deletedAt: new Date(),
-				},
-			}),
-		]);
+		const oldMessage = await this.client.prisma.message.findUnique({
+			where: {
+				id: message.id,
+			},
+		});
 
 		if (!oldMessage) return;
+
+		await this.client.prisma.message.update({
+			where: {
+				id: message.id,
+			},
+			data: {
+				content: null,
+				deletedAt: new Date(),
+			},
+		});
 
 		const authorId = oldMessage?.authorId ?? message.author?.id ?? null;
 

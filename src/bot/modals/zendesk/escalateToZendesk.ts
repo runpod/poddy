@@ -1,6 +1,6 @@
 import { env } from "node:process";
-import { ComponentType, MessageFlags } from "@discordjs/core";
 import type { APIMessage, APIModalSubmitGuildInteraction, APIThreadChannel } from "@discordjs/core";
+import { ComponentType, MessageFlags } from "@discordjs/core";
 import type Language from "../../../../lib/classes/Language.js";
 import Modal from "../../../../lib/classes/Modal.js";
 import type { ZendeskUploadResponse } from "../../../../typings/zendesk.js";
@@ -40,8 +40,7 @@ export default class EscalateToZendesk extends Modal<PoddyClient> {
 		const email = interaction.data.components
 			.filter((component) => component.type === ComponentType.ActionRow)
 			.flatMap((row) => row.components)
-			.find((component) => component.type === ComponentType.TextInput)
-			?.value
+			.find((component) => component.type === ComponentType.TextInput)?.value;
 
 		if (type === "message") {
 			const message = await this.client.api.channels.getMessage(interaction.channel!.id, id);

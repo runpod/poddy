@@ -29,7 +29,7 @@ export default class PoddyFunctions extends Functions {
 		ticket: SubmittableTicket,
 		thread?: APIThreadChannel,
 	) {
-		if(!email) return;
+		if (!email) return;
 
 		const response = await fetch("https://runpodinc.zendesk.com/api/v2/tickets.json", {
 			headers: {
@@ -115,19 +115,22 @@ export default class PoddyFunctions extends Functions {
 		return data;
 	}
 
-	public async fetchAllThreadMessages(threadId: string, options: {
-		excludeBots?: boolean;
-		limit?: number;
-		sortOrder?: 'chronological' | 'reverse';
-	} = {}) {
-		const { excludeBots = false, limit, sortOrder = 'chronological' } = options;
+	public async fetchAllThreadMessages(
+		threadId: string,
+		options: {
+			excludeBots?: boolean;
+			limit?: number;
+			sortOrder?: "chronological" | "reverse";
+		} = {},
+	) {
+		const { excludeBots = false, limit, sortOrder = "chronological" } = options;
 		const allMessages: APIMessage[] = [];
-		
+
 		let messages = await this.client.api.channels.getMessages(threadId, {
 			limit: 100,
 		});
 
-		allMessages.push(...messages.filter(message => excludeBots ? !message.author.bot : true));
+		allMessages.push(...messages.filter((message) => (excludeBots ? !message.author.bot : true)));
 
 		console.log(`📚 Fetched ${messages.length} initial messages for thread ${threadId}`);
 
@@ -137,8 +140,8 @@ export default class PoddyFunctions extends Functions {
 				before: messages[messages.length - 1]!.id,
 			});
 
-			const filteredMessages = messages.filter(message => excludeBots ? !message.author.bot : true);
-			
+			const filteredMessages = messages.filter((message) => (excludeBots ? !message.author.bot : true));
+
 			// If we have a limit, only add what we need
 			if (limit && allMessages.length + filteredMessages.length > limit) {
 				const remaining = limit - allMessages.length;
@@ -148,11 +151,13 @@ export default class PoddyFunctions extends Functions {
 
 			allMessages.push(...filteredMessages);
 
-			console.log(`📚 Fetched ${messages.length} additional messages (${allMessages.length} total) for thread ${threadId}`);
+			console.log(
+				`📚 Fetched ${messages.length} additional messages (${allMessages.length} total) for thread ${threadId}`,
+			);
 		}
 
 		// Sort messages based on requested order
-		if (sortOrder === 'chronological') {
+		if (sortOrder === "chronological") {
 			allMessages.reverse(); // Discord returns newest first, we want oldest first
 		}
 

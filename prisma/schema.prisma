@@ -408,3 +408,11 @@ model QAThread {
 
   @@map("qa_threads")
 }
+
+model QAAllowedChannel {
+  channelId String   @id @map("channel_id")
+  guildId   String   @map("guild_id")
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  @@map("qa_allowed_channels")
+}

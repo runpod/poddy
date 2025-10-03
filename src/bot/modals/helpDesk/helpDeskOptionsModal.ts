@@ -59,15 +59,16 @@ export default class HelpDeskOptionModal extends Modal {
 							const helpDeskOptionModalComponent = helpDeskOption.helpDeskOptionModalComponents.find(
 								(helpDeskOptionModalComponent) => helpDeskOptionModalComponent.id === component.custom_id,
 							);
-							
+
 							if (!helpDeskOptionModalComponent) return null;
-							
+
 							return {
 								name: helpDeskOptionModalComponent.label,
 								value: component.value,
 								inline: helpDeskOptionModalComponent.style === "SHORT",
 							} as APIEmbedField;
-					}).filter(Boolean) as APIEmbedField[],
+						})
+						.filter(Boolean) as APIEmbedField[],
 					color: this.client.config.colors.success,
 				},
 			],

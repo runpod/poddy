@@ -14,59 +14,64 @@ export const LIMITATIONS_REMINDER = `Remember:
 
 // User-facing Messages
 export const MESSAGES = {
-    GREETING: '👋 Hi! Please ask a question and I\'ll help you!',
-    CLARIFICATION_FALLBACK: "I'd like to help! Could you provide more details about what you're trying to do?",
-    CLARIFICATION_DEFAULT: ['Please provide more details about your question'],
-    ERROR_GENERIC: '❌ An error occurred while processing your request. Please try again later.',
-    ERROR_FAILED_RESPONSE: 'Failed to get response. Please try again later.',
-    ERROR_FORMAT_FALLBACK: 'I found some information but had trouble formatting it. Please try rephrasing your question.',
-    BETA_FOOTER: '\n\n*This feature is still in beta and being improved. If you continue to need more help feel free to post in our community or [file a ticket](https://contact.runpod.io/hc/en-us/requests/new).*'
+	GREETING: "👋 Hi! Please ask a question and I'll help you!",
+	CLARIFICATION_FALLBACK: "I'd like to help! Could you provide more details about what you're trying to do?",
+	CLARIFICATION_DEFAULT: ["Please provide more details about your question"],
+	ERROR_GENERIC: "❌ An error occurred while processing your request. Please try again later.",
+	ERROR_FAILED_RESPONSE: "Failed to get response. Please try again later.",
+	ERROR_FORMAT_FALLBACK: "I found some information but had trouble formatting it. Please try rephrasing your question.",
+	BETA_FOOTER:
+		"\n\n*This feature is still in beta and being improved. If you continue to need more help feel free to post in our community or [file a ticket](https://contact.runpod.io/hc/en-us/requests/new).*",
 } as const;
 
 // Animation Frames
 export const ANIMATION_FRAMES = {
-    CLARIFICATION: [
-        '🤔 Let me understand what you need help with.',
-        '🤔 Let me understand what you need help with..',
-        '🤔 Let me understand what you need help with...',
-        '💭 Thinking of the right questions.',
-        '💭 Thinking of the right questions..',
-        '💭 Thinking of the right questions...'
-    ],
-    PROCESSING: [
-        '🤔 Processing your question.',
-        '🤔 Processing your question..',
-        '🤔 Processing your question...',
-        '🔍 Searching documentation.',
-        '🔍 Searching documentation..',
-        '🔍 Searching documentation...',
-        '📚 Analyzing information.',
-        '📚 Analyzing information..',
-        '📚 Analyzing information...',
-        '✨ Preparing response.',
-        '✨ Preparing response..',
-        '✨ Preparing response...'
-    ]
+	CLARIFICATION: [
+		"🤔 Let me understand what you need help with.",
+		"🤔 Let me understand what you need help with..",
+		"🤔 Let me understand what you need help with...",
+		"💭 Thinking of the right questions.",
+		"💭 Thinking of the right questions..",
+		"💭 Thinking of the right questions...",
+	],
+	PROCESSING: [
+		"🤔 Processing your question.",
+		"🤔 Processing your question..",
+		"🤔 Processing your question...",
+		"🔍 Searching documentation.",
+		"🔍 Searching documentation..",
+		"🔍 Searching documentation...",
+		"📚 Analyzing information.",
+		"📚 Analyzing information..",
+		"📚 Analyzing information...",
+		"✨ Preparing response.",
+		"✨ Preparing response..",
+		"✨ Preparing response...",
+	],
 } as const;
 
 // Initial Messages for Animations
 export const INITIAL_MESSAGES = {
-    CLARIFICATION_THINKING: '🤔 Let me understand what you need help with...',
-    PROCESSING_THINKING: '🤔 Processing your question...'
+	CLARIFICATION_THINKING: "🤔 Let me understand what you need help with...",
+	PROCESSING_THINKING: "🤔 Processing your question...",
 } as const;
 
 // Content Formatting
 export const CONTENT_FORMATTERS = {
-    USER_PREFIX: '\n\nUser: ',
-    BOT_PREFIX: '\n\nBot: ',
-    INITIAL_USER: (question: string) => `User: ${question}`,
-    THREAD_IMAGES_CONTEXT: (count: number) => `\n\n[Thread contains ${count} image(s) that may be relevant to this conversation]`
+	USER_PREFIX: "\n\nUser: ",
+	BOT_PREFIX: "\n\nBot: ",
+	INITIAL_USER: (question: string) => `User: ${question}`,
+	THREAD_IMAGES_CONTEXT: (count: number) =>
+		`\n\n[Thread contains ${count} image(s) that may be relevant to this conversation]`,
 } as const;
 
 // Classification Prompt Template
-export const CLASSIFICATION_PROMPT = (fullText: string, hasThreadContext: boolean) => `Analyze this support conversation and determine if additional documentation research is needed.
+export const CLASSIFICATION_PROMPT = (
+	fullText: string,
+	hasThreadContext: boolean,
+) => `Analyze this support conversation and determine if additional documentation research is needed.
 
-${hasThreadContext ? 'This is a FOLLOW-UP in an existing conversation thread.' : 'This is a NEW conversation.'}
+${hasThreadContext ? "This is a FOLLOW-UP in an existing conversation thread." : "This is a NEW conversation."}
 
 Text to analyze:
 """
@@ -112,7 +117,7 @@ Respond in JSON:
 // Clarification Prompt Template
 export const CLARIFICATION_PROMPT = (question: string, images: string[] | null) => `${BOT_CONTEXT}
 
-A user asked a very vague question: "${question}"${images ? `\n[Thread contains ${images.length} image(s) that may provide context]` : ''}
+A user asked a very vague question: "${question}"${images ? `\n[Thread contains ${images.length} image(s) that may provide context]` : ""}
 
 Please ask 1-2 specific clarifying questions to help understand what they need help with regarding Runpod services. Keep it brief and friendly. Focus on understanding if they need help with:
 - GPU pods/instances setup
@@ -126,22 +131,25 @@ Do NOT offer to process refunds or take any actions. You can only provide inform
 
 // Standard Query Prompt Templates
 export const QUERY_PROMPTS = {
-    RAG: (question: string, images: string[] | null) => `${BOT_CONTEXT}
+	RAG: (question: string, images: string[] | null) => `${BOT_CONTEXT}
 
-Question: ${question}${images ? CONTENT_FORMATTERS.THREAD_IMAGES_CONTEXT(images.length) : ''}
+Question: ${question}${images ? CONTENT_FORMATTERS.THREAD_IMAGES_CONTEXT(images.length) : ""}
 
 Please provide a detailed, accurate answer based on Runpod's documentation and knowledge base. ${LIMITATIONS_REMINDER}`,
 
-    PASSTHROUGH: (question: string, images: string[] | null) => `${BOT_CONTEXT}
+	PASSTHROUGH: (question: string, images: string[] | null) => `${BOT_CONTEXT}
 
-Question: ${question}${images ? CONTENT_FORMATTERS.THREAD_IMAGES_CONTEXT(images.length) : ''}
+Question: ${question}${images ? CONTENT_FORMATTERS.THREAD_IMAGES_CONTEXT(images.length) : ""}
 
-Please provide a helpful response based on general knowledge about Runpod services. ${LIMITATIONS_REMINDER}`
+Please provide a helpful response based on general knowledge about Runpod services. ${LIMITATIONS_REMINDER}`,
 } as const;
 
 // Thread Summary Prompt Templates
 export const THREAD_SUMMARY_PROMPTS = {
-    CUSTOM: (conversation: string, customPrompt: string) => `Please summarize this Discord thread conversation with the following focus:
+	CUSTOM: (
+		conversation: string,
+		customPrompt: string,
+	) => `Please summarize this Discord thread conversation with the following focus:
 
 **Custom Instructions:** ${customPrompt}
 
@@ -150,7 +158,7 @@ ${conversation}
 
 Provide a clear, structured summary that addresses the custom instructions above.`,
 
-    DEFAULT: (conversation: string) => `Please summarize this Discord thread conversation. Focus on:
+	DEFAULT: (conversation: string) => `Please summarize this Discord thread conversation. Focus on:
 1. The main topic or problem discussed
 2. Key solutions or answers provided
 3. Important technical details mentioned
@@ -159,27 +167,39 @@ Provide a clear, structured summary that addresses the custom instructions above
 Conversation:
 ${conversation}
 
-Provide a clear, structured summary in 3-5 paragraphs.`
+Provide a clear, structured summary in 3-5 paragraphs.`,
 } as const;
 
 // Bot Safety - Action Phrases to Detect
 export const BOT_ACTION_PHRASES = [
-    'i will process', 'i can refund', "i'll refund", 'i am refunding',
-    'i will refund', 'let me process', "i'll process", 'i can process',
-    'i will handle', "i'll handle", 'i can handle', 'processing your',
-    'initiating', 'has been initiated', 'i can access', "i'll access",
-    'let me check your account', 'looking at your account'
+	"i will process",
+	"i can refund",
+	"i'll refund",
+	"i am refunding",
+	"i will refund",
+	"let me process",
+	"i'll process",
+	"i can process",
+	"i will handle",
+	"i'll handle",
+	"i can handle",
+	"processing your",
+	"initiating",
+	"has been initiated",
+	"i can access",
+	"i'll access",
+	"let me check your account",
+	"looking at your account",
 ] as const;
 
 // Constants
 export const CONSTANTS = {
-    IMAGE_EXTENSIONS: ['.png', '.jpg', '.jpeg', '.gif', '.webp'],
-    MAX_MESSAGE_LENGTH: 2000,
-    MAX_IMAGES_PER_THREAD: 5,
-    IMAGE_TIMEOUT_MS: 10000,
-    ANIMATION_INTERVALS: {
-        CLARIFICATION: 1000,
-        PROCESSING: 1500
-    }
+	IMAGE_EXTENSIONS: [".png", ".jpg", ".jpeg", ".gif", ".webp"],
+	MAX_MESSAGE_LENGTH: 2000,
+	MAX_IMAGES_PER_THREAD: 5,
+	IMAGE_TIMEOUT_MS: 10000,
+	ANIMATION_INTERVALS: {
+		CLARIFICATION: 1000,
+		PROCESSING: 1500,
+	},
 } as const;
-

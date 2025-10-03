@@ -6,7 +6,12 @@
     "build": "tsc && cross-env NODE_ENV=development node .",
     "start": "NODE_ENV=production node .",
     "prepare": "husky || prisma generate || true",
-    "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts"
+    "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts",
+    "db:start": "docker compose up -d postgres",
+    "db:stop": "docker compose stop postgres",
+    "db:reset": "docker compose down -v && docker compose up -d postgres",
+    "db:migrate": "npx prisma migrate dev",
+    "db:studio": "npx prisma studio"
   },
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,prisma}": [
@@ -31,6 +36,7 @@
     "@sapphire/snowflake": "^3.5.5",
     "@sentry/node": "9.1.0",
     "@types/node-cron": "^3.0.11",
+    "axios": "^1.12.2",
     "bufferutil": "^4.0.9",
     "colorette": "^2.0.20",
     "datadog-metrics": "^0.12.1",
@@ -40,12 +46,14 @@
     "hono": "^4.9.8",
     "i18next": "^25.5.2",
     "i18next-intervalplural-postprocessor": "^3.0.0",
-    "node-cron": "^4.2.1"
+    "node-cron": "^4.2.1",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@types/got": "^9.6.12",
     "@types/node": "24.5.2",
+    "@types/pg": "^8.15.5",
     "cross-env": "^10.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.0",
