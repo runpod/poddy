@@ -5,6 +5,7 @@ import {
 	ChannelType,
 	InteractionContextType,
 	MessageFlags,
+	PermissionFlagsBits,
 } from "@discordjs/core";
 import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
 import type Language from "../../../../lib/classes/Language.js";
@@ -67,6 +68,7 @@ export default class QAChannels extends ApplicationCommand {
 						type: ApplicationCommandOptionType.Subcommand,
 					},
 				],
+				default_member_permissions: PermissionFlagsBits.ManageGuild.toString(),
 				type: ApplicationCommandType.ChatInput,
 				contexts: [InteractionContextType.Guild],
 			},
@@ -81,17 +83,6 @@ export default class QAChannels extends ApplicationCommand {
 		language: Language;
 		shardId: number;
 	}) {
-		// Check if user has Team role
-		const REQUIRED_ROLE_ID = "948767967699685376";
-		const hasRequiredRole = interaction.member.roles.includes(REQUIRED_ROLE_ID);
-
-		if (!hasRequiredRole) {
-			return this.client.api.interactions.reply(interaction.id, interaction.token, {
-				content: "You need the Team role to use this command.",
-				flags: MessageFlags.Ephemeral,
-			});
-		}
-
 		const subcommand = interaction.arguments.subCommand;
 
 		if (!subcommand) {

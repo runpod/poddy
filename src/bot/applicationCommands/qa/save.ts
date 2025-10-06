@@ -9,6 +9,7 @@ import {
 	ChannelType,
 	InteractionContextType,
 	MessageFlags,
+	PermissionFlagsBits,
 } from "@discordjs/core";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
@@ -58,6 +59,7 @@ export default class Save extends ApplicationCommand {
 						type: ApplicationCommandOptionType.String,
 					},
 				],
+				default_member_permissions: PermissionFlagsBits.ManageGuild.toString(),
 				type: ApplicationCommandType.ChatInput,
 				contexts: [InteractionContextType.Guild], // guild only.
 			},
@@ -80,18 +82,6 @@ export default class Save extends ApplicationCommand {
 		language: Language;
 		shardId: number;
 	}) {
-		// Check if user has the required role (before deferring)
-		const REQUIRED_ROLE_ID = "948767967699685376";
-		const hasRequiredRole = interaction.member.roles.includes(REQUIRED_ROLE_ID);
-
-		if (!hasRequiredRole) {
-			return this.client.api.interactions.reply(interaction.id, interaction.token, {
-				content: "You need the Team role to use this command.",
-				flags: MessageFlags.Ephemeral,
-			});
-		}
-
-		// Check if in a thread (before deferring)
 		if (
 			interaction.channel.type !== ChannelType.PublicThread &&
 			interaction.channel.type !== ChannelType.PrivateThread &&
