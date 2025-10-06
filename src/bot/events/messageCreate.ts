@@ -15,7 +15,7 @@ import {
 	MESSAGES,
 } from "../../utilities/qa/messages.js";
 import { addBotResponse, addUserMessage, createQAThread, threadExists } from "../../utilities/qa/threads.js";
-import { handlePassthroughResponse, handleRAGResponse, processRunPodQuery } from "../../utilities/runpod.js";
+import { handlePassthroughResponse, handleRAGResponse, processRunpodQuery } from "../../utilities/runpod.js";
 
 /**
  * Split long messages into chunks under Discord's limit
@@ -259,7 +259,7 @@ export default class MessageCreate extends EventHandler {
 
 				try {
 					// Generate intelligent clarification using Runpod
-					const clarificationResponse = await processRunPodQuery(
+					const clarificationResponse = await processRunpodQuery(
 						CLARIFICATION_PROMPT(question, images),
 						false,
 						threadContext,

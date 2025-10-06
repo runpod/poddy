@@ -1,5 +1,3 @@
-/* eslint-disable typescript-sort-keys/interface */
-
 export interface LanguageValues {
 LANGUAGE_ENABLED: {},
 LANGUAGE_ID: {},

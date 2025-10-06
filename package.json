@@ -36,7 +36,6 @@
     "@sapphire/snowflake": "^3.5.5",
     "@sentry/node": "9.1.0",
     "@types/node-cron": "^3.0.11",
-    "axios": "^1.12.2",
     "bufferutil": "^4.0.9",
     "colorette": "^2.0.20",
     "datadog-metrics": "^0.12.1",

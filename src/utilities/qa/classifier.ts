@@ -1,10 +1,10 @@
-import { processRunPodQuery } from "../runpod.js";
+import { processRunpodQuery } from "../runpod.js";
 import { CLASSIFICATION_PROMPT, MESSAGES } from "./messages.js";
 
 export async function analyzeQuestionType(fullText: string, hasThreadContext = false) {
 	try {
 		// Call Runpod with classification request using pass_through mode and GPT-3.5
-		const result = await processRunPodQuery(
+		const result = await processRunpodQuery(
 			CLASSIFICATION_PROMPT(fullText, hasThreadContext),
 			false, // needsRAG = false (use pass_through mode)
 			null, // threadContext
