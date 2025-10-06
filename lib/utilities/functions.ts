@@ -1,4 +1,3 @@
-/* eslint-disable n/no-sync */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync } from "node:fs";
 import { env } from "node:process";

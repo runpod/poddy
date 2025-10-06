@@ -18,7 +18,7 @@ import type { APIInteractionWithArguments } from "../../../../typings/index.js";
 import type { PoddyClient } from "../../../client.js";
 import type PoddyFunctions from "../../../utilities/functions.js";
 import { THREAD_SUMMARY_PROMPTS } from "../../../utilities/qa/messages.js";
-import { ingestDocument, processRunPodQuery } from "../../../utilities/runpod.js";
+import { ingestDocument, processRunpodQuery } from "../../../utilities/runpod.js";
 
 export default class Save extends ApplicationCommand {
 	/**
@@ -228,7 +228,7 @@ export default class Save extends ApplicationCommand {
 				: THREAD_SUMMARY_PROMPTS.DEFAULT(truncatedConversation);
 
 			// Call Runpod with passthrough mode for summarization
-			const result = await processRunPodQuery(
+			const result = await processRunpodQuery(
 				prompt,
 				false, // needsRAG = false (use pass_through mode)
 				null, // threadContext

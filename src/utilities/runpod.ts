@@ -12,7 +12,7 @@ const MAX_POLL_ATTEMPTS = 150; // 5 minutes (150 * 2 seconds = 300 seconds)
 /**
  * Call Runpod API to start a job
  */
-async function callRunPodAPI(
+async function callRunpodAPI(
 	prompt: string,
 	needsRAG = true,
 	threadContext: string | null = null,
@@ -123,7 +123,7 @@ async function waitForJobCompletion(endpointId: string, jobId: string) {
 /**
  * Process a Runpod query and return response
  */
-async function processRunPodQuery(
+async function processRunpodQuery(
 	prompt: string,
 	needsRAG = true,
 	threadContext: string | null = null,
@@ -133,7 +133,7 @@ async function processRunPodQuery(
 	maxTokens?: number,
 ) {
 	try {
-		const jobResponse = await callRunPodAPI(
+		const jobResponse = await callRunpodAPI(
 			prompt,
 			needsRAG,
 			threadContext,
@@ -198,7 +198,7 @@ async function handleRAGResponse(
 	useComplex = false,
 ) {
 	const llmProvider = useComplex ? "openai_4o" : "openai_4o_mini";
-	const response = await processRunPodQuery(
+	const response = await processRunpodQuery(
 		QUERY_PROMPTS.RAG(question, images),
 		true,
 		threadContext,
@@ -223,7 +223,7 @@ async function handlePassthroughResponse(
 	useComplex = false,
 ) {
 	const llmProvider = useComplex ? "openai_4o" : "openai_4o_mini";
-	const response = await processRunPodQuery(
+	const response = await processRunpodQuery(
 		QUERY_PROMPTS.PASSTHROUGH(question, images),
 		false,
 		threadContext,
@@ -341,4 +341,11 @@ ${formattedConversation}`;
 	}
 }
 
-export { processRunPodQuery, ensureSafeResponse, handleRAGResponse, handlePassthroughResponse, ingestDocument };
+export {
+	processRunpodQuery,
+	ensureSafeResponse,
+	handleRAGResponse,
+	handlePassthroughResponse,
+	ingestDocument,
+	waitForJobCompletion,
+};
