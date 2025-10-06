@@ -1,4 +1,21 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: poddy-postgres
+    environment:
+      POSTGRES_USER: poddy
+      POSTGRES_PASSWORD: poddy_dev_password
+      POSTGRES_DB: poddy_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U poddy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   bot:
     build:
       context: .
@@ -8,3 +25,9 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

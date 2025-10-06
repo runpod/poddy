@@ -389,9 +389,17 @@ model SnowflakeMigrations {
 }
 
 model Tag {
-    id        String    @id
-    name      String
-    content   String
-    authorId  String
-    createdAt DateTime
+  id        String   @id
+  name      String
+  content   String
+  authorId  String
+  createdAt DateTime
+}
+
+model QAAllowedChannel {
+  channelId String   @id @map("channel_id")
+  guildId   String   @map("guild_id")
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  @@map("qa_allowed_channels")
 }

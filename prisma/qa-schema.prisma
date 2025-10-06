@@ -1,0 +1,23 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("QA_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/qa-client"
+}
+
+model QAThread {
+  id          Int      @id @default(autoincrement())
+  threadId    String   @unique @map("thread_id")
+  source      String
+  question    String
+  category    String?
+  content     String
+  llmUsed     String?  @map("llm_used")
+  created     DateTime @default(now())
+  lastUpdated DateTime @updatedAt @map("last_updated")
+
+  @@map("qa_threads")
+}

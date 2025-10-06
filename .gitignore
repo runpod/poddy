@@ -112,3 +112,8 @@ dist
 package-lock.json
 
 .exports/
+
+# Generated files
+/src/generated
+
+# Note: Prisma clients are also generated to node_modules/ and already ignored above

@@ -6,7 +6,13 @@
     "build": "tsc && cross-env NODE_ENV=development node .",
     "start": "NODE_ENV=production node .",
     "prepare": "husky || prisma generate || true",
-    "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts"
+    "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts",
+    "db:start": "docker compose up -d postgres",
+    "db:stop": "docker compose stop postgres",
+    "db:reset": "docker compose down -v && docker compose up -d postgres",
+    "db:migrate": "npx prisma migrate dev",
+    "db:studio": "npx prisma studio",
+    "db:qa:studio": "npx prisma studio --schema=prisma/qa-schema.prisma"
   },
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,prisma}": [
@@ -19,13 +25,13 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.779.0",
-    "@aws-sdk/lib-storage": "^3.779.0",
-    "@discordjs/core": "^2.0.1",
-    "@discordjs/rest": "^2.4.3",
-    "@discordjs/ws": "^2.0.1",
-    "@dsnp/parquetjs": "^1.8.6",
-    "@hono/node-server": "^1.13.8",
+    "@aws-sdk/client-s3": "^3.896.0",
+    "@aws-sdk/lib-storage": "^3.896.0",
+    "@discordjs/core": "^2.2.2",
+    "@discordjs/rest": "^2.6.0",
+    "@discordjs/ws": "^2.0.3",
+    "@dsnp/parquetjs": "^1.8.7",
+    "@hono/node-server": "^1.19.4",
     "@prisma/client": "^6.4.1",
     "@sapphire/bitfield": "^1.2.4",
     "@sapphire/snowflake": "^3.5.5",
@@ -34,24 +40,24 @@
     "bufferutil": "^4.0.9",
     "colorette": "^2.0.20",
     "datadog-metrics": "^0.12.1",
-    "discord-api-types": "^0.37.119",
+    "discord-api-types": "^0.38.26",
     "dotenv-extended": "^2.9.0",
     "fastify": "^5.2.1",
-    "hono": "^4.7.2",
-    "i18next": "^24.2.2",
+    "hono": "^4.9.8",
+    "i18next": "^25.5.2",
     "i18next-intervalplural-postprocessor": "^3.0.0",
-    "node-cron": "^3.0.3"
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.2.4",
     "@types/got": "^9.6.12",
-    "@types/node": "22.13.4",
-    "cross-env": "^7.0.3",
+    "@types/node": "24.5.2",
+    "cross-env": "^10.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
+    "lint-staged": "^16.2.0",
     "prisma": "^6.4.1",
     "tsm": "^2.3.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.9.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -63,5 +69,5 @@
       "prisma"
     ]
   },
-  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
+  "packageManager": "pnpm@10.17.1"
 }

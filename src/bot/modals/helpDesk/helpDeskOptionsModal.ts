@@ -1,5 +1,5 @@
 import type { APIEmbedField, APIModalSubmitInteraction } from "@discordjs/core";
-import { MessageFlags } from "@discordjs/core";
+import { ComponentType, MessageFlags } from "@discordjs/core";
 import type Language from "../../../../lib/classes/Language.js";
 import Modal from "../../../../lib/classes/Modal.js";
 import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
@@ -52,19 +52,23 @@ export default class HelpDeskOptionModal extends Modal {
 			embeds: [
 				{
 					title: helpDeskOption.modalTitle!,
-					fields: interaction.data.components[0]!.components.map((component) => {
-						const helpDeskOptionModalComponent = helpDeskOption.helpDeskOptionModalComponents.find(
-							(helpDeskOptionModalComponent) => helpDeskOptionModalComponent.id === component.custom_id,
-						);
+					fields: interaction.data.components
+						.filter((component) => component.type === ComponentType.ActionRow)
+						.flatMap((component) => component.components)
+						.map((component) => {
+							const helpDeskOptionModalComponent = helpDeskOption.helpDeskOptionModalComponents.find(
+								(helpDeskOptionModalComponent) => helpDeskOptionModalComponent.id === component.custom_id,
+							);
 
-						if (!helpDeskOptionModalComponent) return null;
+							if (!helpDeskOptionModalComponent) return null;
 
-						return {
-							name: helpDeskOptionModalComponent!.label!,
-							value: component.value!,
-							inline: helpDeskOptionModalComponent.style === "SHORT",
-						} as APIEmbedField;
-					}).filter(Boolean) as APIEmbedField[],
+							return {
+								name: helpDeskOptionModalComponent.label,
+								value: component.value,
+								inline: helpDeskOptionModalComponent.style === "SHORT",
+							} as APIEmbedField;
+						})
+						.filter(Boolean) as APIEmbedField[],
 					color: this.client.config.colors.success,
 				},
 			],

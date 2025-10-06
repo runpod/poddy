@@ -3,7 +3,7 @@ import { format } from "node:util";
 import type { APIInteraction, APIMessage } from "@discordjs/core";
 import * as Sentry from "@sentry/node";
 import { load } from "dotenv-extended";
-import type { FastifyReply, FastifyRequest } from "fastify";
+import type { HonoRequest } from "hono";
 
 load({
 	path: env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
@@ -18,8 +18,8 @@ export default function init(): typeof Sentry & {
 	captureWithMessage(error: any, message: APIMessage): Promise<string>;
 	captureWithRequest(
 		error: any,
-		request: FastifyRequest,
-		response: FastifyReply,
+		request: HonoRequest,
+		response: Response,
 		query: Record<string, string>,
 	): Promise<string>;
 } {
@@ -36,7 +36,7 @@ export default function init(): typeof Sentry & {
 		 *
 		 * @param error The error to capture.
 		 * @param interaction The interaction that caused the error.
-		 * @return The sentry error ID.
+		 * @return The Sentry error ID.
 		 */
 		captureWithInteraction: async (error: any, interaction: APIInteraction): Promise<string> => {
 			return new Promise((resolve) => {
@@ -58,7 +58,7 @@ export default function init(): typeof Sentry & {
 		 *
 		 * @param error The error to capture.
 		 * @param message The message that caused the error.
-		 * @return The sentry error ID.
+		 * @return The Sentry error ID.
 		 */
 		captureWithMessage: async (error: any, message: APIMessage): Promise<string> => {
 			return new Promise((resolve) => {
@@ -77,15 +77,15 @@ export default function init(): typeof Sentry & {
 
 		captureWithRequest: async (
 			error: any,
-			request: FastifyRequest,
-			response: FastifyReply,
+			request: HonoRequest,
+			response: Response,
 			query: Record<string, string>,
 		): Promise<string> => {
 			return new Promise((resolve) => {
 				Sentry.withScope((scope) => {
 					scope.setExtra("Environment", env.NODE_ENV);
-					scope.setExtra("IP Address", request.ip);
-					scope.setExtra("User Agent", request.headers["user-agent"]);
+					scope.setExtra("IP Address", request.raw.headers.get("X-Forwarded-For"));
+					scope.setExtra("User Agent", request.raw.headers.get("User-Agent"));
 
 					if (request.url) {
 						scope.setExtra("Path", request.url.split("?")[0]);
@@ -95,7 +95,7 @@ export default function init(): typeof Sentry & {
 
 					scope.setExtra("Request", JSON.stringify(request, null, 4));
 					scope.setExtra("Response", JSON.stringify(response, null, 4));
-					scope.setExtra("Cookie", request.headers.cookie);
+					scope.setExtra("Cookie", request.raw.headers.get("Cookie"));
 
 					resolve(Sentry.captureException(error));
 				});
@@ -107,7 +107,7 @@ export default function init(): typeof Sentry & {
 		 *
 		 * @param error The error to capture.
 		 * @param extras Extra details to add to the error.
-		 * @return The sentry error ID.
+		 * @return The Sentry error ID.
 		 */
 		captureWithExtras: async (error: any, extras: Record<string, any>) => {
 			return new Promise((resolve) => {
