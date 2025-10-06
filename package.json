@@ -12,7 +12,7 @@
     "db:reset": "docker compose down -v && docker compose up -d postgres",
     "db:migrate": "npx prisma migrate dev",
     "db:studio": "npx prisma studio",
-    "db:studio:qa": "npx prisma studio --schema=prisma/qa-schema.prisma"
+    "db:qa:studio": "npx prisma studio --schema=prisma/qa-schema.prisma"
   },
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,prisma}": [

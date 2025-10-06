@@ -17,14 +17,13 @@ Welcome to the repository for Poddy, a Discord bot created to help the Runpod co
    ```
 
 2. Set up environment files:
-   - Duplicate `.env.example` to `.env.dev` (and `.env.prod` for production)
+   - Duplicate `.env.example` to `.env.dev`
    - Modify all values accordingly
-   - Create `.env` file with `QA_DATABASE_URL` for Prisma Studio access to QA database
 
 3. Generate Prisma clients:
    ```bash
-   npx prisma generate                                    # Generate main database client
-   npx prisma generate --schema=prisma/qa-schema.prisma  # Generate QA database client
+   pnpx prisma generate                                   # Generate main database client
+   pnpx prisma generate --schema=prisma/qa-schema.prisma  # Generate QA database client
    ```
    Note: Run these commands whenever you modify the Prisma schemas
 
@@ -41,22 +40,9 @@ Welcome to the repository for Poddy, a Discord bot created to help the Runpod co
 
 ### Running the Bot
 
-#### Development Mode
-```bash
-pnpm build
-```
-- Uses `.env.dev` environment file
-- Enables debug logs
-- Uses guild commands in development server instead of global commands
-- Compiles TypeScript and runs with `NODE_ENV=development`
+Use `pnpm build` to run the development version of the bot.
 
-#### Production Mode
-```bash
-pnpm start
-```
-- Uses `.env.prod` environment file (must exist)
-- Runs with `NODE_ENV=production`
-- Uses global Discord commands
+The only difference between the production and development version is that the development has debug logs to assist with development, and uses guild commands in the development server instead of global commands.
 
 ### Database Management
 
