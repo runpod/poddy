@@ -11,7 +11,8 @@
     "db:stop": "docker compose stop postgres",
     "db:reset": "docker compose down -v && docker compose up -d postgres",
     "db:migrate": "npx prisma migrate dev",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "db:studio:qa": "npx prisma studio --schema=prisma/qa-schema.prisma"
   },
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,prisma}": [
@@ -45,14 +46,12 @@
     "hono": "^4.9.8",
     "i18next": "^25.5.2",
     "i18next-intervalplural-postprocessor": "^3.0.0",
-    "node-cron": "^4.2.1",
-    "pg": "^8.16.3"
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@types/got": "^9.6.12",
     "@types/node": "24.5.2",
-    "@types/pg": "^8.15.5",
     "cross-env": "^10.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.0",

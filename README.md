@@ -19,14 +19,22 @@ Welcome to the repository for Poddy, a Discord bot created to help the Runpod co
 2. Set up environment files:
    - Duplicate `.env.example` to `.env.dev` (and `.env.prod` for production)
    - Modify all values accordingly
+   - Create `.env` file with `QA_DATABASE_URL` for Prisma Studio access to QA database
 
-3. Start local database and create tables (requires Docker):
+3. Generate Prisma clients:
+   ```bash
+   npx prisma generate                                    # Generate main database client
+   npx prisma generate --schema=prisma/qa-schema.prisma  # Generate QA database client
+   ```
+   Note: Run these commands whenever you modify the Prisma schemas
+
+4. Start local database and create tables (requires Docker):
    ```bash
    pnpm db:start
    pnpm db:migrate
    ```
 
-4. Run the bot:
+5. Run the bot:
    ```bash
    pnpm build
    ```
@@ -58,7 +66,8 @@ Useful database commands:
 - **Stop database**: `pnpm db:stop` - Stops PostgreSQL container
 - **Reset database**: `pnpm db:reset` - Deletes all data and restarts fresh
 - **Run migrations**: `pnpm db:migrate` - Apply schema changes
-- **Database UI**: `pnpm db:studio` - Opens Prisma Studio (web interface)
+- **Database UI (Main DB)**: `pnpm db:studio` - Opens Prisma Studio for main database
+- **Database UI (QA DB)**: `pnpm db:studio:qa` - Opens Prisma Studio for QA threads database (requires `.env` with `QA_DATABASE_URL`)
 
 ### Troubleshooting
 

@@ -166,6 +166,8 @@ export default class MessageCreate extends EventHandler {
 		const mentionsEveryone = message.mention_everyone;
 
 		if (isBotDirectlyMentioned && !mentionsEveryone) {
+			console.log(`\n🎯 Bot mentioned in channel ${message.channel_id} by user ${message.author?.id}`);
+
 			// Check if channel is allowed for QA (if any restrictions are set)
 			const allowedChannels = await this.client.prisma.qAAllowedChannel.findMany({
 				where: {
@@ -173,15 +175,19 @@ export default class MessageCreate extends EventHandler {
 				},
 			});
 
+			console.log(`📋 Found ${allowedChannels.length} allowed channels configured`);
+
 			// If there are allowed channels configured, check if current channel is in the list
 			if (allowedChannels.length > 0) {
 				const isAllowed = allowedChannels.some((ch) => ch.channelId === message.channel_id);
+				console.log(`🔐 Channel ${message.channel_id} is ${isAllowed ? "allowed" : "NOT allowed"}`);
 				if (!isAllowed) {
 					// Silently ignore - bot only responds in allowed channels
 					return;
 				}
 			}
 			const question = message.content.replace(/<@!?\d+>/g, "").trim();
+			console.log(`❓ Question extracted: "${question.substring(0, 50)}..."`);
 
 			if (!question) {
 				await this.client.api.channels.createMessage(message.channel_id, {
@@ -198,9 +204,12 @@ export default class MessageCreate extends EventHandler {
 			// Create or get thread for Q&A conversation
 			let thread: APIThreadChannel;
 			try {
+				console.log(`🧵 Channel type: ${channel?.type}`);
 				if (channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread) {
 					thread = channel as APIThreadChannel;
+					console.log(`✅ Using existing thread: ${thread.id}`);
 				} else {
+					console.log(`🆕 Creating new thread for question...`);
 					thread = (await this.client.api.channels.createThread(
 						message.channel_id,
 						{
@@ -209,13 +218,15 @@ export default class MessageCreate extends EventHandler {
 						},
 						message.id,
 					)) as APIThreadChannel;
+					console.log(`✅ Created thread: ${thread.id}`);
 				}
 			} catch (error) {
+				console.error("❌ Failed to create Q&A thread:", error);
 				this.client.logger.error("Failed to create Q&A thread:", error);
 				return;
 			}
 
-			const images = await extractImagesFromThread(thread);
+			const images = await extractImagesFromThread(this.client.api, thread.id);
 			if (images) {
 				console.log(`🖼️ Found ${images.length} total image(s) in the thread for context`);
 			}
@@ -238,7 +249,11 @@ export default class MessageCreate extends EventHandler {
 
 			const textToAnalyze = threadContext ? `${threadContext}\n\nNew question: ${question}` : question;
 			const hasContext = !!threadContext;
+			console.log(`🔬 Analyzing question (hasContext: ${hasContext})...`);
 			const analysis = await analyzeQuestionType(textToAnalyze, hasContext);
+			console.log(
+				`📊 Analysis complete - RAG: ${analysis.needs_rag}, Clarity: ${analysis.clarity}, Complexity: ${analysis.complexity}`,
+			);
 
 			if (analysis.clarity === "unclear") {
 				const thinkingMsg = await this.client.api.channels.createMessage(thread.id, {
@@ -336,9 +351,13 @@ export default class MessageCreate extends EventHandler {
 
 					// Create QA thread entry only when using RAG
 					const isNewThread = !(await threadExists(this.client.prisma, thread.id));
+					console.log(`📊 Thread ${thread.id} - isNewThread: ${isNewThread}`);
+
 					if (isNewThread) {
-						await createQAThread(this.client.prisma, thread.id, "discord", question);
+						const result = await createQAThread(this.client.prisma, thread.id, "discord", question);
+						console.log(`📝 createQAThread result:`, result);
 					} else {
+						console.log(`💬 Adding user message to existing thread`);
 						await addUserMessage(this.client.prisma, thread.id, question);
 					}
 

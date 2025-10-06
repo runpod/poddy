@@ -91,18 +91,19 @@ function messageHasImages(message: APIMessage): boolean {
 
 /**
  * Extract all images from a thread's message history
- * @param {ThreadChannel} thread - Discord thread object
+ * @param {any} apiClient - Discord REST API client
+ * @param {string} threadId - Discord thread ID
  * @param {number} limit - Maximum number of recent messages to check (default 20)
  * @returns {Array|null} Array of base64 encoded images or null if no images
  */
-async function extractImagesFromThread(thread: any, limit = 20): Promise<string[] | null> {
+async function extractImagesFromThread(apiClient: any, threadId: string, limit = 20): Promise<string[] | null> {
 	try {
-		// Fetch recent messages from the thread
-		const messages = await thread.messages.fetch({ limit });
+		// Fetch recent messages from the thread using Discord REST API
+		const messages = await apiClient.channels.getMessages(threadId, { limit });
 		const allImages = [];
 
 		// Sort messages by timestamp (oldest first)
-		const sortedMessages = Array.from(messages.values()).sort((a: any, b: any) => {
+		const sortedMessages = messages.sort((a: any, b: any) => {
 			const aTime = new Date(a.timestamp).getTime();
 			const bTime = new Date(b.timestamp).getTime();
 			return aTime - bTime;
@@ -112,7 +113,7 @@ async function extractImagesFromThread(thread: any, limit = 20): Promise<string[
 			const images = await extractImagesFromMessage(message as APIMessage);
 			if (images) {
 				console.log(
-					`🖼️ Found ${images.length} image(s) from ${(message as any).author.username} at ${new Date((message as any).timestamp).toLocaleTimeString()}`,
+					`🖼️ Found ${images.length} image(s) from ${message.author?.username || "Unknown"} at ${new Date(message.timestamp).toLocaleTimeString()}`,
 				);
 				allImages.push(...images);
 			}
