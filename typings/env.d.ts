@@ -18,6 +18,7 @@ declare global {
 			SLACK_CUSTOMER_SUCCESS_HOOK: string;
 			SLACK_SALES_HOOK: string;
 			ZENDESK_API_KEY: string;
+			CHANGELOG_WEBHOOK_SECRET: string;
 		}
 	}
 }
