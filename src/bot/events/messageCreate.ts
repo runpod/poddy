@@ -103,6 +103,18 @@ export default class MessageCreate extends EventHandler {
 		}
 
 		if (message.guild_id) {
+			if (["1064658510689874040"].includes(message.channel_id)) {
+				await fetch("https://changelog.getrunpod.io/webhooks/discord", {
+					method: "POST",
+					body: JSON.stringify({
+						secret: env.CHANGELOG_WEBHOOK_SECRET,
+						content: message.content,
+						author: message.author.username,
+						createdAt: new Date(message.timestamp).toISOString(),
+					}),
+				});
+			}
+
 			// TODO: Use new_communicators and new_communicators_first_day metrics in Datadog, this will help us track if average messages sent
 			// by new users are consistent with new_communicators (do we on average see a couple of messages per new user, or do we see a lot of
 			// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
