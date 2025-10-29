@@ -1,5 +1,12 @@
 {
 	"[prisma]": {
 		"editor.tabSize": 2
+	},
+	"[json][javascript][typescript]": {
+		"editor.defaultFormatter": "biomejs.biome",
+		"editor.codeActionsOnSave": {
+			"source.organizeImports.biome": "explicit"
+		},
+		"editor.indentSize": 2
 	}
 }

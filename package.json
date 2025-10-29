@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc && cross-env NODE_ENV=development node .",
     "start": "NODE_ENV=production node .",
-    "prepare": "husky || prisma generate || true",
+    "prepare": "husky || prisma generate || prisma generate --schema=prisma/qa-schema.prisma || true",
     "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts",
     "db:start": "docker compose up -d postgres",
     "db:stop": "docker compose stop postgres",
@@ -69,5 +69,5 @@
       "prisma"
     ]
   },
-  "packageManager": "pnpm@10.17.1"
+  "packageManager": "pnpm@10.18.1"
 }

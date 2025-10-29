@@ -57,7 +57,6 @@ export default {
 		GatewayIntentBits.GuildMembers |
 		GatewayIntentBits.GuildModeration |
 		GatewayIntentBits.GuildVoiceStates |
-		GatewayIntentBits.GuildPresences |
 		GatewayIntentBits.GuildMessages |
 		GatewayIntentBits.MessageContent |
 		GatewayIntentBits.GuildScheduledEvents,
