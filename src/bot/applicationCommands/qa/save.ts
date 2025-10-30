@@ -59,7 +59,7 @@ export default class Save extends ApplicationCommand {
 						type: ApplicationCommandOptionType.String,
 					},
 				],
-				default_member_permissions: PermissionFlagsBits.ManageGuild.toString(),
+				default_member_permissions: PermissionFlagsBits.ManageMessages.toString(),
 				type: ApplicationCommandType.ChatInput,
 				contexts: [InteractionContextType.Guild], // guild only.
 			},
