@@ -57,17 +57,6 @@ Useful database commands:
 
 ### Troubleshooting
 
-**Error: `options.port should be >= 0 and < 65536. Received type number (NaN)`**
-- Ensure your `.env.prod` or `.env.dev` file has `API_PORT` configured (e.g., `API_PORT=3000`)
-
-**Error: `Property 'qAThread' does not exist on type 'PrismaClient'`**
-- Run `npx prisma generate` to regenerate the Prisma client after schema changes
-
-**Error: `Can't reach database server at mydb.orb.local:5432`**
-- Start the local PostgreSQL database with `pnpm db:start`
-- Ensure `./prisma/.env` has the correct `DATABASE_URL`
-- For local development, use: `postgresql://poddy:poddy_dev_password@localhost:5432/poddy_dev`
-
 **Error: `Type 'K' cannot be used to index type 'LanguageValues'` (TypeScript errors in Language files)**
 - Run `pnpm translate` to regenerate language type definitions
 - This command updates `typings/language.d.ts` from your language files
