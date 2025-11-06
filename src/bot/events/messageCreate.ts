@@ -1,9 +1,20 @@
 import { env } from "node:process";
-import type { APIChannel, APIThreadChannel, GatewayMessageCreateDispatchData, ToEventProps } from "@discordjs/core";
-import { ChannelType, GatewayDispatchEvents, MessageType, RESTJSONErrorCodes } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import {
+	type APIChannel,
+	type APIThreadChannel,
+	ChannelType,
+	GatewayDispatchEvents,
+	type GatewayMessageCreateDispatchData,
+	MessageFlags,
+	MessageType,
+	RESTJSONErrorCodes,
+} from "discord-api-types/v10";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
+import { getRunpodAccountLinkSection } from "../../utilities/components.js";
+import { DISCORD_LOGIN_URL_QUERY, query } from "../../utilities/graphql.js";
 import { classifyQuestionCategory } from "../../utilities/qa/categoryclassifier.js";
 import { analyzeQuestionType } from "../../utilities/qa/classifier.js";
 import { extractImagesFromThread } from "../../utilities/qa/imageprocessor.js";
@@ -70,6 +81,25 @@ export default class MessageCreate extends EventHandler {
 				if (error.code === RESTJSONErrorCodes.UnknownChannel)
 					this.client.logger.error(`Unable to fetch channel ${message.channel_id}.`);
 			} else throw error;
+		}
+
+		// Simple CTA: specific user can post the account link CTA in announcement channels
+		if (
+			message.author.id === "194861788926443520" &&
+			message.content.trim() === "!cta" &&
+			channel?.type === ChannelType.GuildAnnouncement
+		) {
+			const loginUrlResponse = await query(DISCORD_LOGIN_URL_QUERY);
+			const loginUrl = loginUrlResponse.data?.discordLoginUrl;
+			if (!loginUrl) return;
+
+			const language = this.client.languageHandler.getLanguage("en-US");
+
+			await this.client.api.channels.createMessage(message.channel_id, {
+				flags: MessageFlags.IsComponentsV2,
+				components: [getRunpodAccountLinkSection(language, loginUrl)],
+			});
+			return;
 		}
 
 		this.client.dataDog?.increment("total_messages_sent", 1, [
