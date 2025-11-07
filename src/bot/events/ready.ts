@@ -59,19 +59,9 @@ export default class Ready extends EventHandler {
 			this.client.dataDog?.gauge("guilds", this.client.guildOwnersCache.size);
 			this.client.dataDog?.gauge("approximate_user_count", this.client.approximateUserCount);
 
-			for (const [guildId, usersInVoice] of this.client.usersInVoice.entries())
+			for (const [guildId, usersInVoice] of this.client.usersInVoice.entries()) {
 				this.client.dataDog?.increment("minutes_in_voice", usersInVoice.size, [`guild:${guildId}`]);
-
-			if (env.DATADOG_API_KEY)
-				this.client.dataDog?.flush(
-					() => {
-						if (env.NODE_ENV === "development") this.client.logger.debug("Flushed DataDog metrics.");
-					},
-					(error) => {
-						this.client.logger.error(error);
-						this.client.logger.sentry.captureException(error);
-					},
-				);
+			}
 
 			const betterStackStatusReportsResponse = await fetch(
 				"https://betteruptime.com/api/v2/status-pages/162404/status-reports",
@@ -82,9 +72,18 @@ export default class Ready extends EventHandler {
 				},
 			);
 
-			const betterStackStatusReports: {
+			const raw = await betterStackStatusReportsResponse.text();
+
+			let betterStackStatusReports: {
 				data: BetterStackStatusReport[];
-			} = await betterStackStatusReportsResponse.json();
+			};
+
+			try {
+				betterStackStatusReports = JSON.parse(raw);
+			} catch {
+				this.client.logger.warn("Failed to parse BetterStack Status", raw);
+				return;
+			}
 
 			await Promise.all(
 				betterStackStatusReports.data

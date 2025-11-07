@@ -66,7 +66,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 
 				const command = new CommandFile.default(this.client) as ApplicationCommand;
 
-				this.client.applicationCommands.set(command.name, command);
+				this.client.applicationCommands.set(`${command.name}-${command.type}`, command);
 			}
 		}
 	}
@@ -178,13 +178,14 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 	}
 
 	/**
-	 * Get an application command by its name.
+	 * Get an application command by its name and type.
 	 *
 	 * @param name The name of the application command.
-	 * @returns The application command with the specified name if it exists, otherwise undefined.
+	 * @param type The type of the application command.
+	 * @returns The application command with the specified name and type if it exists, otherwise undefined.
 	 */
-	private getApplicationCommand(name: string) {
-		return this.client.applicationCommands.get(name);
+	private getApplicationCommand(name: string, type: number) {
+		return this.client.applicationCommands.get(`${name}-${type}`);
 	}
 
 	/**
@@ -205,7 +206,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 		});
 		const language = this.client.languageHandler.getLanguage(userLanguage?.languageId ?? interaction.locale);
 
-		const applicationCommand = this.getApplicationCommand(interaction.data.name);
+		const applicationCommand = this.getApplicationCommand(interaction.data.name, interaction.data.type);
 
 		if (!applicationCommand) {
 			this.client.logger.error(

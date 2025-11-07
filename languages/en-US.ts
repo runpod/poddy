@@ -1182,7 +1182,7 @@ export default {
 	SAVE_COMMAND_PROMPT_OPTION_DESCRIPTION: "Custom summary prompt to focus on specific aspects",
 	SAVE_COMMAND_NO_MESSAGES_ERROR: "No messages found in this thread.",
 	SAVE_COMMAND_SUCCESS: "✅ Thread saved successfully to the knowledge base!",
-	SAVE_COMMAND_ERROR: "❌ Failed to save thread. Please try again later.",
+	SAVE_COMMAND_ERROR: "❌ Failed to save thread.",
 
 	QA_CHANNELS_COMMAND_NAME: "qa-channels",
 	QA_CHANNELS_COMMAND_DESCRIPTION: "Manage channels where the QA bot can respond",
@@ -1196,7 +1196,15 @@ export default {
 	QA_CHANNELS_CHANNEL_OPTION_DESCRIPTION: "The channel to add or remove",
 	QA_CHANNELS_NO_SUBCOMMAND: "Please specify a subcommand (add, remove, or list).",
 	QA_CHANNELS_NO_CHANNEL_PROVIDED: "Please provide a channel.",
-	QA_CHANNELS_ADD_ERROR: "Failed to add channel. Please try again.",
-	QA_CHANNELS_REMOVE_ERROR: "Failed to remove channel. Please try again.",
-	QA_CHANNELS_LIST_ERROR: "Failed to list channels. Please try again.",
+	QA_CHANNELS_ADD_ERROR: "Failed to add channel.",
+	QA_CHANNELS_REMOVE_ERROR: "Failed to remove channel.",
+	QA_CHANNELS_LIST_ERROR: "Failed to list channels.",
+
+	RUNPOD_NOT_LINKED: "User does not have a Runpod account linked.",
+	RUNPOD_HELP_US_HELP_YOU:
+		"Help us help you! Please link your Runpod and Discord accounts so our team can assist you faster.",
+	RUNPOD_ASK_TO_LINK_BUTTON_LABEL: "Ask them to link their account?",
+	RUNPOD_LINK_ACCOUNT_BUTTON_LABEL: "Link Runpod Account",
+	RUNPOD_FETCH_USER_FAILED: "Failed to fetch user data.",
+	RUNPOD_FETCH_LINK_FAILED: "Failed to fetch the link.",
 };

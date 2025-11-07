@@ -185,6 +185,11 @@ export default class ExtendedClient extends Client {
 	public readonly channelNameCache = new Map<string, string>();
 
 	/**
+	 * A cache for authenticated Runpod users (Discord ID -> true if authenticated).
+	 */
+	public readonly authenticatedUsersCache = new Set<string>();
+
+	/**
 	 * The options for our bot.
 	 */
 	public options: BotOptions;
