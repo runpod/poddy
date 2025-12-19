@@ -55,10 +55,21 @@ Useful database commands:
 - **Database UI (Main DB)**: `pnpm db:studio` - Opens Prisma Studio for main database
 - **Database UI (QA DB)**: `pnpm db:studio:qa` - Opens Prisma Studio for QA threads database (requires `.env` with `QA_DATABASE_URL`)
 
+### Mastra API (Documentation Q&A)
+
+Poddy uses the Mastra-hosted Runpod documentation agent to answer user questions. Configure these environment variables:
+
+- `MASTRA_ENDPOINT_URL` - The Mastra agent endpoint (default: `https://runpod-assistant-dev.mastra.cloud/api/agents/runpodSlackAgent/generate`)
+- `MASTRA_API_KEY` - **Required** - Bearer token for Mastra Cloud authentication (get from Mastra Cloud dashboard)
+
 ### Troubleshooting
 
 **Error: `Type 'K' cannot be used to index type 'LanguageValues'` (TypeScript errors in Language files)**
 - Run `pnpm translate` to regenerate language type definitions
 - This command updates `typings/language.d.ts` from your language files
+
+**Mastra API returns "Unauthorized"**
+- Ensure `MASTRA_API_KEY` is set in your `.env` file
+- Verify the API key is valid and not expired
 
 For support, please open an issue.

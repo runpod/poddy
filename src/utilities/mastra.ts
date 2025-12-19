@@ -7,6 +7,7 @@
 
 const MASTRA_ENDPOINT =
 	process.env.MASTRA_ENDPOINT_URL || "https://runpod-assistant-dev.mastra.cloud/api/agents/runpodSlackAgent/generate";
+const MASTRA_API_KEY = process.env.MASTRA_API_KEY;
 
 interface MastraResponse {
 	text: string;
@@ -34,6 +35,10 @@ export async function callMastraAPI(
 	threadId?: string,
 	resourceId?: string,
 ): Promise<{ success: true; text: string; sources?: MastraResponse["sources"] } | { success: false; error: string }> {
+	if (!MASTRA_API_KEY) {
+		console.warn("[Mastra] WARNING: MASTRA_API_KEY not set - requests may fail with 'Unauthorized'");
+	}
+
 	console.log("[Mastra] Calling API:", MASTRA_ENDPOINT);
 	console.log("[Mastra] Question:", question);
 	console.log("[Mastra] Thread ID:", threadId || "(stateless)");
@@ -52,12 +57,17 @@ export async function callMastraAPI(
 			payload.resourceId = resourceId;
 		}
 
+		const headers: Record<string, string> = {
+			"Content-Type": "application/json",
+		};
+
+		if (MASTRA_API_KEY) {
+			headers["Authorization"] = `Bearer ${MASTRA_API_KEY}`;
+		}
+
 		const response = await fetch(MASTRA_ENDPOINT, {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"x-mastra-cloud": "true",
-			},
+			headers,
 			body: JSON.stringify(payload),
 		});
 
