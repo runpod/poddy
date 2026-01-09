@@ -1,14 +1,15 @@
 import { setTimeout } from "node:timers";
-import type {
-	APIEmbed,
-	APIGuildTextChannel,
-	GatewayMessageUpdateDispatchData,
-	GuildTextChannelType,
-	ToEventProps,
-} from "@discordjs/core";
-import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import { LogEvent } from "@prisma/client";
+import {
+	type APIEmbed,
+	type APIGuildTextChannel,
+	GatewayDispatchEvents,
+	type GatewayMessageUpdateDispatchData,
+	type GuildTextChannelType,
+	RESTJSONErrorCodes,
+} from "discord-api-types/v10";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 

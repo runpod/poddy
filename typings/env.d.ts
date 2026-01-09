@@ -3,7 +3,6 @@ declare global {
 		interface ProcessEnv {
 			API_PORT: string;
 			APPLICATION_ID: string;
-			BETTER_UPTIME_API_KEY: string;
 			CLIENT_SECRET: string;
 			CONSOLE_HOOK: string;
 			DATABASE_URL: string;
