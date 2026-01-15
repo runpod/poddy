@@ -37,6 +37,7 @@ export type APIInteractionWithArguments<T> = T & {
 };
 
 export type BetterStackResourceStatus = "operational" | "downtime" | "degraded" | "maintenance" | "resolved";
+export type BetterStackAffectedResourceStatus = "resolved" | "degraded" | "downtime" | "maintenance";
 
 export interface BetterStackIndexResponse {
 	data: {
@@ -87,7 +88,7 @@ export type BetterStackIncludedItem =
 
 export interface BetterStackAffectedResource {
 	status_page_resource_id: string;
-	status: BetterStackResourceStatus;
+	status: BetterStackAffectedResourceStatus;
 }
 
 export interface BetterStackStatusPageSection {
@@ -137,7 +138,7 @@ export interface BetterStackStatusReport {
 	type: "status_report";
 	attributes: {
 		title: string;
-		report_type: "incident" | "maintenance";
+		report_type: "manual" | "automatic" | "maintenance";
 		starts_at: string;
 		ends_at: string | null;
 		affected_resources: BetterStackAffectedResource[];

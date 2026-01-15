@@ -75,14 +75,15 @@ export default class Ready extends EventHandler<PoddyClient> {
 						.filter((statusReport) => {
 							const startTime = new Date(statusReport.attributes.starts_at).getTime();
 							const now = Date.now();
+							const reportType = statusReport.attributes.report_type;
 
-							// Show incidents from the past 7 days
-							if (statusReport.attributes.report_type === "incident") {
+							// Incidents (manual or automatic) from the past 7 days
+							if (reportType === "manual" || reportType === "automatic") {
 								return startTime >= now - WEEK_MS;
 							}
 
-							// Show maintenances in the next 7 days
-							if (statusReport.attributes.report_type === "maintenance") {
+							// Maintenances in the next 7 days
+							if (reportType === "maintenance") {
 								return startTime <= now + WEEK_MS;
 							}
 
