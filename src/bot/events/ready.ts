@@ -3,11 +3,11 @@ import type { GatewayReadyDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
 import { schedule } from "node-cron";
 import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import type { BetterStackStatusReport } from "../../../typings/index.js";
+import type { BetterStackIndexResponse, BetterStackStatusReport } from "../../../typings/index.js";
+import type { PoddyClient } from "../../client.js";
 
-export default class Ready extends EventHandler {
-	public constructor(client: ExtendedClient) {
+export default class Ready extends EventHandler<PoddyClient> {
+	public constructor(client: PoddyClient) {
 		super(client, GatewayDispatchEvents.Ready, true);
 	}
 
@@ -23,12 +23,16 @@ export default class Ready extends EventHandler {
 			data.guilds.map(async (guild) => {
 				this.client.guildOwnersCache.set(guild.id, "");
 
-				const invites = await this.client.api.guilds.getInvites(guild.id);
-				const invitesCache =
-					this.client.invitesCache.get(guild.id) ??
-					new Map(new Map(invites.map((invite) => [invite.code, invite.uses])));
+				try {
+					const invites = await this.client.api.guilds.getInvites(guild.id);
+					const invitesCache =
+						this.client.invitesCache.get(guild.id) ??
+						new Map(new Map(invites.map((invite) => [invite.code, invite.uses])));
 
-				this.client.invitesCache.set(guild.id, invitesCache);
+					this.client.invitesCache.set(guild.id, invitesCache);
+				} catch (error) {
+					this.client.logger.warn(`Failed to get invites for guild ${guild.id}:`, error);
+				}
 			}),
 		);
 
@@ -55,6 +59,49 @@ export default class Ready extends EventHandler {
 			);
 		});
 
+		const checkBetterStackStatus = async () => {
+			try {
+				const response = await fetch("https://uptime.runpod.io/index.json");
+				const betterStackIndex: BetterStackIndexResponse = await response.json();
+
+				const statusReports = betterStackIndex.included.filter(
+					(item): item is BetterStackStatusReport => item.type === "status_report",
+				);
+
+				const WEEK_MS = 1_000 * 60 * 60 * 24 * 7;
+
+				await Promise.all(
+					statusReports
+						.filter((statusReport) => {
+							const startTime = new Date(statusReport.attributes.starts_at).getTime();
+							const now = Date.now();
+							const reportType = statusReport.attributes.report_type;
+
+							// Incidents (manual or automatic) from the past 7 days
+							if (reportType === "manual" || reportType === "automatic") {
+								return startTime >= now - WEEK_MS;
+							}
+
+							// Maintenances in the next 7 days
+							if (reportType === "maintenance") {
+								return startTime <= now + WEEK_MS;
+							}
+
+							return false;
+						})
+						.map(async (statusReport) =>
+							this.client.functions.updateBetterStackStatusReport(statusReport.id, betterStackIndex),
+						),
+				);
+			} catch (error) {
+				this.client.logger.warn("Failed to fetch/parse BetterStack Status", error);
+			}
+		};
+
+		if (env.NODE_ENV === "development") {
+			await checkBetterStackStatus();
+		}
+
 		schedule("* * * * *", async () => {
 			this.client.dataDog?.gauge("guilds", this.client.guildOwnersCache.size);
 			this.client.dataDog?.gauge("approximate_user_count", this.client.approximateUserCount);
@@ -63,36 +110,7 @@ export default class Ready extends EventHandler {
 				this.client.dataDog?.increment("minutes_in_voice", usersInVoice.size, [`guild:${guildId}`]);
 			}
 
-			const betterStackStatusReportsResponse = await fetch(
-				"https://betteruptime.com/api/v2/status-pages/162404/status-reports",
-				{
-					headers: {
-						Authorization: `Bearer ${env.BETTER_UPTIME_API_KEY}`,
-					},
-				},
-			);
-
-			const raw = await betterStackStatusReportsResponse.text();
-
-			let betterStackStatusReports: {
-				data: BetterStackStatusReport[];
-			};
-
-			try {
-				betterStackStatusReports = JSON.parse(raw);
-			} catch {
-				this.client.logger.warn("Failed to parse BetterStack Status", raw);
-				return;
-			}
-
-			await Promise.all(
-				betterStackStatusReports.data
-					.filter(
-						(statusReport) =>
-							new Date(statusReport.attributes.starts_at).getTime() >= Date.now() - 1_000 * 60 * 60 * 24 * 7,
-					)
-					.map(async (statusReport) => this.client.functions.updateBetterStackStatusReport(statusReport.id)),
-			);
+			await checkBetterStackStatus();
 		});
 
 		const helpDesks = await this.client.prisma.helpDesk.findMany({

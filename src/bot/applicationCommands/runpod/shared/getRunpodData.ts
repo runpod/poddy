@@ -67,7 +67,7 @@ export async function getRunpodDiscordUser(
 							type: ComponentType.Button,
 							style: ButtonStyle.Link,
 							label: "View in Dashboard",
-							url: `https://www.runpod.io/console/user/${userData.id}`,
+							url: `https://console.runpod.io/admin/users/${userData.id}`,
 						},
 					},
 					{
@@ -89,20 +89,9 @@ export async function getRunpodDiscordUser(
 
 			for (const pod of visiblePods) {
 				podsComponents.push({
-					type: ComponentType.Section,
-					components: [
-						{
-							type: ComponentType.TextDisplay,
-							content: `**${pod.id}**\nStatus: \`${pod.desiredStatus}\``,
-						},
-					],
-					accessory: {
-						type: ComponentType.Button,
-						style: ButtonStyle.Link,
-						label: "View Pod",
-						url: `https://www.runpod.io/console/pods/${pod.id}`,
-					},
-				});
+					type: ComponentType.TextDisplay,
+					content: `**${pod.id}**\nStatus: \`${pod.desiredStatus}\``,
+				}); // this would be a section with a button but we cant link to pod pages
 			}
 
 			components.push({
@@ -132,7 +121,7 @@ export async function getRunpodDiscordUser(
 						type: ComponentType.Button,
 						style: ButtonStyle.Link,
 						label: "View Endpoint",
-						url: `https://www.runpod.io/console/serverless/${endpoint.id}`,
+						url: `https://console.runpod.io/admin/users/${userData.id}/endpoints/${endpoint.id}`,
 					},
 				});
 			}

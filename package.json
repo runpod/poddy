@@ -36,13 +36,11 @@
     "@sapphire/bitfield": "^1.2.4",
     "@sapphire/snowflake": "^3.5.5",
     "@sentry/node": "9.1.0",
-    "@types/node-cron": "^3.0.11",
     "bufferutil": "^4.0.9",
     "colorette": "^2.0.20",
     "datadog-metrics": "^0.12.1",
     "discord-api-types": "^0.38.26",
     "dotenv-extended": "^2.9.0",
-    "fastify": "^5.2.1",
     "hono": "^4.9.8",
     "i18next": "^25.5.2",
     "i18next-intervalplural-postprocessor": "^3.0.0",
@@ -50,8 +48,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
-    "@types/got": "^9.6.12",
     "@types/node": "24.5.2",
+    "@types/node-cron": "^3.0.11",
     "cross-env": "^10.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.0",
@@ -69,5 +67,5 @@
       "prisma"
     ]
   },
-  "packageManager": "pnpm@10.18.1"
+  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a"
 }

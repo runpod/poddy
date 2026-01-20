@@ -1,11 +1,14 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync } from "node:fs";
-import { env } from "node:process";
-import type { APIMessage, APISelectMenuOption, RESTPostAPIChannelMessageJSONBody } from "@discordjs/core";
-import { ComponentType, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import {
+	type APIMessage,
+	type APISelectMenuOption,
+	ComponentType,
+	RESTJSONErrorCodes,
+	type RESTPostAPIChannelMessageJSONBody,
+} from "discord-api-types/v10";
 import Config from "../../config/bot.config.js";
-import type { BetterStackStatusReport, BetterStackStatusUpdate } from "../../typings/index.js";
 import type Language from "../classes/Language.js";
 import Logger from "../classes/Logger.js";
 import type ExtendedClient from "../extensions/ExtendedClient.js";
@@ -465,178 +468,5 @@ export default class Functions {
 		});
 
 		this.client.logger.info(`Created help desk message for ${helpDesk.name} [${helpDesk.id}] in ${helpDesk.guildId}.`);
-	}
-
-	/**
-	 * Update a BetterStack status report.
-	 *
-	 * @param statusReportId The ID of the status report to update.
-	 */
-	public async updateBetterStackStatusReport(statusReportId: string) {
-		const statusReportResponse = await fetch(
-			`https://betteruptime.com/api/v2/status-pages/162404/status-reports/${statusReportId}`,
-			{
-				headers: {
-					Authorization: `Bearer ${env.BETTER_UPTIME_API_KEY}`,
-				},
-			},
-		);
-
-		const statusReport: {
-			data: BetterStackStatusReport;
-			included: BetterStackStatusUpdate[];
-		} = await statusReportResponse.json();
-
-		const existingStatusReports = await this.client.prisma.betterStackStatusReport.findMany({
-			where: {
-				id: statusReport.data.id,
-			},
-		});
-
-		const mostRecentStatusUpdate = statusReport.included.sort(
-			(a, b) => new Date(b.attributes.published_at).getTime() - new Date(a.attributes.published_at).getTime(),
-		)[0];
-
-		const toSend = {
-			embeds: [
-				{
-					title: statusReport.data.attributes.title,
-					url: `https://uptime.runpod.io/incident/${statusReport.data.id}`,
-					description: statusReport.included
-						.sort(
-							(a, b) => new Date(a.attributes.published_at).getTime() - new Date(b.attributes.published_at).getTime(),
-						)
-						.map((statusUpdate) =>
-							`${this.client.functions.generateTimestamp({
-								timestamp: new Date(statusUpdate.attributes.published_at),
-							})} ${statusUpdate.attributes.message}`.replaceAll(" #", "\n#"),
-						)
-						.join("\n\n"),
-					footer: {
-						text: mostRecentStatusUpdate?.attributes.affected_resources.every(
-							(affectedResource) => affectedResource.status === "resolved",
-						)
-							? "Service Restored"
-							: mostRecentStatusUpdate?.attributes.affected_resources.some(
-										(affectedResource) => affectedResource.status === "downtime",
-									)
-								? "Service Downtime"
-								: mostRecentStatusUpdate?.attributes.affected_resources.some(
-											(affectedResource) => affectedResource.status === "degraded",
-										)
-									? "Service Degradation"
-									: "Planned Maintenance",
-					},
-					color: mostRecentStatusUpdate?.attributes.affected_resources.every(
-						(affectedResource) => affectedResource.status === "resolved",
-					)
-						? this.client.config.colors.success
-						: mostRecentStatusUpdate?.attributes.affected_resources.some(
-									(affectedResource) => affectedResource.status === "downtime",
-								)
-							? this.client.config.colors.error
-							: mostRecentStatusUpdate?.attributes.affected_resources.some(
-										(affectedResource) => affectedResource.status === "degraded",
-									)
-								? this.client.config.colors.warning
-								: this.client.config.colors.primary,
-				},
-			],
-			allowed_mentions: { parse: [] },
-		} as RESTPostAPIChannelMessageJSONBody;
-
-		const logChannels = await this.client.prisma.logChannel.findMany({
-			where: {
-				event: "INCIDENT_CREATED",
-			},
-		});
-
-		if (!logChannels.length && !existingStatusReports.length) return;
-
-		const updates = await Promise.all(
-			existingStatusReports.map(async (existingStatusReport) => {
-				const message = await this.client.api.channels
-					.getMessage(existingStatusReport.channelId, existingStatusReport.messageId)
-					.catch(async (error) => {
-						if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.UnknownMessage) {
-							await this.client.prisma.betterStackStatusReport.delete({
-								where: { id: existingStatusReport.id },
-							});
-
-							return null;
-						}
-
-						throw error;
-					});
-
-				if (!message)
-					return {
-						channelId: existingStatusReport.channelId,
-						shouldCreate: true,
-					};
-
-				if (
-					message.embeds.some((embed, index) => {
-						const toSendEmbed = toSend.embeds?.[index];
-
-						return (
-							embed.title?.trim() === toSendEmbed?.title?.trim() &&
-							embed.description?.trim() === toSendEmbed?.description?.trim() &&
-							embed.color === toSendEmbed?.color &&
-							embed.footer?.text === toSendEmbed?.footer?.text
-						);
-					})
-				)
-					return {
-						channelId: existingStatusReport.channelId,
-						shouldCreate: false,
-					};
-
-				await this.client.api.channels.editMessage(
-					existingStatusReport.channelId,
-					existingStatusReport.messageId,
-					toSend,
-				);
-
-				return {
-					channelId: existingStatusReport.channelId,
-					shouldCreate: false,
-				};
-			}),
-		);
-
-		const logChannelsToSendTo = logChannels.filter(
-			(logChannel) =>
-				updates.some(({ channelId, shouldCreate }) => {
-					return Boolean(channelId === logChannel.channelId && shouldCreate);
-				}) || updates.every(({ channelId }) => channelId !== logChannel.channelId),
-		);
-
-		await Promise.all(
-			logChannelsToSendTo.map(async (logChannel) =>
-				this.client.api.channels
-					.createMessage(logChannel.channelId, toSend)
-					.then(async (message) =>
-						this.client.prisma.betterStackStatusReport.create({
-							data: {
-								id: statusReport.data.id,
-								channelId: logChannel.channelId,
-								guildId: logChannel.guildId,
-								messageId: message.id,
-								startsAt: new Date(statusReport.data.attributes.starts_at),
-								statusPageId: statusReport.data.attributes.status_page_id,
-								endsAt: statusReport.data.attributes.ends_at ? new Date(statusReport.data.attributes.ends_at) : null,
-							},
-						}),
-					)
-					.catch((error) => {
-						if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.MissingPermissions) {
-							this.client.logger.error(`Unable to send message to ${logChannel.channelId} due to missing permissions.`);
-						}
-
-						throw error;
-					}),
-			),
-		);
 	}
 }

@@ -8,5 +8,6 @@
 			"source.organizeImports.biome": "explicit"
 		},
 		"editor.indentSize": 2
-	}
+	},
+	"prisma.pinToPrisma6": true
 }
