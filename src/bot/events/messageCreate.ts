@@ -3,6 +3,7 @@ import type { ToEventProps } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import {
 	type APIChannel,
+	type APIThreadChannel,
 	ChannelType,
 	GatewayDispatchEvents,
 	type GatewayMessageCreateDispatchData,
@@ -11,8 +12,6 @@ import {
 } from "discord-api-types/v10";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { getRunpodAccountLinkSection } from "../../utilities/components.js";
-import { DISCORD_LOGIN_URL_QUERY, query } from "../../utilities/graphql.js";
 import { callMastraAPI } from "../../utilities/mastra.js";
 
 const MAX_MESSAGE_LENGTH = 2000;
@@ -58,10 +57,9 @@ export default class MessageCreate extends EventHandler {
 		}
 
 		// Handle bot mentions for Mastra Q&A
-		const botMentionPattern = new RegExp(`<@!?${env.APPLICATION_ID}>`);
-		const isBotDirectlyMentioned = botMentionPattern.test(message.content);
+		const isBotMentioned = new RegExp(`<@!?${env.APPLICATION_ID}>`).test(message.content) && !message.mention_everyone;
 
-		if (isBotDirectlyMentioned && !message.mention_everyone) {
+		if (isBotMentioned) {
 			// Check if channel is allowed (if restrictions are configured)
 			const allowedChannels = await this.client.prisma.qAAllowedChannel.findMany({
 				where: { guildId: message.guild_id! },
@@ -84,17 +82,17 @@ export default class MessageCreate extends EventHandler {
 			}
 
 			// Create or use existing thread
+			const isThread = channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread;
 			let thread: APIThreadChannel;
+
 			try {
-				if (channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread) {
-					thread = channel as APIThreadChannel;
-				} else {
-					thread = (await this.client.api.channels.createThread(
-						message.channel_id,
-						{ name: `Q&A: ${question.substring(0, 50)}...`, auto_archive_duration: 60 },
-						message.id,
-					)) as APIThreadChannel;
-				}
+				thread = isThread
+					? (channel as APIThreadChannel)
+					: ((await this.client.api.channels.createThread(
+							message.channel_id,
+							{ name: `Q&A: ${question.substring(0, 50)}...`, auto_archive_duration: 60 },
+							message.id,
+						)) as APIThreadChannel);
 			} catch (error) {
 				console.error("Failed to create thread:", error);
 				return;
@@ -105,35 +103,30 @@ export default class MessageCreate extends EventHandler {
 				content: THINKING_MESSAGE,
 			});
 
-			try {
-				// Pass thread ID and guild ID for conversation memory
-				const response = await callMastraAPI(question, thread.id, message.guild_id!);
-
-				// Delete thinking message
+			const deleteThinkingMessage = async () => {
 				try {
 					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
 				} catch {}
+			};
 
-				if (response.success) {
-					const answer = response.text.replace(/\n{3,}/g, "\n\n") + BETA_FOOTER;
+			try {
+				const response = await callMastraAPI(question, thread.id, message.guild_id!);
+				await deleteThinkingMessage();
 
-					if (answer.length > MAX_MESSAGE_LENGTH) {
-						for (const chunk of splitMessage(answer)) {
-							await this.client.api.channels.createMessage(thread.id, { content: chunk });
-						}
-					} else {
-						await this.client.api.channels.createMessage(thread.id, { content: answer });
-					}
-				} else {
-					await this.client.api.channels.createMessage(thread.id, {
-						content: `❌ ${response.error}`,
-					});
+				if (!response.success) {
+					await this.client.api.channels.createMessage(thread.id, { content: `❌ ${response.error}` });
+					return;
+				}
+
+				const answer = response.text.replace(/\n{3,}/g, "\n\n") + BETA_FOOTER;
+				const chunks = answer.length > MAX_MESSAGE_LENGTH ? splitMessage(answer) : [answer];
+
+				for (const chunk of chunks) {
+					await this.client.api.channels.createMessage(thread.id, { content: chunk });
 				}
 			} catch (error) {
 				console.error("Error processing question:", error);
-				try {
-					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
-				} catch {}
+				await deleteThinkingMessage();
 				await this.client.api.channels.createMessage(thread.id, { content: ERROR_MESSAGE });
 			}
 

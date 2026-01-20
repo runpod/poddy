@@ -1179,4 +1179,21 @@ export default {
 	RUNPOD_LINK_ACCOUNT_BUTTON_LABEL: "Link Runpod Account",
 	RUNPOD_FETCH_USER_FAILED: "Failed to fetch user data.",
 	RUNPOD_FETCH_LINK_FAILED: "Failed to fetch the link.",
+
+	// QA Channels Command
+	QA_CHANNELS_COMMAND_NAME: "qa-channels",
+	QA_CHANNELS_COMMAND_DESCRIPTION: "Manage channels where the QA bot can respond",
+	QA_CHANNELS_ADD_OPTION_NAME: "add",
+	QA_CHANNELS_ADD_OPTION_DESCRIPTION: "Add a channel to the QA allowed list",
+	QA_CHANNELS_REMOVE_OPTION_NAME: "remove",
+	QA_CHANNELS_REMOVE_OPTION_DESCRIPTION: "Remove a channel from the QA allowed list",
+	QA_CHANNELS_LIST_OPTION_NAME: "list",
+	QA_CHANNELS_LIST_OPTION_DESCRIPTION: "List all QA allowed channels",
+	QA_CHANNELS_CHANNEL_OPTION_NAME: "channel",
+	QA_CHANNELS_CHANNEL_OPTION_DESCRIPTION: "The channel to add or remove",
+	QA_CHANNELS_NO_SUBCOMMAND: "Please specify a subcommand (add, remove, or list).",
+	QA_CHANNELS_NO_CHANNEL_PROVIDED: "Please specify a channel.",
+	QA_CHANNELS_ADD_ERROR: "An error occurred while adding the channel.",
+	QA_CHANNELS_REMOVE_ERROR: "An error occurred while removing the channel.",
+	QA_CHANNELS_LIST_ERROR: "An error occurred while listing channels.",
 };
