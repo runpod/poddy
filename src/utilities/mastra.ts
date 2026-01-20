@@ -6,7 +6,8 @@
  */
 
 const MASTRA_ENDPOINT =
-	process.env.MASTRA_ENDPOINT_URL || "https://runpod-assistant-dev.mastra.cloud/api/agents/runpodSlackAgent/generate";
+	process.env.MASTRA_ENDPOINT_URL ||
+	"https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate";
 const MASTRA_API_KEY = process.env.MASTRA_API_KEY;
 
 interface MastraResponse {

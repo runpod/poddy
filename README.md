@@ -59,7 +59,7 @@ Useful database commands:
 
 Poddy uses the Mastra-hosted Runpod documentation agent to answer user questions. Configure these environment variables:
 
-- `MASTRA_ENDPOINT_URL` - The Mastra agent endpoint (default: `https://runpod-assistant-dev.mastra.cloud/api/agents/runpodSlackAgent/generate`)
+- `MASTRA_ENDPOINT_URL` - The Mastra agent endpoint (default: `https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate`)
 - `MASTRA_API_KEY` - **Required** - Bearer token for Mastra Cloud authentication (get from Mastra Cloud dashboard)
 
 ### Troubleshooting
