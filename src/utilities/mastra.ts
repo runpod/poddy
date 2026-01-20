@@ -48,8 +48,14 @@ export async function callMastraAPI(
 	try {
 		const startTime = Date.now();
 
-		const payload: { messages: Array<{ role: string; content: string }>; threadId?: string; resourceId?: string } = {
+		const payload: {
+			messages: Array<{ role: string; content: string }>;
+			threadId?: string;
+			resourceId?: string;
+			source: string;
+		} = {
 			messages: [{ role: "user", content: question }],
+			source: "discord",
 		};
 
 		// Both threadId and resourceId required for memory
