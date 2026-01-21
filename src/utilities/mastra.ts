@@ -46,10 +46,8 @@ type MastraResult = { success: true; text: string; sources?: MastraSource[] } | 
  */
 export async function callMastraAPI(question: string, threadId?: string, resourceId?: string): Promise<MastraResult> {
 	if (!MASTRA_API_KEY) {
-		return {
-			success: false,
-			error: "Mastra API key not configured",
-		};
+		// Should never reach here - caller should check API key availability
+		return { success: false, error: "" }; // Empty error = silent
 	}
 
 	try {
