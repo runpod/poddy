@@ -42,6 +42,12 @@ export default class MessageCreate extends EventHandler {
 		const isBotMentioned = message.mentions?.some(user => user.id === env.APPLICATION_ID) && !message.mention_everyone;
 
 		if (isBotMentioned) {
+			// Skip bot mention handling if Mastra API key is not configured
+			// This keeps the bot reproducible for open source contributors without API access
+			if (!process.env.MASTRA_API_KEY) {
+				return;
+			}
+
 			const language = this.client.languageHandler.getLanguage("en-US");
 
 			// Check if channel is allowed (if restrictions are configured)
