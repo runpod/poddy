@@ -13,11 +13,10 @@ import {
 } from "discord-api-types/v10";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { callMastraAPI } from "../../utilities/mastra.js";
-import { splitMessage } from "../../utilities/string.js";
+import { handleMastraQA } from "../../utilities/mastraQA.js";
 
-function isThreadChannel(channel: APIChannel): boolean {
-	return channel.type === ChannelType.PublicThread || channel.type === ChannelType.PrivateThread;
+function isThreadChannel(channel: APIChannel | null): boolean {
+	return channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread;
 }
 
 function buildDataDogTags(message: APIMessage, channel: APIChannel | null): string[] {
@@ -63,83 +62,7 @@ export default class MessageCreate extends EventHandler {
 				return;
 			}
 
-			const language = this.client.languageHandler.getLanguage("en-US");
-
-			// Check if channel is allowed (if restrictions are configured)
-			const allowedChannels = await this.client.prisma.qAAllowedChannel.findMany({
-				where: { guildId: message.guild_id! },
-			});
-
-			if (allowedChannels.length > 0) {
-				const isAllowed = allowedChannels.some((ch) => ch.channelId === message.channel_id);
-				if (!isAllowed) return;
-			}
-
-			// Only remove bot mention from content, not all mentions
-			const question = message.content.replace(new RegExp(`<@!?${env.APPLICATION_ID}>`, "g"), "").trim();
-
-			if (!question) {
-				return await this.client.api.channels.createMessage(message.channel_id, {
-					content: language.MASTRA_GREETING_MESSAGE,
-					message_reference: { message_id: message.id, fail_if_not_exists: false },
-					allowed_mentions: { parse: [], replied_user: true },
-				});
-			}
-
-			// Create or use existing thread
-			const isThread = isThreadChannel(channel);
-			let thread: APIThreadChannel;
-
-			try {
-				if (isThread) {
-					thread = channel as APIThreadChannel;
-				} else {
-					thread = (await this.client.api.channels.createThread(
-						message.channel_id,
-						{ name: `Q&A: ${question.substring(0, 50)}...`, auto_archive_duration: 60 },
-						message.id,
-					)) as APIThreadChannel;
-				}
-			} catch (error) {
-				this.client.logger.error("Failed to create thread:", error);
-				return;
-			}
-
-			// Show thinking message
-			const thinkingMsg = await this.client.api.channels.createMessage(thread.id, {
-				content: language.MASTRA_THINKING_MESSAGE,
-			});
-
-			const deleteThinkingMessage = async (): Promise<void> => {
-				// Silently ignore delete failures - the message may have already been deleted
-				try {
-					await this.client.api.channels.deleteMessage(thread.id, thinkingMsg.id);
-				} catch {
-					// Intentionally empty - deletion failure is non-critical
-				}
-			};
-
-			try {
-				const response = await callMastraAPI(question, thread.id, message.guild_id!);
-				await deleteThinkingMessage();
-
-				if (!response.success) {
-					await this.client.api.channels.createMessage(thread.id, { content: `❌ ${response.error}` });
-					return;
-				}
-
-				const answer = response.text.replace(/\n{3,}/g, "\n\n") + language.MASTRA_BETA_FOOTER;
-				const chunks = answer.length > 2000 ? splitMessage(answer) : [answer];
-
-				for (const chunk of chunks) {
-					await this.client.api.channels.createMessage(thread.id, { content: chunk });
-				}
-			} catch (error) {
-				this.client.logger.error("Error processing question:", error);
-				await deleteThinkingMessage();
-				await this.client.api.channels.createMessage(thread.id, { content: language.MASTRA_ERROR_MESSAGE });
-			}
-
+			await handleMastraQA(this.client, message, channel);
 			return;
 		}
 
