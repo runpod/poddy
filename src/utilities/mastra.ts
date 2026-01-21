@@ -39,16 +39,13 @@ export async function callMastraAPI(
 	resourceId?: string,
 ): Promise<{ success: true; text: string; sources?: MastraResponse["sources"] } | { success: false; error: string }> {
 	if (!MASTRA_API_KEY) {
-		console.warn("[Mastra] WARNING: MASTRA_API_KEY not set - requests may fail with 'Unauthorized'");
+		return {
+			success: false,
+			error: "Mastra API key not configured",
+		};
 	}
 
-	console.log("[Mastra] Calling API:", MASTRA_ENDPOINT);
-	console.log("[Mastra] Question:", question);
-	console.log("[Mastra] Thread ID:", threadId || "(stateless)");
-	console.log("[Mastra] Resource ID:", resourceId || "(stateless)");
-
 	try {
-		const startTime = Date.now();
 
 		const payload: {
 			messages: Array<{ role: string; content: string }>;
@@ -71,20 +68,14 @@ export async function callMastraAPI(
 
 		const headers: Record<string, string> = {
 			"Content-Type": "application/json",
+			"Authorization": `Bearer ${MASTRA_API_KEY}`,
 		};
-
-		if (MASTRA_API_KEY) {
-			headers["Authorization"] = `Bearer ${MASTRA_API_KEY}`;
-		}
 
 		const response = await fetch(MASTRA_ENDPOINT, {
 			method: "POST",
 			headers,
 			body: JSON.stringify(payload),
 		});
-
-		const duration = Date.now() - startTime;
-		console.log(`[Mastra] Response received in ${duration}ms, status: ${response.status}`);
 
 		if (!response.ok) {
 			const errorText = await response.text();
@@ -96,7 +87,6 @@ export async function callMastraAPI(
 		}
 
 		const data: MastraResponse = await response.json();
-		console.log("[Mastra] Success! Response length:", data.text?.length, "Sources:", data.sources?.length || 0);
 
 		return {
 			success: true,
