@@ -12,14 +12,16 @@ const MASTRA_ENDPOINT =
 	"https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate";
 const MASTRA_API_KEY = process.env.MASTRA_API_KEY;
 
+interface MastraSource {
+	title: string;
+	url: string;
+	score: number;
+	source: string;
+}
+
 interface MastraResponse {
 	text: string;
-	sources?: Array<{
-		title: string;
-		url: string;
-		score: number;
-		source: string;
-	}>;
+	sources?: MastraSource[];
 	usage?: {
 		inputTokens: number;
 		outputTokens: number;
@@ -27,17 +29,22 @@ interface MastraResponse {
 	};
 }
 
+interface MastraPayload {
+	messages: Array<{ role: string; content: string }>;
+	threadId?: string;
+	resourceId?: string;
+	source: string;
+}
+
+type MastraResult = { success: true; text: string; sources?: MastraSource[] } | { success: false; error: string };
+
 /**
  * Call Mastra API directly
  * @param question - The user's question
  * @param threadId - Discord thread ID for conversation continuity
  * @param resourceId - Guild/server ID for user isolation
  */
-export async function callMastraAPI(
-	question: string,
-	threadId?: string,
-	resourceId?: string,
-): Promise<{ success: true; text: string; sources?: MastraResponse["sources"] } | { success: false; error: string }> {
+export async function callMastraAPI(question: string, threadId?: string, resourceId?: string): Promise<MastraResult> {
 	if (!MASTRA_API_KEY) {
 		return {
 			success: false,
@@ -46,34 +53,22 @@ export async function callMastraAPI(
 	}
 
 	try {
-
-		const payload: {
-			messages: Array<{ role: string; content: string }>;
-			threadId?: string;
-			resourceId?: string;
-			source: string;
-		} = {
+		const payload: MastraPayload = {
 			messages: [
 				{ role: "system", content: DISCORD_SYSTEM_CONTEXT },
 				{ role: "user", content: question },
 			],
 			source: "discord",
-		};
-
-		// Both threadId and resourceId required for memory
-		if (threadId && resourceId) {
-			payload.threadId = threadId;
-			payload.resourceId = resourceId;
-		}
-
-		const headers: Record<string, string> = {
-			"Content-Type": "application/json",
-			"Authorization": `Bearer ${MASTRA_API_KEY}`,
+			// Both threadId and resourceId required for memory
+			...(threadId && resourceId ? { threadId, resourceId } : {}),
 		};
 
 		const response = await fetch(MASTRA_ENDPOINT, {
 			method: "POST",
-			headers,
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${MASTRA_API_KEY}`,
+			},
 			body: JSON.stringify(payload),
 		});
 
@@ -93,8 +88,9 @@ export async function callMastraAPI(
 			text: data.text,
 			sources: data.sources,
 		};
-	} catch (error: any) {
-		console.error("[Mastra] Error:", error.message);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error";
+		console.error("[Mastra] Error:", message);
 		return {
 			success: false,
 			error: "Failed to get response. Please try again later.",
