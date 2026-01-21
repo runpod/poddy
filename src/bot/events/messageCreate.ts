@@ -13,36 +13,18 @@ import {
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 import { callMastraAPI } from "../../utilities/mastra.js";
-
-const MAX_MESSAGE_LENGTH = 2000;
-const THINKING_MESSAGE = "🤔 Processing your question...";
-const GREETING_MESSAGE = "👋 Hi! Please ask a question and I'll help you!";
-const ERROR_MESSAGE = "❌ An error occurred while processing your request. Please try again later.";
-const BETA_FOOTER =
-	"\n\n*Powered by Runpod AI. This feature is still in beta. If you need more help, feel free to post in our community or [file a ticket](https://contact.runpod.io/hc/en-us/requests/new).*";
-
-function splitMessage(text: string, maxLength = MAX_MESSAGE_LENGTH): string[] {
-	const chunks: string[] = [];
-	let current = text;
-
-	while (current.length > maxLength) {
-		let splitIndex = current.lastIndexOf("\n", maxLength);
-		if (splitIndex === -1) splitIndex = current.lastIndexOf(" ", maxLength);
-		if (splitIndex === -1) splitIndex = maxLength;
-
-		chunks.push(current.substring(0, splitIndex));
-		current = current.substring(splitIndex).trim();
-	}
-
-	if (current) chunks.push(current);
-	return chunks;
-}
+import { splitMessage } from "../../utilities/string.js";
 
 export default class MessageCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
 		super(client, GatewayDispatchEvents.MessageCreate);
 	}
 
+	/**
+	 * Handle the creation of a new message.
+	 *
+	 * https://discord.com/developers/docs/topics/gateway-events#message-create
+	 */
 	public override async run({ shardId, data: message }: ToEventProps<GatewayMessageCreateDispatchData>) {
 		if (message.author.bot || message.type !== MessageType.Default) return;
 
@@ -57,9 +39,11 @@ export default class MessageCreate extends EventHandler {
 		}
 
 		// Handle bot mentions for Mastra Q&A
-		const isBotMentioned = new RegExp(`<@!?${env.APPLICATION_ID}>`).test(message.content) && !message.mention_everyone;
+		const isBotMentioned = message.mentions?.some(user => user.id === env.APPLICATION_ID) && !message.mention_everyone;
 
 		if (isBotMentioned) {
+			const language = this.client.languageHandler.getLanguage("en-US");
+
 			// Check if channel is allowed (if restrictions are configured)
 			const allowedChannels = await this.client.prisma.qAAllowedChannel.findMany({
 				where: { guildId: message.guild_id! },
@@ -70,15 +54,15 @@ export default class MessageCreate extends EventHandler {
 				if (!isAllowed) return;
 			}
 
-			const question = message.content.replace(/<@!?\d+>/g, "").trim();
+			// Only remove bot mention from content, not all mentions
+			const question = message.content.replace(new RegExp(`<@!?${env.APPLICATION_ID}>`, 'g'), "").trim();
 
 			if (!question) {
-				await this.client.api.channels.createMessage(message.channel_id, {
-					content: GREETING_MESSAGE,
+				return await this.client.api.channels.createMessage(message.channel_id, {
+					content: language.MASTRA_GREETING_MESSAGE,
 					message_reference: { message_id: message.id, fail_if_not_exists: false },
 					allowed_mentions: { parse: [], replied_user: true },
 				});
-				return;
 			}
 
 			// Create or use existing thread
@@ -100,7 +84,7 @@ export default class MessageCreate extends EventHandler {
 
 			// Show thinking message
 			const thinkingMsg = await this.client.api.channels.createMessage(thread.id, {
-				content: THINKING_MESSAGE,
+				content: language.MASTRA_THINKING_MESSAGE,
 			});
 
 			const deleteThinkingMessage = async () => {
@@ -118,8 +102,8 @@ export default class MessageCreate extends EventHandler {
 					return;
 				}
 
-				const answer = response.text.replace(/\n{3,}/g, "\n\n") + BETA_FOOTER;
-				const chunks = answer.length > MAX_MESSAGE_LENGTH ? splitMessage(answer) : [answer];
+				const answer = response.text.replace(/\n{3,}/g, "\n\n") + language.MASTRA_BETA_FOOTER;
+				const chunks = answer.length > 2000 ? splitMessage(answer) : [answer];
 
 				for (const chunk of chunks) {
 					await this.client.api.channels.createMessage(thread.id, { content: chunk });
@@ -127,7 +111,7 @@ export default class MessageCreate extends EventHandler {
 			} catch (error) {
 				console.error("Error processing question:", error);
 				await deleteThinkingMessage();
-				await this.client.api.channels.createMessage(thread.id, { content: ERROR_MESSAGE });
+				await this.client.api.channels.createMessage(thread.id, { content: language.MASTRA_ERROR_MESSAGE });
 			}
 
 			return;
