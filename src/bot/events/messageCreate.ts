@@ -3,8 +3,6 @@ import type { ToEventProps } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import {
 	type APIChannel,
-	type APIMessage,
-	type APIThreadChannel,
 	ChannelType,
 	GatewayDispatchEvents,
 	type GatewayMessageCreateDispatchData,
@@ -13,20 +11,7 @@ import {
 } from "discord-api-types/v10";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { handleMastraQA } from "../../utilities/mastraQA.js";
-
-function isThreadChannel(channel: APIChannel | null): boolean {
-	return channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread;
-}
-
-function buildDataDogTags(message: APIMessage, channel: APIChannel | null): string[] {
-	return [
-		`guildId:${message.guild_id ?? "@me"}`,
-		`userId:${message.author.id}`,
-		`channelId:${message.channel_id}`,
-		`channelName:${channel?.name}`,
-	];
-}
+import { handleMastraQA } from "../utilities/mastraQA.js";
 
 export default class MessageCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
@@ -41,6 +26,17 @@ export default class MessageCreate extends EventHandler {
 	public override async run({ shardId, data: message }: ToEventProps<GatewayMessageCreateDispatchData>) {
 		if (message.author.bot || message.type !== MessageType.Default) return;
 
+		await this.client.prisma.message.create({
+			data: {
+				id: message.id,
+				authorId: message.author.id,
+				channelId: message.channel_id,
+				content: message.content,
+				createdAt: new Date(message.timestamp),
+				guildId: message.guild_id!,
+			},
+		});
+
 		let channel: APIChannel | null = null;
 		try {
 			channel = await this.client.api.channels.get(message.channel_id);
@@ -52,10 +48,8 @@ export default class MessageCreate extends EventHandler {
 		}
 
 		// Handle bot mentions for Mastra Q&A
-		const isBotMentioned =
-			message.mentions?.some((user) => user.id === env.APPLICATION_ID) && !message.mention_everyone;
 
-		if (isBotMentioned) {
+		if (message.mentions?.some((user) => user.id === env.APPLICATION_ID)) {
 			// Skip bot mention handling if Mastra API key is not configured
 			// This keeps the bot reproducible for open source contributors without API access
 			if (!env.MASTRA_API_KEY) {
@@ -63,26 +57,36 @@ export default class MessageCreate extends EventHandler {
 			}
 
 			await handleMastraQA(this.client, message, channel);
-			return;
 		}
 
-		const dataDogTags = buildDataDogTags(message, channel);
+		this.client.dataDog?.increment("total_messages_sent", 1, [
+			`guildId:${message.guild_id ?? "@me"}`,
+			`userId:${message.author.id}`,
+			`channelId:${message.channel_id}`,
+			`channelName:${channel?.name}`,
+		]);
 
-		// DataDog tracking for non-bot-mention messages
-		this.client.dataDog?.increment("total_messages_sent", 1, dataDogTags);
-
-		if (isThreadChannel(channel)) {
+		if (channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread) {
 			const parentChannel = await this.client.api.channels.get(message.channel_id);
-			const isEngagingThread =
+
+			if (
 				parentChannel.type === ChannelType.GuildText ||
 				(parentChannel.type === ChannelType.GuildForum &&
-					parentChannel.parent_id !== this.client.config.supportCategoryId);
-
-			if (isEngagingThread) {
-				this.client.dataDog?.increment("total_messages_sent.engaging", 1, dataDogTags);
-			}
-		} else if (channel.type === ChannelType.GuildText && channel.parent_id !== this.client.config.supportCategoryId) {
-			this.client.dataDog?.increment("total_messages_sent.engaging", 1, dataDogTags);
+					parentChannel.parent_id !== this.client.config.supportCategoryId)
+			)
+				this.client.dataDog?.increment("total_messages_sent.engaging", 1, [
+					`guildId:${message.guild_id ?? "@me"}`,
+					`userId:${message.author.id}`,
+					`channelId:${message.channel_id}`,
+					`channelName:${channel?.name}`,
+				]);
+		} else if (channel?.type === ChannelType.GuildText && channel.parent_id !== this.client.config.supportCategoryId) {
+			this.client.dataDog?.increment("total_messages_sent.engaging", 1, [
+				`guildId:${message.guild_id ?? "@me"}`,
+				`userId:${message.author.id}`,
+				`channelId:${message.channel_id}`,
+				`channelName:${channel?.name}`,
+			]);
 		}
 
 		if (message.guild_id) {
@@ -106,7 +110,12 @@ export default class MessageCreate extends EventHandler {
 			const oneWeekAgo = Date.now() - 604_800_000;
 
 			if (memberJoinedAt > oneWeekAgo) {
-				this.client.dataDog?.increment("total_messages_sent.new_user", 1, dataDogTags);
+				this.client.dataDog?.increment("total_messages_sent.new_user", 1, [
+					`guildId:${message.guild_id ?? "@me"}`,
+					`userId:${message.author.id}`,
+					`channelId:${message.channel_id}`,
+					`channelName:${channel?.name}`,
+				]);
 			}
 
 			const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
@@ -129,8 +138,7 @@ export default class MessageCreate extends EventHandler {
 
 				this.client.dataDog?.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
 
-				const oneDayInMs = 86_400_000;
-				if (memberJoinedAt + oneDayInMs > Date.now()) {
+				if (memberJoinedAt + 86_400_000 > Date.now()) {
 					this.client.dataDog?.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
 				}
 			}

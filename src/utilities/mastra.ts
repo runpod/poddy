@@ -1,16 +1,10 @@
-/**
- * Mastra API Integration
- * Simple, direct call to Mastra agent - no polling, no classification complexity
- *
- * Mastra handles conversation memory via threadId (PostgreSQL-backed, auto-retrieves last 4 messages)
- */
-
+import { env } from "node:process";
 import { DISCORD_SYSTEM_CONTEXT } from "./systemContext.js";
 
+// Mastra handles conversation memory via threadId (PostgreSQL-backed, auto-retrieves last 4 messages)
 const MASTRA_ENDPOINT =
-	process.env.MASTRA_ENDPOINT_URL ||
-	"https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate";
-const MASTRA_API_KEY = process.env.MASTRA_API_KEY;
+	env.MASTRA_ENDPOINT_URL || "https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate";
+const MASTRA_API_KEY = env.MASTRA_API_KEY;
 
 interface MastraSource {
 	title: string;
@@ -38,12 +32,6 @@ interface MastraPayload {
 
 type MastraResult = { success: true; text: string; sources?: MastraSource[] } | { success: false; error: string };
 
-/**
- * Call Mastra API directly
- * @param question - The user's question
- * @param threadId - Discord thread ID for conversation continuity
- * @param resourceId - Guild/server ID for user isolation
- */
 export async function callMastraAPI(question: string, threadId?: string, resourceId?: string): Promise<MastraResult> {
 	if (!MASTRA_API_KEY) {
 		// Should never reach here - caller should check API key availability
@@ -84,7 +72,7 @@ export async function callMastraAPI(question: string, threadId?: string, resourc
 		return {
 			success: true,
 			text: data.text,
-			sources: data.sources,
+			...(data.sources && { sources: data.sources }),
 		};
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error";
