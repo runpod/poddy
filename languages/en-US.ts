@@ -1179,4 +1179,10 @@ export default {
 	RUNPOD_LINK_ACCOUNT_BUTTON_LABEL: "Link Runpod Account",
 	RUNPOD_FETCH_USER_FAILED: "Failed to fetch user data.",
 	RUNPOD_FETCH_LINK_FAILED: "Failed to fetch the link.",
+
+	// Mastra Q&A Messages
+	MASTRA_THINKING_MESSAGE: "🤔 Processing your question...",
+	MASTRA_GREETING_MESSAGE: "👋 Hi! Please ask a question and I'll help you!",
+	MASTRA_ERROR_MESSAGE: "❌ An error occurred while processing your request. Please try again later.",
+	MASTRA_BETA_FOOTER: "\n\n-# Powered by Runpod AI. This is a beta feature, if you need more help please post in a forum channel or [create a ticket](https://contact.runpod.io/hc/en-us/requests/new)",
 };

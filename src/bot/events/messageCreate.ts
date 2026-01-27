@@ -6,14 +6,12 @@ import {
 	ChannelType,
 	GatewayDispatchEvents,
 	type GatewayMessageCreateDispatchData,
-	MessageFlags,
 	MessageType,
 	RESTJSONErrorCodes,
 } from "discord-api-types/v10";
 import EventHandler from "../../../lib/classes/EventHandler.js";
 import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { getRunpodAccountLinkSection } from "../../utilities/components.js";
-import { DISCORD_LOGIN_URL_QUERY, query } from "../../utilities/graphql.js";
+import { handleMastraQA } from "../utilities/mastraQA.js";
 
 export default class MessageCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
@@ -21,9 +19,9 @@ export default class MessageCreate extends EventHandler {
 	}
 
 	/**
-	 * Handle the creation of a new interaction.
+	 * Handle the creation of a new message.
 	 *
-	 * https://discord.com/developers/docs/topics/gateway-events#interaction-create
+	 * https://discord.com/developers/docs/topics/gateway-events#message-create
 	 */
 	public override async run({ shardId, data: message }: ToEventProps<GatewayMessageCreateDispatchData>) {
 		if (message.author.bot || message.type !== MessageType.Default) return;
@@ -40,33 +38,25 @@ export default class MessageCreate extends EventHandler {
 		});
 
 		let channel: APIChannel | null = null;
-
 		try {
 			channel = await this.client.api.channels.get(message.channel_id);
 		} catch (error) {
-			if (error instanceof DiscordAPIError) {
-				if (error.code === RESTJSONErrorCodes.UnknownChannel)
-					this.client.logger.error(`Unable to fetch channel ${message.channel_id}.`);
-			} else throw error;
+			if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.UnknownChannel) {
+				this.client.logger.error(`Unable to fetch channel ${message.channel_id}.`);
+			}
+			return;
 		}
 
-		// Simple CTA: specific user can post the account link CTA in announcement channels
-		if (
-			message.author.id === "194861788926443520" &&
-			message.content.trim() === "!cta" &&
-			channel?.type === ChannelType.GuildAnnouncement
-		) {
-			const loginUrlResponse = await query(DISCORD_LOGIN_URL_QUERY);
-			const loginUrl = loginUrlResponse.data?.discordLoginUrl;
-			if (!loginUrl) return;
+		// Handle bot mentions for Mastra Q&A
 
-			const language = this.client.languageHandler.getLanguage("en-US");
+		if (message.mentions?.some((user) => user.id === env.APPLICATION_ID)) {
+			// Skip bot mention handling if Mastra API key is not configured
+			// This keeps the bot reproducible for open source contributors without API access
+			if (!env.MASTRA_API_KEY) {
+				return;
+			}
 
-			await this.client.api.channels.createMessage(message.channel_id, {
-				flags: MessageFlags.IsComponentsV2,
-				components: [getRunpodAccountLinkSection(language, loginUrl)],
-			});
-			return;
+			await handleMastraQA(this.client, message, channel);
 		}
 
 		this.client.dataDog?.increment("total_messages_sent", 1, [
@@ -116,13 +106,17 @@ export default class MessageCreate extends EventHandler {
 			// by new users are consistent with new_communicators (do we on average see a couple of messages per new user, or do we see a lot of
 			// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
 			// Discord server, and if we need an easier onboarding flow for it.
-			if (new Date(message.member!.joined_at!).getTime() > Date.now() - 604_800_000)
+			const memberJoinedAt = new Date(message.member!.joined_at!).getTime();
+			const oneWeekAgo = Date.now() - 604_800_000;
+
+			if (memberJoinedAt > oneWeekAgo) {
 				this.client.dataDog?.increment("total_messages_sent.new_user", 1, [
-					`guildId:${message.guild_id}`,
+					`guildId:${message.guild_id ?? "@me"}`,
 					`userId:${message.author.id}`,
 					`channelId:${message.channel_id}`,
 					`channelName:${channel?.name}`,
 				]);
+			}
 
 			const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
 				where: {
@@ -144,8 +138,9 @@ export default class MessageCreate extends EventHandler {
 
 				this.client.dataDog?.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
 
-				if (new Date(message.member!.joined_at!).getTime() + 86_400 > Date.now())
+				if (memberJoinedAt + 86_400_000 > Date.now()) {
 					this.client.dataDog?.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
+				}
 			}
 
 			const autoThreadChannel = await this.client.prisma.autoThreadChannel.findUnique({
