@@ -4,7 +4,7 @@ import { DISCORD_SYSTEM_CONTEXT } from "./systemContext.js";
 // Mastra handles conversation memory via threadId (PostgreSQL-backed, auto-retrieves last 4 messages)
 const MASTRA_ENDPOINT =
 	env.MASTRA_ENDPOINT_URL || "https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate";
-const MASTRA_API_KEY = env.MASTRA_API_KEY;
+const MASTRA_API_KEY = env.RUNPOD_ASSISTANT_API_KEY;
 
 interface MastraSource {
 	title: string;
@@ -35,6 +35,7 @@ type MastraResult = { success: true; text: string; sources?: MastraSource[] } | 
 export async function callMastraAPI(question: string, threadId?: string, resourceId?: string): Promise<MastraResult> {
 	if (!MASTRA_API_KEY) {
 		// Should never reach here - caller should check API key availability
+		// RUNPOD_ASSISTANT_API_KEY environment variable must be set
 		return { success: false, error: "" }; // Empty error = silent
 	}
 
