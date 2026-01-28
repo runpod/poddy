@@ -52,7 +52,7 @@ export default class MessageCreate extends EventHandler {
 		if (message.mentions?.some((user) => user.id === env.APPLICATION_ID)) {
 			// Skip bot mention handling if Mastra API key is not configured
 			// This keeps the bot reproducible for open source contributors without API access
-			if (!env.MASTRA_API_KEY) {
+			if (!env.RUNPOD_ASSISTANT_API_KEY) {
 				return;
 			}
 
