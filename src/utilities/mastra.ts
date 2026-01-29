@@ -2,8 +2,8 @@ import { env } from "node:process";
 import { DISCORD_SYSTEM_CONTEXT } from "./systemContext.js";
 
 // Mastra handles conversation memory via threadId (PostgreSQL-backed, auto-retrieves last 4 messages)
-const MASTRA_ENDPOINT =
-	env.MASTRA_ENDPOINT_URL || "https://runpod-assistant.mastra.cloud/api/agents/runpodGeneralQuestionAgent/generate";
+const MASTRA_AGENT_URL = env.MASTRA_AGENT_URL;
+const MASTRA_ENDPOINT = `${MASTRA_AGENT_URL}/generate`;
 const MASTRA_API_KEY = env.RUNPOD_ASSISTANT_API_KEY;
 
 interface MastraSource {
