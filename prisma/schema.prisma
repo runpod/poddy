@@ -1,26 +1,15 @@
 datasource db {
-  // Change provider to whichever provide you're using.
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./__generated__/"
 }
 
 enum CommandType {
   TEXT_COMMAND
   APPLICATION_COMMAND
-}
-
-enum ZapierNotificationType {
-  CUSTOMER_SUCCESS
-  SALES
-}
-
-enum TextInputStyle {
-  SHORT
-  PARAGRAPH
 }
 
 enum EscalatedType {
@@ -102,88 +91,8 @@ model Embed {
   data    String
   guildId String
 
-  helpDeskOptions HelpDeskOption[]
-
   @@unique([name, guildId])
   @@map("embeds")
-}
-
-model HelpDesk {
-  id            String  @id @default(cuid())
-  guildId       String
-  channelId     String?
-  name          String
-  description   String?
-  embedColor    String?
-  messageId     String?
-  footer        String?
-  footerIconUrl String?
-
-  helpDeskOptions HelpDeskOption[]
-
-  @@unique([guildId, name])
-  @@map("help_desks")
-}
-
-model HelpDeskOption {
-  id            String   @id @default(cuid())
-  name          String
-  responseId    String
-  description   String?
-  helpDeskId    String
-  emojiName     String?
-  emojiId       String?
-  emojiAnimated Boolean?
-  modalTitle    String?
-  channelId     String?
-  roleIds       String[]
-  position      Int
-
-  helpDesk HelpDesk @relation(fields: [helpDeskId], references: [id], onDelete: Cascade)
-  response Embed    @relation(fields: [responseId], references: [id], onDelete: Cascade)
-
-  helpDeskOptionModalComponents HelpDeskOptionModalComponent[]
-
-  @@unique([helpDeskId, name])
-  @@map("help_desk_options")
-}
-
-model HelpDeskOptionModalComponent {
-  id               String         @id @default(cuid())
-  label            String
-  style            TextInputStyle
-  required         Boolean
-  minLength        Int?
-  maxLength        Int?
-  placeholder      String?
-  value            String?
-  helpDeskOptionId String
-  position         Int
-
-  helpDeskOption HelpDeskOption @relation(fields: [helpDeskOptionId], references: [id], onDelete: Cascade)
-}
-
-model SubscriptionGroup {
-  id          String  @id
-  name        String  @unique
-  category    String?
-  description String?
-
-  subscribedUsers SubscribedUser[]
-
-  @@map("subscription_groups")
-}
-
-model SubscribedUser {
-  id        String @id @default(cuid())
-  userId    String
-  groupId   String
-  channelId String
-
-  group SubscriptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, groupId])
-  @@map("subscribed_users")
 }
 
 model Event {
@@ -236,16 +145,6 @@ model SubmissionUpvote {
 
   @@id([userId, submissionId])
   @@unique([userId, eventId])
-}
-
-model ZapierNotification {
-  id        String                 @id @default(cuid())
-  email     String
-  message   String
-  type      ZapierNotificationType
-  timestamp DateTime               @default(now())
-
-  @@map("zapier_notifications")
 }
 
 model ZendeskTicket {

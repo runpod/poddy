@@ -1,10 +1,10 @@
 import { env } from "node:process";
 import type { GatewayReadyDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type { PoddyClient } from "@src/client";
+import type { BetterStackIndexResponse, BetterStackStatusReport } from "@src/typings/betterstack.js";
 import { schedule } from "node-cron";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type { BetterStackIndexResponse, BetterStackStatusReport } from "../../../typings/index.js";
-import type { PoddyClient } from "../../client.js";
 
 export default class Ready extends EventHandler<PoddyClient> {
 	public constructor(client: PoddyClient) {
@@ -112,13 +112,6 @@ export default class Ready extends EventHandler<PoddyClient> {
 
 			await checkBetterStackStatus();
 		});
-
-		const helpDesks = await this.client.prisma.helpDesk.findMany({
-			where: {},
-			select: { id: true },
-		});
-
-		await Promise.all(helpDesks.map(async (helpDesk) => this.client.functions.updateHelpDesk(helpDesk.id)));
 
 		return this.client.logger.webhookLog("console", {
 			content: `${this.client.functions.generateTimestamp()} Logged in as ${
