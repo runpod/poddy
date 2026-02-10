@@ -1,8 +1,8 @@
 import { Locale } from "@discordjs/core";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import enUS from "@lib/languages/en-US.js";
+import type { LanguageValues } from "@lib/typings/language.js";
 import type { TOptions } from "i18next";
-import enUS from "../../languages/en-US.js";
-import type { LanguageValues } from "../../typings/language";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
 
 export type LanguageKeys = keyof typeof enUS;
 export type LanguageOptions = Partial<typeof enUS>;

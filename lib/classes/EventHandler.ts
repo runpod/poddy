@@ -1,5 +1,5 @@
 import type { MappedEvents } from "@discordjs/core";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 
 export default class EventHandler<C extends ExtendedClient = ExtendedClient> {
 	/**

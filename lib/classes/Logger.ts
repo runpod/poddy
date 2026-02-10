@@ -1,8 +1,8 @@
 import { env } from "node:process";
 import { inspect } from "node:util";
 import type { RESTPostAPIWebhookWithTokenJSONBody } from "@discordjs/core";
+import init from "@lib/utilities/sentry.js";
 import { bgGreenBright, bgMagentaBright, bgRedBright, bgYellowBright, bold } from "colorette";
-import init from "../utilities/sentry.js";
 
 export class Logger {
 	/**

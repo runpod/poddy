@@ -1,8 +1,8 @@
 import type { APIEmbed, APIMessageComponentButtonInteraction, Permissions } from "@discordjs/core";
 import { RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
-import PermissionsBitField from "../utilities/permissions.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import PermissionsBitField from "@lib/utilities/permissions.js";
 import type Language from "./Language.js";
 
 export default class Button {

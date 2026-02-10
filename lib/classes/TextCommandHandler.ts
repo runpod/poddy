@@ -1,6 +1,6 @@
 import { setTimeout } from "node:timers";
 import type { GatewayMessageCreateDispatchData, ToEventProps } from "@discordjs/core";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type TextCommand from "./TextCommand";
 
@@ -45,7 +45,7 @@ export default class TextCommandHandler<C extends ExtendedClient = ExtendedClien
 				`${this.client.__dirname}/dist/src/bot/textCommands/${parentFolder}`,
 				".js",
 			)) {
-				const CommandFile = await import(`../../src/bot/textCommands/${parentFolder}/${fileName}`);
+				const CommandFile = await import(`@lib/src/bot/textCommands/${parentFolder}/${fileName}`);
 
 				const command = new CommandFile.default(this.client) as TextCommand;
 

@@ -15,9 +15,9 @@ import {
 	RESTJSONErrorCodes,
 } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import type { APIInteractionWithArguments, InteractionArguments } from "../../typings";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
-import applicationCommandOptionTypeReference from "../utilities/reference.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments, InteractionArguments } from "@lib/typings/index.js";
+import applicationCommandOptionTypeReference from "@lib/utilities/reference.js";
 import type ApplicationCommand from "./ApplicationCommand.js";
 import type Language from "./Language.js";
 
@@ -62,7 +62,7 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 				`${this.client.__dirname}/dist/src/bot/applicationCommands/${parentFolder}`,
 				".js",
 			)) {
-				const CommandFile = await import(`../../src/bot/applicationCommands/${parentFolder}/${fileName}`);
+				const CommandFile = await import(`@lib/src/bot/applicationCommands/${parentFolder}/${fileName}`);
 
 				const command = new CommandFile.default(this.client) as ApplicationCommand;
 

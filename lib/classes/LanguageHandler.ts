@@ -1,7 +1,7 @@
 import type { Locale } from "@discordjs/core";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { LanguageValues } from "@lib/typings/language.js";
 import type { TOptions } from "i18next";
-import type { LanguageValues } from "../../typings/language.js";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
 import type { LanguageKeys, LanguageOptions } from "./Language.js";
 import Language from "./Language.js";
 
@@ -37,7 +37,7 @@ export default class LanguageHandler<C extends ExtendedClient = ExtendedClient> 
 	 */
 	public async loadLanguages() {
 		for (const fileName of this.client.functions.getFiles(`${this.client.__dirname}/dist/languages/`, ".js")) {
-			const languageFile: LanguageOptions = await import(`../../languages/${fileName}`).then((file) => file.default);
+			const languageFile: LanguageOptions = await import(`@lib/languages/${fileName}`).then((file) => file.default);
 
 			const language: Language = new Language(this.client, languageFile.LANGUAGE_ID! as Locale, {
 				enabled: languageFile.LANGUAGE_ENABLED!,
