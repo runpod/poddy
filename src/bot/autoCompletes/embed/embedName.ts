@@ -1,8 +1,8 @@
 import type { APIApplicationCommandAutocompleteInteraction } from "@discordjs/core";
-import AutoComplete from "../../../../lib/classes/AutoComplete.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import AutoComplete from "@lib/classes/AutoComplete.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 
 export default class EmbedName extends AutoComplete {
 	/**
@@ -11,18 +11,7 @@ export default class EmbedName extends AutoComplete {
 	 * @param client - Our extended client.
 	 */
 	public constructor(client: ExtendedClient) {
-		super(
-			[
-				"embed-delete-name",
-				"embed-preview-name",
-				"embed-rename-name",
-				"help_desk-options-add-response",
-				"help_desk-options-edit-response",
-				"help_desk_options-add-response",
-				"help_desk_options-response-response",
-			],
-			client,
-		);
+		super(["embed-delete-name", "embed-preview-name", "embed-rename-name"], client);
 	}
 
 	/**
