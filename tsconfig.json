@@ -17,7 +17,15 @@
 		// Modules
 		"module": "ESNext",
 		"moduleResolution": "node",
+		"baseUrl": ".",
 		"resolveJsonModule": true,
+		"paths": {
+			"@lib/*": ["./lib/*"],
+			"@lib/languages/*": ["./languages/*"],
+			"@lib/typings/language.js": ["./typings/language.d.ts"],
+			"@src/*": ["./src/*"],
+			"@db/*": ["./prisma/__generated__/*"]
+		},
 
 		// Emit
 		"declaration": true,

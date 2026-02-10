@@ -6,7 +6,7 @@ import type {
 } from "@discordjs/core";
 import { MessageFlags, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type SelectMenu from "./SelectMenu.js";
 
@@ -51,7 +51,7 @@ export default class SelectMenuHandler<C extends ExtendedClient = ExtendedClient
 				`${this.client.__dirname}/dist/src/bot/selectMenus/${parentFolder}`,
 				".js",
 			)) {
-				const SelectMenuFile = await import(`../../src/bot/selectMenus/${parentFolder}/${fileName}`);
+				const SelectMenuFile = await import(`@lib/src/bot/selectMenus/${parentFolder}/${fileName}`);
 
 				const selectMenu = new SelectMenuFile.default(this.client) as SelectMenu;
 

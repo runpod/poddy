@@ -6,7 +6,7 @@ import type {
 } from "@discordjs/core";
 import { MessageFlags, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type Button from "./Button.js";
 import type Language from "./Language.js";
 
@@ -51,7 +51,7 @@ export default class ButtonHandler<C extends ExtendedClient = ExtendedClient> {
 				`${this.client.__dirname}/dist/src/bot/buttons/${parentFolder}`,
 				".js",
 			)) {
-				const ButtonFile = await import(`../../src/bot/buttons/${parentFolder}/${fileName}`);
+				const ButtonFile = await import(`@lib/src/bot/buttons/${parentFolder}/${fileName}`);
 
 				const button = new ButtonFile.default(this.client) as Button;
 

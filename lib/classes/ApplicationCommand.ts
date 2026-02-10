@@ -1,4 +1,5 @@
 import { env } from "node:process";
+import { CommandType } from "@db/client.js";
 import type {
 	APIApplicationCommandInteraction,
 	APIContextMenuInteraction,
@@ -8,10 +9,9 @@ import type {
 } from "@discordjs/core";
 import { ApplicationCommandType, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import { CommandType } from "@prisma/client";
-import type { APIInteractionWithArguments } from "../../typings";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
-import PermissionsBitField from "../utilities/permissions.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import PermissionsBitField from "@lib/utilities/permissions.js";
 import type Language from "./Language.js";
 
 export default class ApplicationCommand {

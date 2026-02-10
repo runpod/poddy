@@ -2,7 +2,7 @@ import { setTimeout } from "node:timers";
 import type { APIModalSubmitInteraction, RESTPostAPIWebhookWithTokenJSONBody, ToEventProps } from "@discordjs/core";
 import { MessageFlags, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type Language from "./Language.js";
 import type Modal from "./Modal.js";
 
@@ -47,7 +47,7 @@ export default class ModalHandler<C extends ExtendedClient = ExtendedClient> {
 				`${this.client.__dirname}/dist/src/bot/modals/${parentFolder}`,
 				".js",
 			)) {
-				const ModalFile = await import(`../../src/bot/modals/${parentFolder}/${fileName}`);
+				const ModalFile = await import(`@lib/src/bot/modals/${parentFolder}/${fileName}`);
 
 				const modal = new ModalFile.default(this.client) as Modal;
 

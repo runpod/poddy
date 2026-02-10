@@ -4,9 +4,9 @@ import type {
 	ToEventProps,
 } from "@discordjs/core";
 import { ApplicationCommandOptionType } from "@discordjs/core";
-import type { APIInteractionWithArguments, InteractionArguments } from "../../typings";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
-import applicationCommandOptionTypeReference from "../utilities/reference.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments, InteractionArguments } from "@lib/typings/index.js";
+import applicationCommandOptionTypeReference from "@lib/utilities/reference.js";
 import type AutoComplete from "./AutoComplete";
 import type Language from "./Language";
 
@@ -38,7 +38,7 @@ export default class AutoCompleteHandler<C extends ExtendedClient = ExtendedClie
 				`${this.client.__dirname}/dist/src/bot/autoCompletes/${parentFolder}`,
 				".js",
 			)) {
-				const AutoCompleteFile = await import(`../../src/bot/autoCompletes/${parentFolder}/${fileName}`);
+				const AutoCompleteFile = await import(`@lib/src/bot/autoCompletes/${parentFolder}/${fileName}`);
 
 				const autoComplete = new AutoCompleteFile.default(this.client) as AutoComplete;
 

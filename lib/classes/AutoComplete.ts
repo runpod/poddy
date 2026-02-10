@@ -1,6 +1,6 @@
 import type { APIApplicationCommandAutocompleteInteraction } from "@discordjs/core";
-import type { APIInteractionWithArguments } from "../../typings";
-import type ExtendedClient from "../extensions/ExtendedClient.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 import type Language from "./Language.js";
 
 export default class AutoComplete {
