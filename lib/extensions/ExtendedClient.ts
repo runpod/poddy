@@ -1,30 +1,31 @@
 import { execSync } from "node:child_process";
 import { resolve } from "node:path";
 import { env } from "node:process";
+import { PrismaClient } from "@db/client.js";
 import type { APIGuildMember, APIRole, ClientOptions, MappedEvents } from "@discordjs/core";
 import { API, Client } from "@discordjs/core";
-import { PrismaClient } from "@prisma/client";
+import type ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import ApplicationCommandHandler from "@lib/classes/ApplicationCommandHandler.js";
+import type AutoComplete from "@lib/classes/AutoComplete.js";
+import AutoCompleteHandler from "@lib/classes/AutoCompleteHandler.js";
+import type Button from "@lib/classes/Button.js";
+import ButtonHandler from "@lib/classes/ButtonHandler.js";
+import type EventHandler from "@lib/classes/EventHandler.js";
+import LanguageHandler from "@lib/classes/LanguageHandler.js";
+import Logger from "@lib/classes/Logger.js";
+import type Modal from "@lib/classes/Modal.js";
+import ModalHandler from "@lib/classes/ModalHandler.js";
+import type SelectMenu from "@lib/classes/SelectMenu.js";
+import SelectMenuHandler from "@lib/classes/SelectMenuHandler.js";
+import type TextCommand from "@lib/classes/TextCommand.js";
+import TextCommandHandler from "@lib/classes/TextCommandHandler.js";
+import type { BotOptions } from "@lib/typings/options.js";
+import Functions from "@lib/utilities/functions.js";
+import { PrismaPg } from "@prisma/adapter-pg";
+import botConfig from "config/bot.config";
 import * as metrics from "datadog-metrics";
 import i18next from "i18next";
 import intervalPlural from "i18next-intervalplural-postprocessor";
-import Config from "../../config/bot.config.js";
-import type ApplicationCommand from "../classes/ApplicationCommand.js";
-import ApplicationCommandHandler from "../classes/ApplicationCommandHandler.js";
-import type AutoComplete from "../classes/AutoComplete.js";
-import AutoCompleteHandler from "../classes/AutoCompleteHandler.js";
-import type Button from "../classes/Button.js";
-import ButtonHandler from "../classes/ButtonHandler.js";
-import type EventHandler from "../classes/EventHandler.js";
-import LanguageHandler from "../classes/LanguageHandler.js";
-import Logger from "../classes/Logger.js";
-import type Modal from "../classes/Modal.js";
-import ModalHandler from "../classes/ModalHandler.js";
-import type SelectMenu from "../classes/SelectMenu.js";
-import SelectMenuHandler from "../classes/SelectMenuHandler.js";
-import type TextCommand from "../classes/TextCommand.js";
-import TextCommandHandler from "../classes/TextCommandHandler.js";
-import type { BotOptions } from "../typings/options.js";
-import Functions from "../utilities/functions.js";
 
 export default class ExtendedClient extends Client {
 	/**
@@ -35,7 +36,7 @@ export default class ExtendedClient extends Client {
 	/**
 	 * The configuration for our bot.
 	 */
-	public readonly config: typeof Config;
+	public readonly config: typeof botConfig;
 
 	/**
 	 * The logger for our bot.
@@ -48,30 +49,14 @@ export default class ExtendedClient extends Client {
 	public readonly i18n: typeof i18next;
 
 	/**
-	 * __dirname is not in our version of ECMA, this is a workaround.
+	 * __dirname is not in our version of ECMA, little workaround...
 	 */
 	public readonly __dirname: string;
 
 	/**
 	 * Our Prisma client, this is an ORM to interact with our PostgreSQL instance.
 	 */
-	public readonly prisma: PrismaClient<{
-		errorFormat: "pretty";
-		log: (
-			| {
-					emit: "event";
-					level: "query";
-			  }
-			| {
-					emit: "stdout";
-					level: "error";
-			  }
-			| {
-					emit: "stdout";
-					level: "warn";
-			  }
-		)[];
-	}>;
+	public readonly prisma: TypedPrismaClientOnlyATypeDoNotUse;
 
 	/**
 	 * A map of guild ID to user ID, representing a guild and who owns it.
@@ -81,7 +66,6 @@ export default class ExtendedClient extends Client {
 	/**
 	 * Guild roles cache.
 	 */
-
 	public guildRolesCache: Map<string, Map<string, APIRole>>;
 
 	/**
@@ -199,7 +183,7 @@ export default class ExtendedClient extends Client {
 
 		this.api = new API(rest);
 
-		this.config = Config;
+		this.config = botConfig;
 		this.config.version =
 			env.NODE_ENV === "production" ? execSync("git rev-parse --short HEAD").toString().trim() : "dev";
 
@@ -207,18 +191,26 @@ export default class ExtendedClient extends Client {
 		this.options = options;
 
 		this.prisma = new PrismaClient({
-			errorFormat: "pretty",
+			adapter: new PrismaPg({ connectionString: env.DATABASE_URL }),
 			log: [
-				{
-					level: "warn",
-					emit: "stdout",
-				},
-				{
-					level: "error",
-					emit: "stdout",
-				},
+				{ level: "warn", emit: "stdout" },
+				{ level: "error", emit: "stdout" },
 				{ level: "query", emit: "event" },
 			],
+		}).$extends({
+			query: {
+				$allModels: {
+					async $allOperations({ model, operation, args, query }) {
+						const before = Date.now();
+						const result = await query(args);
+						const after = Date.now();
+
+						Logger.debug(`prisma:query`, `${model}.${operation} took ${String(after - before)}ms`);
+
+						return result;
+					},
+				},
+			},
 		});
 
 		this.guildOwnersCache = new Map();
@@ -226,38 +218,6 @@ export default class ExtendedClient extends Client {
 		this.guildMeCache = new Map();
 
 		this.approximateUserCount = 0;
-
-		// I forget what this is even used for, but Vlad from https://github.com/vladfrangu/highlight uses it and recommended me to use it a while ago.
-		if (env.NODE_ENV === "development") {
-			this.prisma.$on("query", (event) => {
-				try {
-					const paramsArray = JSON.parse(event.params);
-					const newQuery = event.query.replaceAll(/\$(?<captured>\d+)/g, (_, number) => {
-						const value = paramsArray[Number(number) - 1];
-
-						if (typeof value === "string") return `"${value}"`;
-
-						if (Array.isArray(value)) return `'${JSON.stringify(value)}'`;
-
-						return String(value);
-					});
-
-					this.logger.debug("prisma:query", newQuery);
-				} catch {
-					this.logger.debug("prisma:query", event.query, "PARAMETERS", event.params);
-				}
-			});
-
-			this.prisma.$use(async (params, next) => {
-				const before = Date.now();
-				const result = await next(params);
-				const after = Date.now();
-
-				this.logger.debug("prisma:query", `${params.model}.${params.action} took ${String(after - before)}ms`);
-
-				return result;
-			});
-		}
 
 		if (env.DATADOG_API_KEY) {
 			// @ts-expect-error
@@ -328,7 +288,7 @@ export default class ExtendedClient extends Client {
 	 */
 	private async loadEvents() {
 		for (const eventFileName of this.functions.getFiles(`${this.__dirname}/dist/src/bot/events`, ".js", true)) {
-			const EventFile = await import(`../../src/bot/events/${eventFileName}`);
+			const EventFile = await import(`@lib/src/bot/events/${eventFileName}`);
 
 			const event = new EventFile.default(this) as EventHandler<this>;
 
@@ -338,3 +298,23 @@ export default class ExtendedClient extends Client {
 		}
 	}
 }
+
+const createTypedPrismaClient = () =>
+	new PrismaClient({
+		adapter: new PrismaPg({ connectionString: "" }),
+		log: [
+			{ level: "warn", emit: "stdout" },
+			{ level: "error", emit: "stdout" },
+			{ level: "query", emit: "event" },
+		],
+	}).$extends({
+		query: {
+			$allModels: {
+				$allOperations({ args, query }) {
+					return query(args);
+				},
+			},
+		},
+	});
+
+type TypedPrismaClientOnlyATypeDoNotUse = ReturnType<typeof createTypedPrismaClient>;

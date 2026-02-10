@@ -1,4 +1,5 @@
 import { setTimeout } from "node:timers";
+import { LogEvent } from "@db/client.js";
 import type {
 	APIEmbed,
 	APIGuildTextChannel,
@@ -8,9 +9,8 @@ import type {
 } from "@discordjs/core";
 import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import { LogEvent } from "@prisma/client";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 
 export default class MessageUpdate extends EventHandler {
 	public constructor(client: ExtendedClient) {

@@ -1,10 +1,10 @@
 import { type APIMessageComponentButtonInteraction, ComponentType, MessageFlags } from "@discordjs/core";
+import Button from "@lib/classes/Button.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { getRunpodAccountLinkSection } from "@src/utilities/components";
+import { DISCORD_LOGIN_URL_QUERY, query } from "@src/utilities/graphql";
 import type { APIActionRowComponent, APIButtonComponent, APIMessageTopLevelComponent } from "discord-api-types/v10";
-import Button from "../../../../lib/classes/Button.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import { getRunpodAccountLinkSection } from "../../../utilities/components.js";
-import { DISCORD_LOGIN_URL_QUERY, query } from "../../../utilities/graphql.js";
 
 export default class AskLink extends Button {
 	public constructor(client: ExtendedClient) {

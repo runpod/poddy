@@ -1,8 +1,8 @@
 import type { APIApplicationCommandAutocompleteInteraction } from "@discordjs/core";
-import AutoComplete from "../../../../lib/classes/AutoComplete.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import AutoComplete from "@lib/classes/AutoComplete.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 
 export default class TagName extends AutoComplete {
 	/**

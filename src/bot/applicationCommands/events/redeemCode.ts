@@ -1,10 +1,10 @@
 import { env } from "node:process";
 import type { APIApplicationCommandInteraction } from "@discordjs/core";
 import { ApplicationCommandOptionType, ApplicationCommandType, MessageFlags } from "@discordjs/core";
-import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 
 export default class RedeemCode extends ApplicationCommand {
 	/**
@@ -206,8 +206,7 @@ export default class RedeemCode extends ApplicationCommand {
 				query: "mutation generateCode($input: CreateCodeInput) {\n  createCode(input: $input) {\n    id\n  }\n}",
 			}),
 			headers: {
-				"User-Agent":
-					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+				"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:147.0) Gecko/20100101 Firefox/147.0",
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${env.RUNPOD_API_KEY}`,
 			},

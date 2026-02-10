@@ -1,9 +1,9 @@
+import { LogEvent } from "@db/client.js";
 import type { GatewayGuildMemberAddDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
-import { LogEvent } from "@prisma/client";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import { DiscordSnowflake } from "@sapphire/snowflake";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class GuildMemberAdd extends EventHandler {
 	public constructor(client: ExtendedClient) {

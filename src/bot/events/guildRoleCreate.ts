@@ -1,7 +1,7 @@
 import type { GatewayGuildRoleCreateDispatchData, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 
 export default class GuildRoleCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
