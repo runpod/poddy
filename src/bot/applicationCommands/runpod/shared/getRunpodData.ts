@@ -1,3 +1,7 @@
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { getAskLinkButtonRow } from "@src/utilities/components";
+import { query, USER_BY_DISCORD_ID_QUERY, type UserByDiscordIdResult } from "@src/utilities/graphql.js";
 import {
 	type APIComponentInContainer,
 	type APIContextMenuInteraction,
@@ -6,10 +10,6 @@ import {
 	ComponentType,
 	MessageFlags,
 } from "discord-api-types/v10";
-import type Language from "../../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../../lib/extensions/ExtendedClient.js";
-import { getAskLinkButtonRow } from "../../../../utilities/components.js";
-import { query, USER_BY_DISCORD_ID_QUERY, type UserByDiscordIdResult } from "../../../../utilities/graphql.js";
 
 export async function getRunpodDiscordUser(
 	client: ExtendedClient,

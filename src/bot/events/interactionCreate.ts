@@ -1,8 +1,8 @@
 import type { APIInteraction, ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents, InteractionType } from "@discordjs/core";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import { isMessageComponentButtonInteraction, isMessageComponentSelectMenuInteraction } from "discord-api-types/utils";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class InteractionCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {

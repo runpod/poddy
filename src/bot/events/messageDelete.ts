@@ -1,7 +1,9 @@
 import { setTimeout } from "node:timers";
+import { LogEvent } from "@db/client.js";
 import type { ToEventProps } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import { LogEvent } from "@prisma/client";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import {
 	type APIEmbed,
 	type APIGuildTextChannel,
@@ -10,8 +12,6 @@ import {
 	type GuildTextChannelType,
 	RESTJSONErrorCodes,
 } from "discord-api-types/v10";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
 
 export default class MessageDelete extends EventHandler {
 	public constructor(client: ExtendedClient) {

@@ -6,10 +6,10 @@ import {
 	RESTJSONErrorCodes,
 } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 
 export default class Invites extends ApplicationCommand {
 	/**

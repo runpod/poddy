@@ -1,6 +1,10 @@
+import { LogEvent } from "@db/client.js";
 import type { ToEventProps } from "@discordjs/core";
 import { GatewayDispatchEvents } from "@discordjs/core";
-import { LogEvent } from "@prisma/client";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { getRunpodAccountLinkSection } from "@src/utilities/components";
+import { DISCORD_LOGIN_URL_QUERY, query, USER_BY_DISCORD_ID_QUERY } from "@src/utilities/graphql";
 import {
 	type APIMessageTopLevelComponent,
 	ChannelType,
@@ -8,10 +12,6 @@ import {
 	type GatewayThreadCreateDispatchData,
 	MessageFlags,
 } from "discord-api-types/v10";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { getRunpodAccountLinkSection } from "../../utilities/components.js";
-import { DISCORD_LOGIN_URL_QUERY, query, USER_BY_DISCORD_ID_QUERY } from "../../utilities/graphql.js";
 
 export default class ThreadCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {

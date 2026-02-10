@@ -1,3 +1,4 @@
+import { LogEvent } from "@db/client.js";
 import type { APIApplicationCommandInteraction, APIGuildForumChannel } from "@discordjs/core";
 import {
 	ApplicationCommandOptionType,
@@ -6,13 +7,12 @@ import {
 	MessageFlags,
 	PermissionFlagsBits,
 } from "@discordjs/core";
-import { LogEvent } from "@prisma/client";
-import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 
-export default class Ping extends ApplicationCommand {
+export default class Config extends ApplicationCommand {
 	/**
 	 * The event names that can be logged.
 	 */

@@ -1,6 +1,14 @@
 import { env } from "node:process";
+import type { EscalatedType } from "@db/client.js";
 import { DiscordAPIError } from "@discordjs/rest";
-import type { EscalatedType } from "@prisma/client";
+import Functions from "@lib/utilities/functions";
+import type {
+	BetterStackIndexResponse,
+	BetterStackResourceStatus,
+	BetterStackStatusReport,
+	BetterStackStatusUpdate,
+} from "@src/typings/betterstack.js";
+import type { ZendeskCreateTicketRequest, ZendeskCreateTicketResponse } from "@src/typings/zendesk.js";
 import {
 	type APIMessage,
 	type APIModalSubmitGuildInteraction,
@@ -11,14 +19,6 @@ import {
 	type RESTPostAPIChannelMessageJSONBody,
 } from "discord-api-types/v10";
 import botConfig from "../../config/bot.config.js";
-import Functions from "../../lib/utilities/functions.js";
-import type {
-	BetterStackIndexResponse,
-	BetterStackResourceStatus,
-	BetterStackStatusReport,
-	BetterStackStatusUpdate,
-} from "../../typings/index.js";
-import type { ZendeskCreateTicketRequest, ZendeskCreateTicketResponse } from "../../typings/zendesk.js";
 
 type SubmittableTicket = {
 	subject?: string;

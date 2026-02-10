@@ -2,10 +2,10 @@ import { env } from "node:process";
 import type { APIMessage, APIModalSubmitGuildInteraction, APIThreadChannel } from "@discordjs/core";
 import { ComponentType, MessageFlags } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
-import type Language from "../../../../lib/classes/Language.js";
-import Modal from "../../../../lib/classes/Modal.js";
-import type { ZendeskUploadResponse } from "../../../../typings/zendesk.js";
-import type { PoddyClient } from "../../../client.js";
+import type Language from "@lib/classes/Language.js";
+import Modal from "@lib/classes/Modal.js";
+import type { PoddyClient } from "@src/client";
+import type { ZendeskUploadResponse } from "@src/typings/zendesk.js";
 
 export default class EscalateToZendesk extends Modal<PoddyClient> {
 	/**

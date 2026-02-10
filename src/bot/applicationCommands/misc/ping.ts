@@ -1,10 +1,10 @@
 import type { APIApplicationCommandInteraction } from "@discordjs/core";
 import { ApplicationCommandType, MessageFlags } from "@discordjs/core";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 import { DiscordSnowflake } from "@sapphire/snowflake";
-import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
 
 export default class Ping extends ApplicationCommand {
 	/**

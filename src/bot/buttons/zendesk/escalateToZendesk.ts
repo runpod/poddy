@@ -5,10 +5,10 @@ import {
 	PermissionFlagsBits,
 	TextInputStyle,
 } from "@discordjs/core";
-import Button from "../../../../lib/classes/Button.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import PermissionsBitField from "../../../../lib/utilities/permissions.js";
+import Button from "@lib/classes/Button.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import PermissionsBitField from "@lib/utilities/permissions.js";
 
 export default class EscalateToZendesk extends Button {
 	/**

@@ -1,9 +1,9 @@
 import type { APIMessageApplicationCommandInteraction } from "@discordjs/core";
 import { ApplicationCommandType, MessageFlags, PermissionFlagsBits } from "@discordjs/core";
-import ApplicationCommand from "../../../../lib/classes/ApplicationCommand.js";
-import type Language from "../../../../lib/classes/Language.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "../../../../typings/index.js";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
 import { getRunpodDiscordUser } from "./shared/getRunpodData.js";
 
 export default class ViewUserDataFromMessage extends ApplicationCommand {

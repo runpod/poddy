@@ -1,3 +1,4 @@
+import type Language from "@lib/classes/Language.js";
 import {
 	type APIActionRowComponent,
 	type APIButtonComponent,
@@ -5,7 +6,6 @@ import {
 	ButtonStyle,
 	ComponentType,
 } from "discord-api-types/v10";
-import type Language from "../../lib/classes/Language.js";
 
 export function getRunpodAccountLinkSection(language: Language, loginUrl: string): APIMessageTopLevelComponent {
 	return {

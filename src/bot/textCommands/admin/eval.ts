@@ -1,10 +1,10 @@
 import { inspect } from "node:util";
 import type { GatewayMessageCreateDispatchData } from "@discordjs/core";
-import type Language from "../../../../lib/classes/Language.js";
-import StopWatch from "../../../../lib/classes/StopWatch.js";
-import TextCommand from "../../../../lib/classes/TextCommand.js";
-import Type from "../../../../lib/classes/Type.js";
-import type ExtendedClient from "../../../../lib/extensions/ExtendedClient.js";
+import type Language from "@lib/classes/Language.js";
+import StopWatch from "@lib/classes/StopWatch.js";
+import TextCommand from "@lib/classes/TextCommand.js";
+import Type from "@lib/classes/Type.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 
 export default class Eval extends TextCommand {
 	/**

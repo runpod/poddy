@@ -1,6 +1,9 @@
 import { env } from "node:process";
 import type { ToEventProps } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { handleMastraQA } from "@src/utilities/mastraQA";
 import {
 	type APIChannel,
 	ChannelType,
@@ -9,9 +12,6 @@ import {
 	MessageType,
 	RESTJSONErrorCodes,
 } from "discord-api-types/v10";
-import EventHandler from "../../../lib/classes/EventHandler.js";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { handleMastraQA } from "../utilities/mastraQA.js";
 
 export default class MessageCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {
