@@ -59,36 +59,6 @@ export default class MessageCreate extends EventHandler {
 			await handleMastraQA(this.client, message, channel);
 		}
 
-		this.client.dataDog?.increment("total_messages_sent", 1, [
-			`guildId:${message.guild_id ?? "@me"}`,
-			`userId:${message.author.id}`,
-			`channelId:${message.channel_id}`,
-			`channelName:${channel?.name}`,
-		]);
-
-		if (channel?.type === ChannelType.PublicThread || channel?.type === ChannelType.PrivateThread) {
-			const parentChannel = await this.client.api.channels.get(message.channel_id);
-
-			if (
-				parentChannel.type === ChannelType.GuildText ||
-				(parentChannel.type === ChannelType.GuildForum &&
-					parentChannel.parent_id !== this.client.config.supportCategoryId)
-			)
-				this.client.dataDog?.increment("total_messages_sent.engaging", 1, [
-					`guildId:${message.guild_id ?? "@me"}`,
-					`userId:${message.author.id}`,
-					`channelId:${message.channel_id}`,
-					`channelName:${channel?.name}`,
-				]);
-		} else if (channel?.type === ChannelType.GuildText && channel.parent_id !== this.client.config.supportCategoryId) {
-			this.client.dataDog?.increment("total_messages_sent.engaging", 1, [
-				`guildId:${message.guild_id ?? "@me"}`,
-				`userId:${message.author.id}`,
-				`channelId:${message.channel_id}`,
-				`channelName:${channel?.name}`,
-			]);
-		}
-
 		if (message.guild_id) {
 			if (["1064658510689874040"].includes(message.channel_id)) {
 				await fetch("https://changelog.getrunpod.io/webhooks/discord", {
@@ -100,47 +70,6 @@ export default class MessageCreate extends EventHandler {
 						createdAt: new Date(message.timestamp).toISOString(),
 					}),
 				});
-			}
-
-			// TODO: Use new_communicators and new_communicators_first_day metrics in Datadog, this will help us track if average messages sent
-			// by new users are consistent with new_communicators (do we on average see a couple of messages per new user, or do we see a lot of
-			// messages for certain new users, etc.) This will also enable us to track if new users might be having trouble getting around in the
-			// Discord server, and if we need an easier onboarding flow for it.
-			const memberJoinedAt = new Date(message.member!.joined_at!).getTime();
-			const oneWeekAgo = Date.now() - 604_800_000;
-
-			if (memberJoinedAt > oneWeekAgo) {
-				this.client.dataDog?.increment("total_messages_sent.new_user", 1, [
-					`guildId:${message.guild_id ?? "@me"}`,
-					`userId:${message.author.id}`,
-					`channelId:${message.channel_id}`,
-					`channelName:${channel?.name}`,
-				]);
-			}
-
-			const newCommunicator = await this.client.prisma.newCommunicator.findUnique({
-				where: {
-					userId_guildId: {
-						userId: message.author.id,
-						guildId: message.guild_id,
-					},
-				},
-			});
-
-			if (!newCommunicator) {
-				await this.client.prisma.newCommunicator.create({
-					data: {
-						userId: message.author.id,
-						guildId: message.guild_id,
-						joinedAt: new Date(message.member!.joined_at!),
-					},
-				});
-
-				this.client.dataDog?.increment("new_communicators", 1, [`guildId:${message.guild_id}`]);
-
-				if (memberJoinedAt + 86_400_000 > Date.now()) {
-					this.client.dataDog?.increment("new_communicators_first_day", 1, [`guildId:${message.guild_id}`]);
-				}
 			}
 
 			const autoThreadChannel = await this.client.prisma.autoThreadChannel.findUnique({

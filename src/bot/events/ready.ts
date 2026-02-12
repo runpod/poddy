@@ -17,8 +17,6 @@ export default class Ready extends EventHandler<PoddyClient> {
 	 * https://discord.com/developers/docs/topics/gateway-events#ready
 	 */
 	public override async run({ shardId, data }: ToEventProps<GatewayReadyDispatchData>) {
-		this.client.dataDog?.gauge("guild_count", data.guilds.length, [`shard:${shardId}`]);
-
 		await Promise.all(
 			data.guilds.map(async (guild) => {
 				this.client.guildOwnersCache.set(guild.id, "");
@@ -39,25 +37,6 @@ export default class Ready extends EventHandler<PoddyClient> {
 		this.client.logger.info(
 			`Logged in as ${data.user.username}#${data.user.discriminator} [${data.user.id}] on Shard ${shardId} with ${data.guilds.length} guilds.`,
 		);
-
-		schedule("59 23 * * *", async () => {
-			const newCommunicators = await this.client.prisma.newCommunicator.findMany({});
-
-			await Promise.all(
-				newCommunicators
-					.filter((newCommunicator) => newCommunicator.joinedAt.getTime() + 604_800_000 < Date.now())
-					.map(async (newCommunicator) =>
-						this.client.prisma.newCommunicator.delete({
-							where: {
-								userId_guildId: {
-									guildId: newCommunicator.guildId,
-									userId: newCommunicator.userId,
-								},
-							},
-						}),
-					),
-			);
-		});
 
 		const checkBetterStackStatus = async () => {
 			try {
@@ -103,13 +82,6 @@ export default class Ready extends EventHandler<PoddyClient> {
 		}
 
 		schedule("* * * * *", async () => {
-			this.client.dataDog?.gauge("guilds", this.client.guildOwnersCache.size);
-			this.client.dataDog?.gauge("approximate_user_count", this.client.approximateUserCount);
-
-			for (const [guildId, usersInVoice] of this.client.usersInVoice.entries()) {
-				this.client.dataDog?.increment("minutes_in_voice", usersInVoice.size, [`guild:${guildId}`]);
-			}
-
 			await checkBetterStackStatus();
 		});
 

@@ -18,9 +18,6 @@ export default class GuildMemberRemove extends EventHandler {
 	public override async run({ data: member }: ToEventProps<GatewayGuildMemberRemoveDispatchData>) {
 		this.client.approximateUserCount--;
 
-		this.client.dataDog?.increment("guild_members", -1, [`guildId:${member.guild_id}`]);
-		this.client.dataDog?.increment("guild_leaves", 1, [`guildId:${member.guild_id}`]);
-
 		const loggingChannels = await this.client.prisma.logChannel.findMany({
 			where: {
 				event: LogEvent.MEMBER_LEFT,
