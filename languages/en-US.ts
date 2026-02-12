@@ -505,9 +505,11 @@ export default {
 
 	ESCALATE_TO_ZENDESK_TITLE: "Escalate To Zendesk",
 
-	ESCALATED_TO_ZENDESK_TITLE: "Escalated To Zendesk",
-	ESCALATED_MESSAGE_TO_ZENDESK_DESCRIPTION: "The message has been escalated to Zendesk!",
-	ESCALATED_THREAD_TO_ZENDESK_DESCRIPTION: "The thread has been escalated to Zendesk!",
+	ESCALATED_TO_ZENDESK_TITLE: "Zendesk Escalation",
+	ESCALATED_MESSAGE_TO_ZENDESK_DESCRIPTION:
+		"We'd like to open a support ticket for this message. Please click the button below to get started.",
+	ESCALATED_THREAD_TO_ZENDESK_DESCRIPTION:
+		"We'd like to open a support ticket for this thread. Please click the button below to get started.",
 
 	OPEN_ZENDESK_TICKET_BUTTON_LABEL: "Open Zendesk Ticket",
 
@@ -519,6 +521,7 @@ export default {
 
 	TICKET_CREATED_TITLE: "Ticket Created",
 	TICKET_CREATED_DESCRIPTION: "Your ticket has been created, check your email for ticket #{{ticketId}}!",
+	TICKET_CREATED_EMBED_DESCRIPTION: "A support ticket has been opened for this conversation. Ticket #{{ticketId}}.",
 
 	ESCALATION_FOR_ANOTHER_USER_TITLE: "Escalation For Another User",
 	ESCALATION_FOR_ANOTHER_USER_DESCRIPTION: "This escalation is for another user, you can't open this ticket!",

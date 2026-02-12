@@ -1,64 +1,38 @@
 # Poddy
 
-Welcome to the repository for Poddy, a Discord bot created to help the Runpod community server function.
+The Discord bot for the Runpod community Discord. Handles support workflows, community features, incident reporting, and AI-assisted Q&A.
 
-## Self Hosting
+## Quick Start
 
-### Prerequisites
+```bash
+pnpm install
+cp .env.example .env.dev    # fill in your values
+pnpm db:start               # start PostgreSQL via Docker
+pnpm db:migrate             # apply schema
+pnpm build                  # compile and run in development mode
+```
 
-- Node.js `v20` or higher
-- PNPM package manager
+The Prisma client is generated automatically during `pnpm install`. If you modify the Prisma schema, regenerate with `pnpx prisma generate`.
 
-### Quick Start
+## Running the Bot
 
-1. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+Use `pnpm build` to compile and run in development mode. This is not a build-only step.
 
-2. Set up environment files:
-   - Duplicate `.env.example` to `.env.dev`
-   - Modify all values accordingly
+- **Dev** (`pnpm build`): guild commands, debug logging, `.env.dev`, `api.runpod.dev`
+- **Prod** (`pnpm start`): global commands, `.env.prod`, `api.runpod.io`
 
-3. Generate Prisma clients:
-   ```bash
-   pnpx prisma generate                                   # Generate main database client
-   pnpx prisma generate --schema=prisma/qa-schema.prisma  # Generate QA database client
-   ```
-   Note: Run these commands whenever you modify the Prisma schemas
+## Database Management
 
-4. Start local database and create tables (requires Docker):
-   ```bash
-   pnpm db:start
-   pnpm db:migrate
-   ```
+| Command | Purpose |
+|---------|---------|
+| `pnpm db:start` | Start PostgreSQL in Docker |
+| `pnpm db:stop` | Stop PostgreSQL container |
+| `pnpm db:reset` | Delete all data and restart fresh |
+| `pnpm db:migrate` | Apply schema changes |
+| `pnpm db:studio` | Open Prisma Studio |
 
-5. Run the bot:
-   ```bash
-   pnpm build
-   ```
+## Troubleshooting
 
-### Running the Bot
-
-Use `pnpm build` to run the development version of the bot.
-
-The only difference between the production and development version is that the development has debug logs to assist with development, and uses guild commands in the development server instead of global commands.
-
-### Database Management
-
-Useful database commands:
-
-- **Start database**: `pnpm db:start` - Starts PostgreSQL in Docker
-- **Stop database**: `pnpm db:stop` - Stops PostgreSQL container
-- **Reset database**: `pnpm db:reset` - Deletes all data and restarts fresh
-- **Run migrations**: `pnpm db:migrate` - Apply schema changes
-- **Database UI (Main DB)**: `pnpm db:studio` - Opens Prisma Studio for main database
-- **Database UI (QA DB)**: `pnpm db:studio:qa` - Opens Prisma Studio for QA threads database (requires `.env` with `QA_DATABASE_URL`)
-
-### Troubleshooting
-
-**Error: `Type 'K' cannot be used to index type 'LanguageValues'` (TypeScript errors in Language files)**
-- Run `pnpm translate` to regenerate language type definitions
-- This command updates `typings/language.d.ts` from your language files
+**`Type 'K' cannot be used to index type 'LanguageValues'`** -- Run `pnpm translate` to regenerate language type definitions from `languages/en-US.ts`.
 
 For support, please open an issue.

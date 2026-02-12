@@ -8,12 +8,16 @@ import type {
 	BetterStackStatusReport,
 	BetterStackStatusUpdate,
 } from "@src/typings/betterstack.js";
-import type { ZendeskCreateTicketRequest, ZendeskCreateTicketResponse } from "@src/typings/zendesk.js";
+import type {
+	ZendeskCreateTicketRequest,
+	ZendeskCreateTicketResponse,
+	ZendeskUploadResponse,
+} from "@src/typings/zendesk.js";
 import {
 	type APIMessage,
 	type APIModalSubmitGuildInteraction,
-	type APIThreadChannel,
 	type APIUser,
+	ButtonStyle,
 	MessageFlags,
 	RESTJSONErrorCodes,
 	type RESTPostAPIChannelMessageJSONBody,
@@ -34,14 +38,13 @@ export default class PoddyFunctions extends Functions {
 		type: "message" | "thread",
 		email: string | undefined,
 		user: APIUser,
+		escalatedId: string,
 		interaction: APIModalSubmitGuildInteraction,
 		ticket: SubmittableTicket,
-		thread?: APIThreadChannel,
 	) {
 		if (!email) return;
 
 		const lang = this.client.languageHandler.getLanguage("en-US");
-		const escalatedId = thread?.id ?? interaction.message!.id;
 
 		const existingTicket = await this.client.prisma.zendeskTicket.findUnique({
 			where: { escalatedId },
@@ -121,15 +124,26 @@ export default class PoddyFunctions extends Functions {
 			skipDuplicates: true,
 		});
 
+		const disabledComponents = interaction.message!.components?.map((row: any) => ({
+			...row,
+			components: row.components?.map((component: any) => ({
+				...component,
+				disabled: true,
+				style: ButtonStyle.Secondary,
+			})),
+		}));
+
 		await this.client.api.channels.editMessage(interaction.channel!.id, interaction.message!.id, {
 			embeds: [
 				{
 					...interaction.message!.embeds![0],
-					footer: {
-						text: `Ticket ID: #${data.ticket.id}`,
-					},
+					description: lang.get("TICKET_CREATED_EMBED_DESCRIPTION", {
+						ticketId: data.ticket.id,
+					}),
+					color: this.client.config.colors.success,
 				},
 			],
+			components: disabledComponents,
 		});
 
 		await this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
@@ -147,6 +161,69 @@ export default class PoddyFunctions extends Functions {
 		});
 
 		return data;
+	}
+
+	public async uploadAttachmentsToZendesk(
+		attachments: { url: string; filename: string; content_type?: string | null }[],
+	): Promise<string[]> {
+		return Promise.all(
+			attachments.map(async (attachment) => {
+				const buffer = await fetch(attachment.url).then(async (res) => res.arrayBuffer());
+
+				const response = await fetch(
+					`https://runpodinc.zendesk.com/api/v2/uploads.json?filename=${attachment.filename}`,
+					{
+						headers: {
+							Authorization: `Basic ${env.ZENDESK_API_KEY}`,
+							"Content-Type": attachment.content_type ?? "application/octet-stream",
+						},
+						body: buffer,
+						method: "POST",
+					},
+				);
+
+				if (!response.ok) {
+					throw new Error(
+						`Zendesk Upload Failed With Status ${response.status} (${response.statusText}) for ${attachment.filename}`,
+					);
+				}
+
+				const data: ZendeskUploadResponse = await response.json();
+				return data.upload.token;
+			}),
+		);
+	}
+
+	public async addTicketInternalNote(
+		ticketId: number,
+		message: {
+			author: { username: string; id: string };
+			content: string;
+			attachments: { url: string; filename: string; content_type?: string | null }[];
+		},
+	) {
+		const uploadTokens = await this.uploadAttachmentsToZendesk(message.attachments);
+
+		const response = await fetch(`https://runpodinc.zendesk.com/api/v2/tickets/${ticketId}.json`, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Basic ${env.ZENDESK_API_KEY}`,
+			},
+			body: JSON.stringify({
+				ticket: {
+					comment: {
+						body: `${message.author.username} [${message.author.id}]: ${message.content}`,
+						uploads: uploadTokens,
+						public: false,
+					},
+				},
+			}),
+			method: "PUT",
+		});
+
+		if (!response.ok) {
+			throw new Error(`Zendesk Ticket Comment Failed With Status ${response.status} (${response.statusText})`);
+		}
 	}
 
 	public async fetchAllThreadMessages(

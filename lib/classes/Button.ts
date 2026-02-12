@@ -5,11 +5,11 @@ import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import PermissionsBitField from "@lib/utilities/permissions.js";
 import type Language from "./Language.js";
 
-export default class Button {
+export default class Button<C extends ExtendedClient = ExtendedClient> {
 	/**
 	 * Our extended client.
 	 */
-	public readonly client: ExtendedClient;
+	public readonly client: C;
 
 	/**
 	 * The name of this button, we look for this at the start of each interaction.
@@ -51,7 +51,7 @@ export default class Button {
 	 * @param options.permissions The permissions the user requires to run this button.
 	 */
 	public constructor(
-		client: ExtendedClient,
+		client: C,
 		options: {
 			clientPermissions?: Permissions;
 			devOnly?: boolean;

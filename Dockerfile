@@ -15,7 +15,6 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm/store \
     CI={CI} pnpm install --frozen-lockfile && \
     pnpm run translate && \
     pnpm prisma generate && \
-    pnpm prisma generate --schema=prisma/qa-schema.prisma && \
     pnpm prisma migrate deploy && \
     pnpm tsc
 
