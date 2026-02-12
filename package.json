@@ -5,14 +5,13 @@
   "scripts": {
     "build": "rm -rf dist && tsc && cross-env NODE_ENV=development node .",
     "start": "NODE_ENV=production node .",
-    "prepare": "husky || prisma generate || prisma generate --schema=prisma/qa-schema.prisma || true",
+    "prepare": "husky || prisma generate || true",
     "translate": "tsm languages/utils/interface.ts && biome check --write --no-errors-on-unmatched typings/language.d.ts",
     "db:start": "docker compose up -d postgres",
     "db:stop": "docker compose stop postgres",
     "db:reset": "docker compose down -v && docker compose up -d postgres",
     "db:migrate": "npx prisma migrate dev",
-    "db:studio": "npx prisma studio",
-    "db:qa:studio": "npx prisma studio --schema=prisma/qa-schema.prisma"
+    "db:studio": "npx prisma studio"
   },
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,prisma}": [
