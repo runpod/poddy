@@ -75,16 +75,6 @@ model AutoTagOnForumChannel {
   @@map("auto_tag_on_forum_channels")
 }
 
-// We store this temporarily to avoid sending duplicate data to DataDog.
-model NewCommunicator {
-  userId   String
-  guildId  String
-  joinedAt DateTime
-
-  @@id([userId, guildId])
-  @@map("new_communicators")
-}
-
 model Embed {
   id      String @id @default(cuid())
   name    String
