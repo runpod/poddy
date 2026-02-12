@@ -3,8 +3,9 @@ import { join } from "node:path";
 import { argv, env } from "node:process";
 import { HeadObjectCommand, S3 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import { Prisma, PrismaClient } from "@db/client.js";
 import parquet from "@dsnp/parquetjs";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { load } from "dotenv-extended";
 
@@ -17,7 +18,7 @@ const shouldReupload = argv.includes("--reupload");
 const skipUpload = argv.includes("--skipupload");
 
 const prisma = new PrismaClient({
-	errorFormat: "pretty",
+	adapter: new PrismaPg({ connectionString: env.DATABASE_URL }),
 	log: [
 		{ level: "warn", emit: "stdout" },
 		{ level: "error", emit: "stdout" },

@@ -1,14 +1,13 @@
 import { env } from "node:process";
-import type { QAAllowedChannel } from "@prisma/client";
+import type { QAAllowedChannel } from "@db/client.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { callMastraAPI } from "@src/utilities/mastra";
 import {
 	type APIChannel,
 	type APIThreadChannel,
 	ChannelType,
 	type GatewayMessageCreateDispatchData,
 } from "discord-api-types/v10";
-import type ExtendedClient from "../../../lib/extensions/ExtendedClient.js";
-import { callMastraAPI } from "../../utilities/mastra.js";
-import { splitMessage } from "../../utilities/string.js";
 
 export async function handleMastraQA(
 	client: ExtendedClient,
@@ -106,4 +105,25 @@ export async function handleMastraQA(
 			],
 		});
 	}
+}
+
+function splitMessage(text: string, maxLength = 2000) {
+	const chunks = [];
+	let currentChunk = "";
+
+	const lines = text.split("\n");
+	for (const line of lines) {
+		if (currentChunk.length + line.length + 1 > maxLength) {
+			chunks.push(currentChunk);
+			currentChunk = line;
+		} else {
+			currentChunk += (currentChunk ? "\n" : "") + line;
+		}
+	}
+
+	if (currentChunk) {
+		chunks.push(currentChunk);
+	}
+
+	return chunks;
 }

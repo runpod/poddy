@@ -618,7 +618,7 @@ export default class GuildAuditLogEntryCreate extends EventHandler {
 								name: `**Thread Slowmode:** ${this.client.functions.format(change.new_value * 1_000)}`,
 								order: 4,
 							};
-						// @ts-expect-error
+						// @ts-expect-error - This exists, but the library does not have this typed out.
 						if (change.key === "invitable" && change.new_value)
 							return {
 								name: "**Thread Invitable:** Yes",
