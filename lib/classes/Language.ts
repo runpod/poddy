@@ -85,7 +85,7 @@ export default class Language {
 	 * @param args The arguments for the key.
 	 * @returns The translated key.
 	 */
-	public get<K extends LanguageKeys, O extends LanguageValues[K]>(key: K, args?: O & TOptions) {
+	public get<K extends LanguageKeys & keyof LanguageValues, O extends LanguageValues[K]>(key: K, args?: O & TOptions) {
 		if (args && !("interpolation" in args)) args.interpolation = { escapeValue: false };
 
 		if (!this.enabled) return this.client.i18n.t(key, { ...args });

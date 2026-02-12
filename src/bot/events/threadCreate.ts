@@ -64,19 +64,19 @@ export default class ThreadCreate extends EventHandler {
 				update: {
 					type: channel.type,
 					name: channel.name,
-					appliedTags: channel.applied_tags,
+					appliedTags: channel.applied_tags ?? [],
 				},
 				create: {
 					id: channel.id,
 					name: channel.name,
 					type: channel.type,
-					appliedTags: channel.applied_tags,
+					appliedTags: channel.applied_tags ?? [],
 				},
 			}),
 			this.client.prisma.threadEvent.create({
 				data: {
 					threadId: channel.id,
-					appliedTags: channel.applied_tags,
+					appliedTags: channel.applied_tags ?? [],
 					timestamp: new Date(),
 				},
 			}),

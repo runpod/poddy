@@ -6,7 +6,6 @@ import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import { handleMastraQA } from "@src/utilities/mastraQA";
 import {
 	type APIChannel,
-	ChannelType,
 	GatewayDispatchEvents,
 	type GatewayMessageCreateDispatchData,
 	MessageType,
