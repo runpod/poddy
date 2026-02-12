@@ -263,7 +263,7 @@ export default class RedeemCode extends ApplicationCommand {
 								}),
 								allowed_mentions: { parse: [], replied_user: true },
 							}),
-						] as any[])
+						] as any[]) // I didn't write this one, sorry.
 					: [],
 			),
 		);

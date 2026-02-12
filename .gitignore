@@ -114,6 +114,5 @@ package-lock.json
 .exports*
 
 # Generated files
-/src/generated
+/prisma/__generated__
 
-# Note: Prisma clients are also generated to node_modules/ and already ignored above
