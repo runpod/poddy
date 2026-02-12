@@ -79,7 +79,7 @@ export default class Type {
 	 */
 	private *parents() {
 		let current: Type | undefined = this;
-		// biome-ignore lint/suspicious/noAssignInExpressions:
+		// biome-ignore lint/suspicious/noAssignInExpressions: We're using a while loop to iterate over the parents.
 		while ((current = this.parent)) yield current;
 	}
 
