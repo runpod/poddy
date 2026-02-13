@@ -1,0 +1,197 @@
+# .arch/repo.yaml
+# Architecture metadata for poddy (Discord bot)
+# Auto-discovered by architecture-reference build-db.ts
+
+schema_version: "1"
+
+meta:
+  service_id: poddy
+  name: Poddy (Discord Bot)
+  team: devrel
+  purpose: Discord bot for Runpod community server - Q&A, user lookups, support integrations
+  repo: runpod/poddy
+
+ownership:
+  team: devrel
+  slack_channel: "#alerts-runpod-assistant"
+  escalation_path:
+    - devrel
+
+observability:
+  datadog:
+    service: poddy
+  sentry:
+    project: poddy
+  alerts_channel: "#alerts-runpod-assistant"
+
+handlers:
+  # --- Slash Command Categories ---
+  - endpoint: /runpod commands
+    type: command
+    file: src/bot/applicationCommands/runpod/
+    notes: Runpod-specific commands (user lookups, pod lookups via GraphQL)
+
+  - endpoint: /config commands
+    type: command
+    file: src/bot/applicationCommands/config/
+    notes: Bot configuration per server/channel
+
+  - endpoint: /zendesk commands
+    type: command
+    file: src/bot/applicationCommands/zendesk/
+    notes: Zendesk ticket integration for community support
+
+  - endpoint: /tags commands
+    type: command
+    file: src/bot/applicationCommands/tags/
+    notes: Saved response tags for common questions
+
+  - endpoint: /subscriptions commands
+    type: command
+    file: src/bot/applicationCommands/subscriptions/
+    notes: Channel subscription management
+
+  # --- HTTP Server ---
+  - endpoint: HTTP API (Hono)
+    type: http
+    file: lib/classes/Server.ts
+    notes: Hono HTTP server on port 3423 for webhooks and health checks
+
+service_calls:
+  - target: runpod-assistant
+    type: http
+    protocol: http
+    purpose: QA agent queries in enabled channels
+    file: src/
+
+  - target: gql-api
+    type: graphql
+    protocol: http
+    purpose: User and pod lookups for community support commands
+    file: src/
+
+  - target: slack
+    type: webhook
+    protocol: http
+    purpose: Customer success and sales notifications
+    file: src/
+
+  - target: zendesk
+    type: api
+    protocol: http
+    purpose: Ticket creation and lookup for support escalation
+    file: src/
+
+  - target: sentry
+    type: errors
+    protocol: http
+    purpose: Error tracking and alerting
+    file: src/
+
+env_vars:
+  - name: DISCORD_TOKEN
+    required: true
+    source: env
+    description: Discord bot token
+
+  - name: APPLICATION_ID
+    required: true
+    source: env
+    description: Discord application ID
+
+  - name: DATABASE_URL
+    required: true
+    source: env
+    description: PostgreSQL connection string (Prisma)
+
+  - name: RUNPOD_API_KEY
+    required: true
+    source: env
+    description: Runpod API key for GraphQL user/pod lookups
+
+  - name: MASTRA_AGENT_URL
+    required: false
+    source: env
+    description: runpod-assistant endpoint URL (QA agent)
+
+  - name: RUNPOD_ASSISTANT_API_KEY
+    required: false
+    source: env
+    description: Service auth key for assistant API
+
+  - name: SENTRY_DSN
+    required: false
+    source: env
+    description: Sentry error tracking DSN
+
+  - name: DATADOG_API_KEY
+    required: false
+    source: env
+    description: Datadog metrics API key
+
+  - name: SLACK_CUSTOMER_SUCCESS_HOOK
+    required: false
+    source: env
+    description: Slack webhook for customer success notifications
+
+  - name: SLACK_SALES_HOOK
+    required: false
+    source: env
+    description: Slack webhook for sales notifications
+
+  - name: API_PORT
+    required: false
+    source: env
+    default_value: "3423"
+    description: Hono HTTP server port
+
+conventions:
+  - category: code
+    rule: Uses Discord.js v2 core with WorkerShardingStrategy (2 workers, 3 shards/worker)
+    rationale: Scalable sharding for large community server
+
+  - category: code
+    rule: Prisma ORM for all database operations
+    rationale: Type-safe PostgreSQL access
+
+  - category: code
+    rule: i18next for internationalization
+    rationale: Multi-language support for global community
+
+failure_modes:
+  - trigger: DISCORD_TOKEN missing or invalid
+    impact: Bot exits immediately (process.exit(1))
+    detection: Process crash
+
+  - trigger: DATABASE_URL unreachable
+    impact: All Prisma operations fail, tags/subscriptions/config broken
+    detection: Sentry errors, Prisma connection timeout
+
+  - trigger: MASTRA_AGENT_URL not configured
+    impact: QA agent disabled, bot only handles non-AI commands
+    detection: No AI responses in enabled channels
+
+  - trigger: Discord gateway shard failure
+    impact: Bot temporarily offline in affected guilds
+    detection: WorkerShardingStrategy recovery logs
+
+key_files:
+  - path: src/index.ts
+    purpose: Main entry point (REST, WebSocket, sharding, server, client start)
+    category: handler
+
+  - path: src/client.ts
+    purpose: PoddyClient (Discord gateway handler)
+    category: handler
+
+  - path: lib/classes/Server.ts
+    purpose: Hono HTTP server + Prisma initialization
+    category: config
+
+  - path: src/bot/applicationCommands/
+    purpose: All slash command implementations
+    category: handler
+
+  - path: prisma/schema.prisma
+    purpose: Database schema (PostgreSQL)
+    category: config
