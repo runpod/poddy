@@ -8,7 +8,7 @@ import {
 	type APIEmbed,
 	type APIGuildTextChannel,
 	GatewayDispatchEvents,
-	type GatewayMessageUpdateDispatchData,
+	type GatewayMessageDeleteDispatchData,
 	type GuildTextChannelType,
 	RESTJSONErrorCodes,
 } from "discord-api-types/v10";
@@ -23,9 +23,7 @@ export default class MessageDelete extends EventHandler {
 	 *
 	 * https://discord.com/developers/docs/topics/gateway-events#message-delete
 	 */
-	public override async run({ data: message }: ToEventProps<GatewayMessageUpdateDispatchData>) {
-		if (message.author?.bot) return;
-
+	public override async run({ data: message }: ToEventProps<GatewayMessageDeleteDispatchData>) {
 		const oldMessage = await this.client.prisma.message.findUnique({
 			where: {
 				id: message.id,
@@ -44,7 +42,7 @@ export default class MessageDelete extends EventHandler {
 			},
 		});
 
-		const authorId = oldMessage?.authorId ?? message.author?.id ?? null;
+		const authorId = oldMessage.authorId;
 
 		const loggingChannels = await this.client.prisma.logChannel.findMany({
 			where: {
@@ -86,7 +84,7 @@ export default class MessageDelete extends EventHandler {
 							type: "R",
 						})})\n`
 					: ""
-			}\n**Content:**\n${oldMessage?.content ?? message.content}`,
+			}\n**Content:**\n${oldMessage.content}`,
 			color: this.client.config.colors.error,
 			footer: {
 				text: `Message ID: ${message.id}`,

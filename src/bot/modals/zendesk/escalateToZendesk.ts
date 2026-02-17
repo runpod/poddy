@@ -1,9 +1,14 @@
-import type { APIModalSubmitGuildInteraction, APIThreadChannel } from "@discordjs/core";
-import { ComponentType, MessageFlags, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import type Language from "@lib/classes/Language.js";
 import Modal from "@lib/classes/Modal.js";
 import type { PoddyClient } from "@src/client";
+import {
+	type APIModalSubmitGuildInteraction,
+	type APIThreadChannel,
+	ComponentType,
+	MessageFlags,
+	RESTJSONErrorCodes,
+} from "discord-api-types/v10";
 
 export default class EscalateToZendesk extends Modal<PoddyClient> {
 	public constructor(client: PoddyClient) {

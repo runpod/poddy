@@ -1,8 +1,7 @@
-import type { APIMessageComponentSelectMenuInteraction } from "@discordjs/core";
-import { MessageFlags } from "@discordjs/core";
 import type Language from "@lib/classes/Language.js";
 import SelectMenu from "@lib/classes/SelectMenu.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { type APIMessageComponentSelectMenuInteraction, MessageFlags } from "discord-api-types/v10";
 
 export default class ExampleSelectMenu extends SelectMenu {
 	/**

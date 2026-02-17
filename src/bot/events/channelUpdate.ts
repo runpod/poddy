@@ -1,7 +1,8 @@
-import type { GatewayChannelUpdateDispatchData, ToEventProps } from "@discordjs/core";
-import { ChannelType, GatewayDispatchEvents } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { GatewayChannelUpdateDispatchData } from "discord-api-types/v10";
+import { ChannelType, GatewayDispatchEvents } from "discord-api-types/v10";
 
 export default class ChannelUpdate extends EventHandler {
 	public constructor(client: ExtendedClient) {

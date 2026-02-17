@@ -1,4 +1,9 @@
-import type { APIApplicationCommandInteraction, APIMessage } from "@discordjs/core";
+import { DiscordAPIError } from "@discordjs/rest";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings";
+import type { APIApplicationCommandInteraction, APIMessage } from "discord-api-types/v10";
 import {
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
@@ -8,12 +13,7 @@ import {
 	MessageFlags,
 	PermissionFlagsBits,
 	RESTJSONErrorCodes,
-} from "@discordjs/core";
-import { DiscordAPIError } from "@discordjs/rest";
-import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
-import type Language from "@lib/classes/Language.js";
-import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "@lib/typings";
+} from "discord-api-types/v10";
 
 export default class Embed extends ApplicationCommand {
 	/**

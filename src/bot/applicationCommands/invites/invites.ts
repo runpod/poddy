@@ -1,15 +1,15 @@
-import type { APIApplicationCommandInteraction, APIExtendedInvite } from "@discordjs/core";
-import {
-	ApplicationCommandOptionType,
-	ApplicationCommandType,
-	MessageFlags,
-	RESTJSONErrorCodes,
-} from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
 import type Language from "@lib/classes/Language.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import type { APIApplicationCommandInteraction, APIExtendedInvite } from "discord-api-types/v10";
+import {
+	ApplicationCommandOptionType,
+	ApplicationCommandType,
+	MessageFlags,
+	RESTJSONErrorCodes,
+} from "discord-api-types/v10";
 
 export default class Invites extends ApplicationCommand {
 	/**

@@ -1,9 +1,9 @@
-import type { APIUserApplicationCommandInteraction } from "@discordjs/core";
-import { ApplicationCommandType, PermissionFlagsBits } from "@discordjs/core";
 import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
 import type Language from "@lib/classes/Language.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import type { APIUserApplicationCommandInteraction } from "discord-api-types/v10";
+import { ApplicationCommandType, PermissionFlagsBits } from "discord-api-types/v10";
 import { getRunpodDiscordUser } from "./shared/getRunpodData.js";
 
 export default class ViewUserData extends ApplicationCommand {

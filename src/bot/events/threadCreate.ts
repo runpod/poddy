@@ -1,6 +1,5 @@
 import { LogEvent } from "@db/client.js";
 import type { ToEventProps } from "@discordjs/core";
-import { GatewayDispatchEvents } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import { getRunpodAccountLinkSection } from "@src/utilities/components";
@@ -9,6 +8,7 @@ import {
 	type APIMessageTopLevelComponent,
 	ChannelType,
 	ComponentType,
+	GatewayDispatchEvents,
 	type GatewayThreadCreateDispatchData,
 	MessageFlags,
 } from "discord-api-types/v10";

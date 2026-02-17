@@ -1,7 +1,8 @@
-import type { GatewayGuildDeleteDispatchData, ToEventProps } from "@discordjs/core";
-import { GatewayDispatchEvents } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { GatewayGuildDeleteDispatchData } from "discord-api-types/v10";
+import { GatewayDispatchEvents } from "discord-api-types/v10";
 
 export default class GuildDelete extends EventHandler {
 	public constructor(client: ExtendedClient) {

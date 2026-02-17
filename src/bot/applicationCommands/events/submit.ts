@@ -1,16 +1,16 @@
 import { Buffer } from "node:buffer";
-import type { APIApplicationCommandInteraction } from "@discordjs/core";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import type { APIApplicationCommandInteraction } from "discord-api-types/v10";
 import {
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
 	ButtonStyle,
 	ComponentType,
 	MessageFlags,
-} from "@discordjs/core";
-import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
-import type Language from "@lib/classes/Language.js";
-import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+} from "discord-api-types/v10";
 
 export default class Submit extends ApplicationCommand {
 	/**

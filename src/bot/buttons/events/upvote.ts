@@ -1,7 +1,7 @@
-import { type APIMessageComponentButtonInteraction, MessageFlags } from "@discordjs/core";
 import Button from "@lib/classes/Button.js";
 import type Language from "@lib/classes/Language.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { type APIMessageComponentButtonInteraction, MessageFlags } from "discord-api-types/v10";
 
 export default class Upvote extends Button {
 	/**
