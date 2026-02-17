@@ -1,5 +1,5 @@
 import { env } from "node:process";
-import type { EscalatedType } from "@db/client.js";
+import { EscalatedType, LogEvent } from "@db/client.js";
 import { DiscordAPIError } from "@discordjs/rest";
 import Functions from "@lib/utilities/functions";
 import type {
@@ -118,7 +118,7 @@ export default class PoddyFunctions extends Functions {
 					id: data.ticket.id,
 					escalatedId,
 					escalatedById: user.id,
-					type: type.toUpperCase() as EscalatedType,
+					type: type === "message" ? EscalatedType.MESSAGE : EscalatedType.THREAD,
 				},
 			],
 			skipDuplicates: true,
@@ -341,7 +341,7 @@ export default class PoddyFunctions extends Functions {
 
 		const logChannels = await this.client.prisma.logChannel.findMany({
 			where: {
-				event: "INCIDENT_CREATED",
+				event: LogEvent.INCIDENT_CREATED,
 			},
 		});
 

@@ -1,5 +1,5 @@
 import type { APIModalSubmitGuildInteraction, APIThreadChannel } from "@discordjs/core";
-import { ComponentType, MessageFlags } from "@discordjs/core";
+import { ComponentType, MessageFlags, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import type Language from "@lib/classes/Language.js";
 import Modal from "@lib/classes/Modal.js";
@@ -101,7 +101,7 @@ export default class EscalateToZendesk extends Modal<PoddyClient> {
 		try {
 			thread = (await this.client.api.channels.get(id)) as APIThreadChannel;
 		} catch (error) {
-			if (error instanceof DiscordAPIError && error.code === 10003) {
+			if (error instanceof DiscordAPIError && error.code === RESTJSONErrorCodes.UnknownChannel) {
 				return this.client.api.interactions.editReply(interaction.application_id, interaction.token, {
 					embeds: [
 						{
