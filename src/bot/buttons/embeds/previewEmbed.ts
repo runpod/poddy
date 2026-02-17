@@ -1,8 +1,8 @@
-import { type APIMessageComponentButtonInteraction, MessageFlags, RESTJSONErrorCodes } from "@discordjs/core";
 import { DiscordAPIError } from "@discordjs/rest";
 import Button from "@lib/classes/Button.js";
 import type Language from "@lib/classes/Language.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import { type APIMessageComponentButtonInteraction, MessageFlags, RESTJSONErrorCodes } from "discord-api-types/v10";
 
 export default class PreviewEmbed extends Button {
 	/**

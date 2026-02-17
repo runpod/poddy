@@ -1,4 +1,8 @@
-import type { APIMessageApplicationCommandInteraction, APIThreadChannel } from "@discordjs/core";
+import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
+import type Language from "@lib/classes/Language.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import type { APIMessageApplicationCommandInteraction, APIThreadChannel } from "discord-api-types/v10";
 import {
 	ApplicationCommandType,
 	ButtonStyle,
@@ -6,11 +10,7 @@ import {
 	ComponentType,
 	MessageFlags,
 	PermissionFlagsBits,
-} from "@discordjs/core";
-import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
-import type Language from "@lib/classes/Language.js";
-import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
-import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+} from "discord-api-types/v10";
 
 export default class EscalateContextMenu extends ApplicationCommand {
 	/**

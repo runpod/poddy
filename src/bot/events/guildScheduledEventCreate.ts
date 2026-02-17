@@ -1,7 +1,8 @@
-import type { GatewayGuildScheduledEventCreateDispatchData, ToEventProps } from "@discordjs/core";
-import { GatewayDispatchEvents, GuildScheduledEventEntityType } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { GatewayGuildScheduledEventCreateDispatchData } from "discord-api-types/v10";
+import { GatewayDispatchEvents, GuildScheduledEventEntityType } from "discord-api-types/v10";
 
 export default class GuildScheduledEventCreate extends EventHandler {
 	public constructor(client: ExtendedClient) {

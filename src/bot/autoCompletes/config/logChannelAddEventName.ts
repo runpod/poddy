@@ -1,9 +1,9 @@
 import { LogEvent } from "@db/client.js";
-import type { APIApplicationCommandAutocompleteInteraction } from "@discordjs/core";
 import AutoComplete from "@lib/classes/AutoComplete.js";
 import type Language from "@lib/classes/Language.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import type { APIApplicationCommandAutocompleteInteraction } from "discord-api-types/v10";
 
 export default class AddTagsForForumChannel extends AutoComplete {
 	/**

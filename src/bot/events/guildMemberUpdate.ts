@@ -1,8 +1,9 @@
 import { env } from "node:process";
-import type { APIGuildMember, GatewayGuildMemberUpdateDispatchData, ToEventProps } from "@discordjs/core";
-import { GatewayDispatchEvents } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { APIGuildMember, GatewayGuildMemberUpdateDispatchData } from "discord-api-types/v10";
+import { GatewayDispatchEvents } from "discord-api-types/v10";
 
 export default class GuildMemberUpdate extends EventHandler {
 	public constructor(client: ExtendedClient) {

@@ -1,9 +1,10 @@
 import { env } from "node:process";
-import type { GatewayReadyDispatchData, ToEventProps } from "@discordjs/core";
-import { GatewayDispatchEvents } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type { PoddyClient } from "@src/client";
 import type { BetterStackIndexResponse, BetterStackStatusReport } from "@src/typings/betterstack.js";
+import type { GatewayReadyDispatchData } from "discord-api-types/v10";
+import { GatewayDispatchEvents } from "discord-api-types/v10";
 import { schedule } from "node-cron";
 
 export default class Ready extends EventHandler<PoddyClient> {

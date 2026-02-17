@@ -1,3 +1,8 @@
+import Button from "@lib/classes/Button.js";
+import type Language from "@lib/classes/Language.js";
+import PermissionsBitField from "@lib/utilities/permissions.js";
+import type { PoddyClient } from "@src/client.js";
+import { query, USER_BY_DISCORD_ID_QUERY, type UserByDiscordIdResult } from "@src/utilities/graphql.js";
 import {
 	type APIMessageComponentButtonInteraction,
 	type APIThreadChannel,
@@ -5,12 +10,7 @@ import {
 	MessageFlags,
 	PermissionFlagsBits,
 	TextInputStyle,
-} from "@discordjs/core";
-import Button from "@lib/classes/Button.js";
-import type Language from "@lib/classes/Language.js";
-import PermissionsBitField from "@lib/utilities/permissions.js";
-import type { PoddyClient } from "@src/client.js";
-import { query, USER_BY_DISCORD_ID_QUERY, type UserByDiscordIdResult } from "@src/utilities/graphql.js";
+} from "discord-api-types/v10";
 
 export default class EscalateToZendesk extends Button<PoddyClient> {
 	public constructor(client: PoddyClient) {

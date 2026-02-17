@@ -1,16 +1,16 @@
 import { setTimeout } from "node:timers";
 import { LogEvent } from "@db/client.js";
+import type { ToEventProps } from "@discordjs/core";
+import { DiscordAPIError } from "@discordjs/rest";
+import EventHandler from "@lib/classes/EventHandler.js";
+import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type {
 	APIEmbed,
 	APIGuildTextChannel,
 	GatewayMessageUpdateDispatchData,
 	GuildTextChannelType,
-	ToEventProps,
-} from "@discordjs/core";
-import { GatewayDispatchEvents, RESTJSONErrorCodes } from "@discordjs/core";
-import { DiscordAPIError } from "@discordjs/rest";
-import EventHandler from "@lib/classes/EventHandler.js";
-import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+} from "discord-api-types/v10";
+import { GatewayDispatchEvents, RESTJSONErrorCodes } from "discord-api-types/v10";
 
 export default class MessageUpdate extends EventHandler {
 	public constructor(client: ExtendedClient) {

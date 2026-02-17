@@ -1,10 +1,10 @@
 import { env } from "node:process";
-import type { APIApplicationCommandInteraction } from "@discordjs/core";
-import { ApplicationCommandOptionType, ApplicationCommandType, MessageFlags } from "@discordjs/core";
 import ApplicationCommand from "@lib/classes/ApplicationCommand.js";
 import type Language from "@lib/classes/Language.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
 import type { APIInteractionWithArguments } from "@lib/typings/index.js";
+import type { APIApplicationCommandInteraction } from "discord-api-types/v10";
+import { ApplicationCommandOptionType, ApplicationCommandType, MessageFlags } from "discord-api-types/v10";
 
 export default class RedeemCode extends ApplicationCommand {
 	/**

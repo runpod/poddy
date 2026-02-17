@@ -1,8 +1,9 @@
 import { LogEvent } from "@db/client.js";
-import type { GatewayGuildAuditLogEntryCreateDispatchData, ToEventProps } from "@discordjs/core";
-import { AuditLogEvent, ChannelType, GatewayDispatchEvents } from "@discordjs/core";
+import type { ToEventProps } from "@discordjs/core";
 import EventHandler from "@lib/classes/EventHandler.js";
 import type ExtendedClient from "@lib/extensions/ExtendedClient.js";
+import type { GatewayGuildAuditLogEntryCreateDispatchData } from "discord-api-types/v10";
+import { AuditLogEvent, ChannelType, GatewayDispatchEvents } from "discord-api-types/v10";
 
 export default class GuildAuditLogEntryCreate extends EventHandler {
 	/**
