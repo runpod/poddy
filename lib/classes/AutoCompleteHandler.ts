@@ -29,16 +29,10 @@ export default class AutoCompleteHandler<C extends ExtendedClient = ExtendedClie
 	 * Load all of the auto completes in the autoCompletes directory.
 	 */
 	public async loadAutoCompletes() {
-		for (const parentFolder of this.client.functions.getFiles(
-			`${this.client.__dirname}/dist/src/bot/autoCompletes`,
-			"",
-			true,
-		))
-			for (const fileName of this.client.functions.getFiles(
-				`${this.client.__dirname}/dist/src/bot/autoCompletes/${parentFolder}`,
-				".js",
-			)) {
-				const AutoCompleteFile = await import(`@lib/src/bot/autoCompletes/${parentFolder}/${fileName}`);
+		const baseDir = `${this.client.__dirname}/dist/src/bot/autoCompletes`;
+		for (const parentFolder of this.client.functions.getFiles(baseDir, "", true))
+			for (const fileName of this.client.functions.getFiles(`${baseDir}/${parentFolder}`, ".js")) {
+				const AutoCompleteFile = await import(`${baseDir}/${parentFolder}/${fileName}`);
 
 				const autoComplete = new AutoCompleteFile.default(this.client) as AutoComplete;
 

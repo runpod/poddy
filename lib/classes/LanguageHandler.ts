@@ -36,8 +36,9 @@ export default class LanguageHandler<C extends ExtendedClient = ExtendedClient> 
 	 * Load all of our languages into our array.
 	 */
 	public async loadLanguages() {
-		for (const fileName of this.client.functions.getFiles(`${this.client.__dirname}/dist/languages/`, ".js")) {
-			const languageFile: LanguageOptions = await import(`@lib/languages/${fileName}`).then((file) => file.default);
+		const langDir = `${this.client.__dirname}/dist/languages`;
+		for (const fileName of this.client.functions.getFiles(`${langDir}/`, ".js")) {
+			const languageFile: LanguageOptions = await import(`${langDir}/${fileName}`).then((file) => file.default);
 
 			const language: Language = new Language(this.client, languageFile.LANGUAGE_ID! as Locale, {
 				enabled: languageFile.LANGUAGE_ENABLED!,
