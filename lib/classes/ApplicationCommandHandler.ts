@@ -53,16 +53,11 @@ export default class ApplicationCommandHandler<C extends ExtendedClient = Extend
 	 * Load all of the application commands in the applicationCommands directory.
 	 */
 	public async loadApplicationCommands() {
-		for (const parentFolder of this.client.functions.getFiles(
-			`${this.client.__dirname}/dist/src/bot/applicationCommands`,
-			"",
-			true,
-		)) {
-			for (const fileName of this.client.functions.getFiles(
-				`${this.client.__dirname}/dist/src/bot/applicationCommands/${parentFolder}`,
-				".js",
-			)) {
-				const CommandFile = await import(`@lib/src/bot/applicationCommands/${parentFolder}/${fileName}`);
+		const baseDir = `${this.client.__dirname}/dist/src/bot/applicationCommands`;
+		for (const parentFolder of this.client.functions.getFiles(baseDir, "", true)) {
+			const parentDir = `${baseDir}/${parentFolder}`;
+			for (const fileName of this.client.functions.getFiles(parentDir, ".js")) {
+				const CommandFile = await import(`${parentDir}/${fileName}`);
 
 				const command = new CommandFile.default(this.client) as ApplicationCommand;
 

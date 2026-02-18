@@ -42,16 +42,11 @@ export default class ButtonHandler<C extends ExtendedClient = ExtendedClient> {
 	 * Load all of the buttons in the buttons directory.
 	 */
 	public async loadButtons() {
-		for (const parentFolder of this.client.functions.getFiles(
-			`${this.client.__dirname}/dist/src/bot/buttons`,
-			"",
-			true,
-		)) {
-			for (const fileName of this.client.functions.getFiles(
-				`${this.client.__dirname}/dist/src/bot/buttons/${parentFolder}`,
-				".js",
-			)) {
-				const ButtonFile = await import(`@lib/src/bot/buttons/${parentFolder}/${fileName}`);
+		const baseDir = `${this.client.__dirname}/dist/src/bot/buttons`;
+		for (const parentFolder of this.client.functions.getFiles(baseDir, "", true)) {
+			const parentDir = `${baseDir}/${parentFolder}`;
+			for (const fileName of this.client.functions.getFiles(parentDir, ".js")) {
+				const ButtonFile = await import(`${parentDir}/${fileName}`);
 
 				const button = new ButtonFile.default(this.client) as Button;
 

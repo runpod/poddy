@@ -287,8 +287,9 @@ export default class ExtendedClient extends Client {
 	 * Load all the events in the events directory.
 	 */
 	private async loadEvents() {
-		for (const eventFileName of this.functions.getFiles(`${this.__dirname}/dist/src/bot/events`, ".js", true)) {
-			const EventFile = await import(`@lib/src/bot/events/${eventFileName}`);
+		const eventsDir = `${this.__dirname}/dist/src/bot/events`;
+		for (const eventFileName of this.functions.getFiles(eventsDir, ".js", true)) {
+			const EventFile = await import(`${eventsDir}/${eventFileName}`);
 
 			const event = new EventFile.default(this) as EventHandler<this>;
 

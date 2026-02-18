@@ -42,16 +42,11 @@ export default class SelectMenuHandler<C extends ExtendedClient = ExtendedClient
 	 * Load all of the select menus in the selectMenus directory.
 	 */
 	public async loadSelectMenus() {
-		for (const parentFolder of this.client.functions.getFiles(
-			`${this.client.__dirname}/dist/src/bot/selectMenus`,
-			"",
-			true,
-		)) {
-			for (const fileName of this.client.functions.getFiles(
-				`${this.client.__dirname}/dist/src/bot/selectMenus/${parentFolder}`,
-				".js",
-			)) {
-				const SelectMenuFile = await import(`@lib/src/bot/selectMenus/${parentFolder}/${fileName}`);
+		const baseDir = `${this.client.__dirname}/dist/src/bot/selectMenus`;
+		for (const parentFolder of this.client.functions.getFiles(baseDir, "", true)) {
+			const parentDir = `${baseDir}/${parentFolder}`;
+			for (const fileName of this.client.functions.getFiles(parentDir, ".js")) {
+				const SelectMenuFile = await import(`${parentDir}/${fileName}`);
 
 				const selectMenu = new SelectMenuFile.default(this.client) as SelectMenu;
 

@@ -16,6 +16,7 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm/store \
     pnpm run translate && \
     pnpm prisma generate && \
     pnpm prisma migrate deploy && \
-    pnpm tsc
+    pnpm tsc && \
+    pnpm tsc-alias --resolve-full-paths
 
 CMD [ "pnpm", "start" ]

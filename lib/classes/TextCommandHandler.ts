@@ -36,16 +36,11 @@ export default class TextCommandHandler<C extends ExtendedClient = ExtendedClien
 	 * Load all of the text commands in the textCommands directory.
 	 */
 	public async loadTextCommands() {
-		for (const parentFolder of this.client.functions.getFiles(
-			`${this.client.__dirname}/dist/src/bot/textCommands`,
-			"",
-			true,
-		)) {
-			for (const fileName of this.client.functions.getFiles(
-				`${this.client.__dirname}/dist/src/bot/textCommands/${parentFolder}`,
-				".js",
-			)) {
-				const CommandFile = await import(`@lib/src/bot/textCommands/${parentFolder}/${fileName}`);
+		const baseDir = `${this.client.__dirname}/dist/src/bot/textCommands`;
+		for (const parentFolder of this.client.functions.getFiles(baseDir, "", true)) {
+			const parentDir = `${baseDir}/${parentFolder}`;
+			for (const fileName of this.client.functions.getFiles(parentDir, ".js")) {
+				const CommandFile = await import(`${parentDir}/${fileName}`);
 
 				const command = new CommandFile.default(this.client) as TextCommand;
 
