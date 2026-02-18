@@ -12,10 +12,11 @@ WORKDIR "/app"
 COPY . .
 
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm/store \
-    CI={CI} pnpm install --frozen-lockfile && \
+    CI=${CI} pnpm install --frozen-lockfile && \
     pnpm run translate && \
     pnpm prisma generate && \
     pnpm prisma migrate deploy && \
-    pnpm tsc
+    pnpm tsc && \
+    pnpm tsc-alias
 
 CMD [ "pnpm", "start" ]
