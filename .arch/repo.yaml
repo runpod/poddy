@@ -70,11 +70,11 @@ service_calls:
     purpose: User and pod lookups for community support commands
     file: src/
 
-  - target: slack
+  - target: discord-webhooks
     type: webhook
-    protocol: http
-    purpose: Customer success and sales notifications
-    file: src/
+    protocol: https
+    purpose: Internal logging — bot ready (CONSOLE_HOOK) and guild join/leave (GUILD_HOOK)
+    file: src/bot/events/ready.ts, src/bot/events/guildCreate.ts, src/bot/events/guildDelete.ts
 
   - target: zendesk
     type: api
@@ -129,15 +129,55 @@ env_vars:
     source: env
     description: Datadog metrics API key
 
-  - name: SLACK_CUSTOMER_SUCCESS_HOOK
+  - name: CONSOLE_HOOK
     required: false
     source: env
-    description: Slack webhook for customer success notifications
+    description: Internal Discord webhook for bot ready/status logging (webhookLog "console")
 
-  - name: SLACK_SALES_HOOK
+  - name: GUILD_HOOK
     required: false
     source: env
-    description: Slack webhook for sales notifications
+    description: Internal Discord webhook for guild join/leave events (webhookLog "guild")
+
+  - name: CHANGELOG_WEBHOOK_SECRET
+    required: false
+    source: env
+    description: Secret for verifying incoming changelog webhooks from changelog.getrunpod.io
+
+  - name: ZENDESK_API_KEY
+    required: false
+    source: env
+    description: Zendesk API key (Basic auth) for ticket creation and lookup
+
+  - name: RUNPOD_DEV_API_KEY
+    required: false
+    source: env
+    description: RunPod API key for development environment (used instead of RUNPOD_API_KEY when NODE_ENV=development)
+
+  - name: DEVELOPMENT_GUILD_ID
+    required: false
+    source: env
+    description: Discord guild ID for development/testing
+
+  - name: EXPORTER_ACCESS_KEY
+    required: false
+    source: env
+    description: S3-compatible exporter access key
+
+  - name: EXPORTER_SECRET_KEY
+    required: false
+    source: env
+    description: S3-compatible exporter secret key
+
+  - name: EXPORTER_BUCKET_NAME
+    required: false
+    source: env
+    description: S3-compatible exporter bucket name
+
+  - name: EXPORTER_FILE_PATH
+    required: false
+    source: env
+    description: S3-compatible exporter file path
 
   - name: API_PORT
     required: false
@@ -147,7 +187,7 @@ env_vars:
 
 conventions:
   - category: code
-    rule: Uses @discordjs/core v2 with WorkerShardingStrategy (2 workers, 3 shards/worker). Note: this is the @discordjs/core package (v2.x), not the monolithic discord.js library (v14.x)
+    rule: "Uses @discordjs/core v2 with WorkerShardingStrategy (2 workers, 3 shards/worker). Note: this is the @discordjs/core package (v2.x), not the monolithic discord.js library (v14.x)"
     rationale: Scalable sharding for large community server
 
   - category: code
