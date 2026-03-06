@@ -109,10 +109,10 @@ env_vars:
     source: env
     description: Runpod API key for GraphQL user/pod lookups
 
-  - name: MASTRA_AGENT_URL
+  - name: RUNPOD_ASSISTANT_API_URL
     required: false
     source: env
-    description: runpod-assistant endpoint URL (QA agent). Legacy env var name from Mastra era — should be renamed to RUNPOD_ASSISTANT_API_URL to match other services
+    description: runpod-assistant endpoint URL (QA agent). Matches the env var name used by other services (e.g. runpod-assistant-slackbot)
 
   - name: RUNPOD_ASSISTANT_API_KEY
     required: false
@@ -167,7 +167,7 @@ failure_modes:
     impact: All Prisma operations fail, tags/subscriptions/config broken
     detection: Sentry errors, Prisma connection timeout
 
-  - trigger: MASTRA_AGENT_URL not configured
+  - trigger: RUNPOD_ASSISTANT_API_URL not configured
     impact: QA agent disabled, bot only handles non-AI commands
     detection: No AI responses in enabled channels
 

@@ -14,7 +14,7 @@ declare global {
 			EXPORTER_FILE_PATH: string;
 			EXPORTER_SECRET_KEY: string;
 			GUILD_HOOK: string;
-			MASTRA_AGENT_URL: string;
+			RUNPOD_ASSISTANT_API_URL: string;
 			NODE_ENV: "development" | "production";
 			RUNPOD_API_KEY: string;
 			RUNPOD_ASSISTANT_API_KEY: string;

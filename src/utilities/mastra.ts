@@ -1,8 +1,8 @@
 import { env } from "node:process";
 
 // Mastra handles conversation memory via threadId (PostgreSQL-backed, auto-retrieves last 4 messages)
-const MASTRA_AGENT_URL = env.MASTRA_AGENT_URL;
-const MASTRA_ENDPOINT = `${MASTRA_AGENT_URL}/generate`;
+const RUNPOD_ASSISTANT_API_URL = env.RUNPOD_ASSISTANT_API_URL;
+const MASTRA_ENDPOINT = `${RUNPOD_ASSISTANT_API_URL}/generate`;
 const MASTRA_API_KEY = env.RUNPOD_ASSISTANT_API_KEY;
 const DISCORD_SYSTEM_CONTEXT = `You are Poddy, the official Runpod Discord bot helping users in the Runpod community server.
 Your goal is to help users with questions about Runpod services, troubleshooting, and general guidance.
