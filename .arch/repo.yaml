@@ -112,7 +112,7 @@ env_vars:
   - name: MASTRA_AGENT_URL
     required: false
     source: env
-    description: runpod-assistant endpoint URL (QA agent)
+    description: runpod-assistant endpoint URL (QA agent). Legacy env var name from Mastra era — should be renamed to RUNPOD_ASSISTANT_API_URL to match other services
 
   - name: RUNPOD_ASSISTANT_API_KEY
     required: false
@@ -147,7 +147,7 @@ env_vars:
 
 conventions:
   - category: code
-    rule: Uses Discord.js v2 core with WorkerShardingStrategy (2 workers, 3 shards/worker)
+    rule: Uses @discordjs/core v2 with WorkerShardingStrategy (2 workers, 3 shards/worker). Note: this is the @discordjs/core package (v2.x), not the monolithic discord.js library (v14.x)
     rationale: Scalable sharding for large community server
 
   - category: code
